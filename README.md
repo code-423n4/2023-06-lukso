@@ -49,13 +49,13 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 # Lukso audit details
 - Total Prize Pool: $100,000 USDC 
-  - HM awards: $73,836 USDC 
-  - Analysis awards: $4,475 USDC 
-  - QA awards: $2,238 USDC 
-  - Bot Race awards: $6,713 USDC 
-  - Gas awards: $2,238 USDC 
-  - Judge awards: $6,000 USDC 
-  - Lookout awards: $2,666 USDC 
+  - HM awards: $70,000 USDC 
+  - Analysis awards: $4,250 USDC 
+  - QA awards: $2,000 USDC 
+  - Bot Race awards: $6,250 USDC 
+  - Gas awards: $2,000 USDC 
+  - Judge awards: $9,000 USDC 
+  - Lookout awards: $6,000 USDC 
   - Scout awards: $500 USDC 
 - Join [C4 Discord](https://discord.gg/code4rena) to register
 - Submit findings [using the C4 form](https://code4rena.com/contests/2023-06-lukso/submit)
