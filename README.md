@@ -47,7 +47,7 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 ---
 
-# Lukso audit details
+# LUKSO audit details
 - Total Prize Pool: $100,000 USDC 
   - HM awards: $70,000 USDC 
   - Analysis awards: $4,250 USDC 
