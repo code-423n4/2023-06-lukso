@@ -104,110 +104,112 @@ _For line of code counts, we recommend using [cloc](https://github.com/AlDanial/
 
 ## Contracts in scope
 
-| Contract                                                                                                    | SLOC | Purpose | Libraries used |
-| ----------------------------------------------------------------------------------------------------------- | ---- | ------- | -------------- |
-| **LSP0ERC725Account**                                                                                       |      |         |                |
-| `contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol`                                                     | 331  |         |                |
-| `contracts/LSP0ERC725Account/LSP0Utils.sol`                                                                 | 23   |         |                |
-| `contracts/LSP0ERC725Account/LSP0ERC725AccountInitAbstract.sol`                                             | 12   |         |                |
-| `contracts/LSP0ERC725Account/ILSP0ERC725Account.sol`                                                        | 11   |         |                |
-| `contracts/LSP0ERC725Account/LSP0ERC725Account.sol`                                                         | 11   |         |                |
-| `contracts/LSP0ERC725Account/LSP0ERC725AccountInit.sol`                                                     | 10   |         |                |
-| `contracts/LSP0ERC725Account/LSP0Constants.sol`                                                             | 8    |         |                |
-| **UniversalProfile**                                                                                        |      |         |                |
-| `contracts/UniversalProfileInitAbstract.sol`                                                                | 12   |         |                |
-| `contracts/UniversalProfile.sol`                                                                            | 11   |         |                |
-| `contracts/UniversalProfileInit.sol`                                                                        | 10   |         |                |
-| **LSP1UniversalReceiverDelegate**                                                                           |      |         |                |
-| `contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol`       | 107  |         |                |
-| `contracts/LSP1UniversalReceiver/LSP1Utils.sol`                                                             | 71   |         |                |
-| `contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateVault/LSP1UniversalReceiverDelegateVault.sol` | 60   |         |                |
-| `contracts/LSP1UniversalReceiver/ILSP1UniversalReceiver.sol`                                                | 14   |         |                |
-| `contracts/LSP1UniversalReceiver/LSP1Constants.sol`                                                         | 4    |         |                |
-| `contracts/LSP1UniversalReceiver/LSP1Errors.sol`                                                            | 4    |         |                |
-| **LSP4DigitalAssetMetadata**                                                                                |      |         |                |
-| `contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadataInitAbstract.sol`                               | 30   |         |                |
-| `contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol`                                           | 25   |         |                |
-| `contracts/LSP4DigitalAssetMetadata/LSP4Compatibility.sol`                                                  | 14   |         |                |
-| `contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol`                                                      | 8    |         |                |
-| `contracts/LSP4DigitalAssetMetadata/ILSP4Compatibility.sol`                                                 | 6    |         |                |
-| `contracts/LSP4DigitalAssetMetadata/LSP4Errors.sol`                                                         | 3    |         |                |
-| **LSP6KeyManager**                                                                                          |      |         |                |
-| `contracts/LSP6KeyManager/LSP6Modules/LSP6SetDataModule.sol`                                                | 381  |         |                |
-| `contracts/LSP6KeyManager/LSP6KeyManagerCore.sol`                                                           | 352  |         |                |
-| `contracts/LSP6KeyManager/LSP6Modules/LSP6ExecuteModule.sol`                                                | 218  |         |                |
-| `contracts/LSP6KeyManager/LSP6Utils.sol`                                                                    | 145  |         |                |
-| `contracts/LSP6KeyManager/LSP6Constants.sol`                                                                | 40   |         |                |
-| `contracts/LSP6KeyManager/ILSP6KeyManager.sol`                                                              | 27   |         |                |
-| `contracts/LSP6KeyManager/LSP6Errors.sol`                                                                   | 25   |         |                |
-| `contracts/LSP6KeyManager/LSP6Modules/LSP6OwnershipModule.sol`                                              | 17   |         |                |
-| `contracts/LSP6KeyManager/LSP6KeyManagerInitAbstract.sol`                                                   | 11   |         |                |
-| `contracts/LSP6KeyManager/LSP6KeyManager.sol`                                                               | 10   |         |                |
-| `contracts/LSP6KeyManager/LSP6KeyManagerInit.sol`                                                           | 10   |         |                |
-| **LSP7DigitalAsset**                                                                                        |      |         |                |
-| `contracts/LSP7DigitalAsset/LSP7DigitalAssetCore.sol`                                                       | 197  |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20InitAbstract.sol`                                 | 85   |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20.sol`                                             | 69   |         |                |
-| `contracts/LSP7DigitalAsset/ILSP7DigitalAsset.sol`                                                          | 42   |         |                |
-| `contracts/LSP7DigitalAsset/LSP7DigitalAssetInitAbstract.sol`                                               | 27   |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7CappedSupply.sol`                                                | 27   |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7CappedSupplyInitAbstract.sol`                                    | 27   |         |                |
-| `contracts/LSP7DigitalAsset/LSP7DigitalAsset.sol`                                                           | 21   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7MintableInitAbstract.sol`                                           | 21   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20MintableInitAbstract.sol`                            | 19   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7Mintable.sol`                                                       | 19   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20Mintable.sol`                                        | 17   |         |                |
-| `contracts/LSP7DigitalAsset/LSP7Errors.sol`                                                                 | 16   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20MintableInit.sol`                                    | 16   |         |                |
-| `contracts/LSP7DigitalAsset/presets/LSP7MintableInit.sol`                                                   | 15   |         |                |
-| `contracts/LSP7DigitalAsset/extensions/ILSP7CompatibleERC20.sol`                                            | 10   |         |                |
-| `contracts/LSP7DigitalAsset/presets/ILSP7Mintable.sol`                                                      | 10   |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7Burnable.sol`                                                    | 7    |         |                |
-| `contracts/LSP7DigitalAsset/extensions/LSP7BurnableInitAbstract.sol`                                        | 7    |         |                |
-| `contracts/LSP7DigitalAsset/LSP7Constants.sol`                                                              | 4    |         |                |
-| **LSP8IdentifiableDigitalAsset**                                                                            |      |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol`                               | 222  |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721InitAbstract.sol`                    | 179  |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721.sol`                                | 177  |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/ILSP8IdentifiableDigitalAsset.sol`                                  | 45   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8EnumerableInitAbstract.sol`                          | 34   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol`                                      | 32   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CappedSupplyInitAbstract.sol`                        | 29   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CappedSupply.sol`                                    | 27   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetInitAbstract.sol`                       | 25   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8MintableInitAbstract.sol`                               | 25   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/ILSP8CompatibleERC721.sol`                               | 23   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol`                                   | 21   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721MintableInitAbstract.sol`               | 19   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol`                                           | 18   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721Mintable.sol`                           | 17   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721MintableInit.sol`                       | 16   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol`                                                     | 14   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/LSP8MintableInit.sol`                                       | 14   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Burnable.sol`                                        | 11   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/presets/ILSP8Mintable.sol`                                          | 10   |         |                |
-| `contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol`                                                  | 6    |         |                |
-| **LSP14Ownable2Step**                                                                                       |      |         |                |
-| `contracts/LSP14Ownable2Step/LSP14Ownable2Step.sol`                                                         | 81   |         |                |
-| `contracts/LSP14Ownable2Step/ILSP14Ownable2Step.sol`                                                        | 10   |         |                |
-| `contracts/LSP14Ownable2Step/LSP14Constants.sol`                                                            | 5    |         |                |
-| `contracts/LSP14Ownable2Step/LSP14Errors.sol`                                                               | 3    |         |                |
-| **LSP20CallVerification**                                                                                   |      |         |                |
-| `contracts/LSP20CallVerification/LSP20CallVerification.sol`                                                 | 42   |         |                |
-| `contracts/LSP20CallVerification/ILSP20CallVerification.sol`                                                | 9    |         |                |
-| `contracts/LSP20CallVerification/LSP20Constants.sol`                                                        | 6    |         |                |
-| `contracts/LSP20CallVerification/LSP20Errors.sol`                                                           | 3    |         |                |
-| **Other Libraries & Constants**                                                                             |      |         |                |
-| `contracts/Custom/EIP191Signer.sol`                                                                         | 9    |         |                |
-| `contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol` (only 4 functions in scope)                                 |      |         |                |
-| - `generateArrayElementKeyAtIndex(bytes32,uint128)`                                                         | 7    |         |                |
-| - `generateMappingKey(bytes10,bytes20)`                                                                     | 7    |         |                |
-| - `generateMappingWithGroupingKey(bytes10,bytes20)`                                                         | 7    |         |                |
-| - `isCompactBytesArray(bytes)`                                                                              | 12   |         |                |
-| `contracts/LSP5ReceivedAssets/LSP5Utils.sol`                                                                | 103  |         |                |
-| `contracts/LSP5ReceivedAssets/LSP5Constants.sol`                                                            | 3    |         |                |
-| `contracts/LSP10ReceivedVaults/LSP10Utils.sol`                                                              | 98   |         |                |
-| `contracts/LSP10ReceivedVaults/LSP10Constants.sol`                                                          | 3    |         |                |
+This is the complete list of the contracts in scope for this contest:
+
+| Contract                                                                                                                                                                                                    | SLOC | Purpose | Libraries used |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- | ------- | -------------- |
+| **LSP0ERC725Account**                                                                                                                                                                                       |      |         |                |
+| [`LSP0ERC725AccountCore.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol)                                                                  | 331  |         |                |
+| [`LSP0Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Utils.sol)                                                                                          | 23   |         |                |
+| [`LSP0ERC725AccountInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountInitAbstract.sol)                                                  | 12   |         |                |
+| [`ILSP0ERC725Account.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/ILSP0ERC725Account.sol)                                                                        | 11   |         |                |
+| [`LSP0ERC725Account.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725Account.sol)                                                                          | 11   |         |                |
+| [`LSP0ERC725AccountInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountInit.sol)                                                                  | 10   |         |                |
+| [`LSP0Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Constants.sol)                                                                                  | 8    |         |                |
+| **UniversalProfile**                                                                                                                                                                                        |      |         |                |
+| [`UniversalProfileInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInitAbstract.sol)                                                                      | 12   |         |                |
+| [`UniversalProfile.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfile.sol)                                                                                              | 11   |         |                |
+| [`UniversalProfileInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInit.sol)                                                                                      | 10   |         |                |
+| **LSP1UniversalReceiverDelegate**                                                                                                                                                                           |      |         |                |
+| [`LSP1UniversalReceiverDelegateUP.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol)          | 107  |         |                |
+| [`LSP1Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Utils.sol`)                                                                                     | 71   |         |                |
+| [`LSP1UniversalReceiverDelegateVault.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateVault/LSP1UniversalReceiverDelegateVault.sol) | 60   |         |                |
+| [`ILSP1UniversalReceiver.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiver.sol`)                                                           | 14   |         |                |
+| [`LSP1Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Constants.sol`)                                                                             | 4    |         |                |
+| [`LSP1Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Errors.sol`)                                                                                   | 4    |         |                |
+| **LSP4DigitalAssetMetadata**                                                                                                                                                                                |      |         |                |
+| [`LSP4DigitalAssetMetadataInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadataInitAbstract.sol)                             | 30   |         |                |
+| [`LSP4DigitalAssetMetadata.sol`](chttps://github.com/code-423n4/2023-06-lukso/tree/main/ontracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol)                                                     | 25   |         |                |
+| [`LSP4Compatibility.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Compatibility.sol)                                                                   | 14   |         |                |
+| [`LSP4Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol)                                                                           | 8    |         |                |
+| [`ILSP4Compatibility.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/ILSP4Compatibility.sol)                                                                 | 6    |         |                |
+| [`LSP4Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Errors.sol)                                                                                 | 3    |         |                |
+| **LSP6KeyManager**                                                                                                                                                                                          |      |         |                |
+| [`LSP6SetDataModule.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6SetDataModule.sol)                                                                 | 381  |         |                |
+| [`LSP6KeyManagerCore.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerCore.sol)                                                                           | 352  |         |                |
+| [`LSP6ExecuteModule.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6ExecuteModule.sol)                                                                 | 218  |         |                |
+| [`LSP6Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Utils.sol)                                                                                             | 145  |         |                |
+| [`LSP6Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Constants.sol)                                                                                     | 40   |         |                |
+| [`ILSP6KeyManager.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/ILSP6KeyManager.sol)                                                                                 | 27   |         |                |
+| [`LSP6Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Errors.sol)                                                                                           | 25   |         |                |
+| [`LSP6OwnershipModule.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6OwnershipModule.sol)                                                             | 17   |         |                |
+| [`LSP6KeyManagerInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerInitAbstract.sol)                                                           | 11   |         |                |
+| [`LSP6KeyManager.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManager.sol)                                                                                   | 10   |         |                |
+| [`LSP6KeyManagerInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerInit.sol)                                                                           | 10   |         |                |
+| **LSP7DigitalAsset**                                                                                                                                                                                        |      |         |                |
+| [`LSP7DigitalAssetCore.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7DigitalAssetCore.sol)                                                                     | 197  |         |                |
+| [`LSP7CompatibleERC20InitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20InitAbstract.sol)                                    | 85   |         |                |
+| [`LSP7CompatibleERC20.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20.sol)                                                            | 69   |         |                |
+| [`ILSP7DigitalAsset.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/ILSP7DigitalAsset.sol)                                                                           | 42   |         |                |
+| [`LSP7DigitalAssetInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7DigitalAssetInitAbstract.sol)                                                     | 27   |         |                |
+| [`LSP7CappedSupply.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CappedSupply.sol)                                                                  | 27   |         |                |
+| [`LSP7CappedSupplyInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CappedSupplyInitAbstract.sol)                                          | 27   |         |                |
+| [`LSP7DigitalAsset.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7DigitalAsset.sol)                                                                             | 21   |         |                |
+| [`LSP7MintableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7MintableInitAbstract.sol)                                                     | 21   |         |                |
+| [`LSP7CompatibleERC20MintableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20MintableInitAbstract.sol)                       | 19   |         |                |
+| [`LSP7Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7Mintable.sol)                                                                             | 19   |         |                |
+| [`LSP7CompatibleERC20Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20Mintable.sol)                                               | 17   |         |                |
+| [`LSP7Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7Errors.sol)                                                                                         | 16   |         |                |
+| [`LSP7CompatibleERC20MintableInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7CompatibleERC20MintableInit.sol)                                       | 16   |         |                |
+| [`LSP7MintableInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/LSP7MintableInit.sol)                                                                     | 15   |         |                |
+| [`ILSP7CompatibleERC20.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/ILSP7CompatibleERC20.sol)                                                          | 10   |         |                |
+| [`ILSP7Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/presets/ILSP7Mintable.sol)                                                                           | 10   |         |                |
+| [`LSP7Burnable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7Burnable.sol)                                                                          | 7    |         |                |
+| [`LSP7BurnableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7BurnableInitAbstract.sol)                                                  | 7    |         |                |
+| [`LSP7Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7Constants.sol)                                                                                   | 4    |         |                |
+| **LSP8IdentifiableDigitalAsset**                                                                                                                                                                            |      |         |                |
+| [`LSP8IdentifiableDigitalAssetCore.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol)                                 | 222  |         |                |
+| [`LSP8CompatibleERC721InitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721InitAbstract.sol)                      | 179  |         |                |
+| [`LSP8CompatibleERC721.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721.sol)                                              | 177  |         |                |
+| [`ILSP8IdentifiableDigitalAsset.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/ILSP8IdentifiableDigitalAsset.sol)                                       | 45   |         |                |
+| [`LSP8EnumerableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8EnumerableInitAbstract.sol)                                  | 34   |         |                |
+| [`LSP8Enumerable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Enumerable.sol)                                                          | 32   |         |                |
+| [`LSP8CappedSupplyInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CappedSupplyInitAbstract.sol)                              | 29   |         |                |
+| [`LSP8CappedSupply.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CappedSupply.sol)                                                      | 27   |         |                |
+| [`LSP8IdentifiableDigitalAssetInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetInitAbstract.sol)                 | 25   |         |                |
+| [`LSP8MintableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8MintableInitAbstract.sol)                                         | 25   |         |                |
+| [`ILSP8CompatibleERC721.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/ILSP8CompatibleERC721.sol)                                            | 23   |         |                |
+| [`LSP8IdentifiableDigitalAsset.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAsset.sol)                                         | 21   |         |                |
+| [`LSP8CompatibleERC721MintableInitAbstract.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721MintableInitAbstract.sol)         | 19   |         |                |
+| [`LSP8Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol)                                                                 | 18   |         |                |
+| [`LSP8CompatibleERC721Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721Mintable.sol)                                 | 17   |         |                |
+| [`LSP8CompatibleERC721MintableInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8CompatibleERC721MintableInit.sol)                         | 16   |         |                |
+| [`LSP8Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8Errors.sol)                                                                             | 14   |         |                |
+| [`LSP8MintableInit.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/LSP8MintableInit.sol)                                                         | 14   |         |                |
+| [`LSP8Burnable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Burnable.sol)                                                              | 11   |         |                |
+| [`ILSP8Mintable.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/ILSP8Mintable.sol)                                                               | 10   |         |                |
+| [`LSP8Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.sol)                                                                       | 6    |         |                |
+| **LSP14Ownable2Step**                                                                                                                                                                                       |      |         |                |
+| [`LSP14Ownable2Step.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Ownable2Step.sol)                                                                          | 81   |         |                |
+| [`ILSP14Ownable2Step.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/ILSP14Ownable2Step.sol)                                                                        | 10   |         |                |
+| [`LSP14Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Constants.sol)                                                                                | 5    |         |                |
+| [`LSP14Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Errors.sol)                                                                                      | 3    |         |                |
+| **LSP20CallVerification**                                                                                                                                                                                   |      |         |                |
+| [`LSP20CallVerification.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20CallVerification.sol)                                                              | 42   |         |                |
+| [`ILSP20CallVerification.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/ILSP20CallVerification.sol)                                                            | 9    |         |                |
+| [`LSP20Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Constants.sol)                                                                            | 6    |         |                |
+| [`LSP20Errors.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Errors.sol)                                                                                  | 3    |         |                |
+| **Other Libraries & Constants**                                                                                                                                                                             |      |         |                |
+| [`EIP191Signer.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/Custom/EIP191Signer.sol)                                                                                               | 9    |         |                |
+| [`LSP2Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol) (only 4 functions in scope)                                                          |      |         |                |
+| - `generateArrayElementKeyAtIndex(bytes32,uint128)`                                                                                                                                                         | 7    |         |                |
+| - `generateMappingKey(bytes10,bytes20)`                                                                                                                                                                     | 7    |         |                |
+| - `generateMappingWithGroupingKey(bytes10,bytes20)`                                                                                                                                                         | 7    |         |                |
+| - `isCompactBytesArray(bytes)`                                                                                                                                                                              | 12   |         |                |
+| [`LSP5Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP5ReceivedAssets/LSP5Utils.sol)                                                                                         | 103  |         |                |
+| [`LSP5Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP5ReceivedAssets/LSP5Constants.sol)                                                                                 | 3    |         |                |
+| [`LSP10Utils.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP10ReceivedVaults/LSP10Utils.sol)                                                                                      | 98   |         |                |
+| [`LSP10Constants.sol`](https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP10ReceivedVaults/LSP10Constants.sol)                                                                              | 3    |         |                |
 
 ## Out of scope
 
