@@ -121,6 +121,63 @@ Automated findings output for the audit can be found [here](add link to report) 
 
 # Tests
 
-*Provide every step required to build the project from a fresh git clone, as well as steps to run the tests with a gas report.* 
 
-*Note: Many wardens run Slither as a first pass for testing.  Please document any known errors with no workaround.* 
+1. Clone the repo
+
+```bash
+git clone https://github.com/code-423n4/2023-06-lukso.git
+```
+
+2. npm install
+
+```bash
+cd 2023-06-lukso && npm i
+```
+
+3. To compile the contracts
+
+```bash
+npm run build
+```
+
+4. To run the tests
+
+```bash
+npm run test
+```
+
+It is possible to run seperate tests for each contract with the following format:
+
+```bash
+npm run test:lsp1
+
+## OR
+
+npm run test:up
+
+## OR
+
+npm run test:lsp7
+```
+
+5. To run foundry tests
+
+```bash
+forge install
+
+forge test
+```
+
+Additionally, you can run the coverage:
+
+> Coverage might fail if the contract size exceeds the limit (covergae run without optimization)
+
+```
+npm run test:coverage
+```
+
+Get the contract size by running
+
+```bash
+npx hardhat size-contracts
+```
