@@ -33,7 +33,7 @@ We decided to not initialize these variables to a default value (as `bytes memor
 
 https://github.com/code-423n4/2023-06-lukso/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol#L157-L183
 
-\***\*\*\*\*\***\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\***\*\*\*\*\***Notes from the developers:\***\*\*\*\*\***\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\***\*\*\*\*\***
+**Notes from the developers:**
 
 This is intended behaviour and how the function is built to enable this feature.
 
@@ -71,7 +71,7 @@ Reentrancy in [LSP0ERC725AccountCore.universalReceiver(bytes32,bytes)](https://
 
 https://github.com/code-423n4/2023-06-lukso/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol#L428-L486
 
-\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***Notes from the developers:\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\***\*\*\*\*\***\*\*\*\*\***\*\*\*\*\***
+**Notes from the developers:**
 
 The `UniversalReceiver` event needs both `bytes` values returned by both external calls made to the default LSP1Delegate + the LSP1Delegate associated with a specific typeId. Both of these values after being returned are emitted in the `UniversalReceiver` event. Therefore because the UniversalReceiver emits these values, we cannot place the event before the external calls.
 
