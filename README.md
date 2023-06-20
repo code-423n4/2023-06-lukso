@@ -50,7 +50,7 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
 [![Telegram](https://img.shields.io/badge/Telegram-555?logo=telegram)](https://t.me/LUKSO)
 [![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
-[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/code-423n4/2023-06-lukso)
+[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts)
 [![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
 [![Docs](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
 
