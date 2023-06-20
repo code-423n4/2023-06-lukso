@@ -124,3 +124,7 @@ Automated findings output for the audit can be found [here](add link to report) 
 *Provide every step required to build the project from a fresh git clone, as well as steps to run the tests with a gas report.* 
 
 *Note: Many wardens run Slither as a first pass for testing.  Please document any known errors with no workaround.* 
+
+# Slither
+
+Any known issues from Slither for each contract are listed under the [`slither/`](./slither/) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
