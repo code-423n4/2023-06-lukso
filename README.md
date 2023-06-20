@@ -47,9 +47,13 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 ---
 
-[![Contracts svg](https://img.shields.io/badge/Contracts-555)](https://github.com/code-423n4/2023-06-lukso)
-[![LIPs svg](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
-[![Docs svg](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
+[![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
+[![Telegram](https://img.shields.io/badge/Telegram-555?logo=telegram)](https://t.me/LUKSO)
+[![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
+[![Website](https://img.shields.io/badge/Website-555)](https://lukso.network)
+[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/code-423n4/2023-06-lukso)
+[![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
+[![Docs](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
 
 # LUKSO audit details
 
