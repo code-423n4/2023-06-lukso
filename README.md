@@ -93,9 +93,9 @@ _[LSP1UniversalReceiver]_ is designed to facilitate a universally standardized w
 
 _[LSP1UniversalReceiverDelegate]_ standard formalize the procedure of reacting to specific actions. This standard is typically implemented once the `universalReceiver(..)` function is invoked.
 
-The `universalReceiver(..)` function is called with a unique bytes32 identifier. Subsequently, the universalReceiver function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the bytes32 as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique bytes32), the UniversalReceiverDelegate could contain logic that triggers a specific response such as reverting the entire transaction. 
+The `universalReceiver(..)` function is called with a unique `bytes32 typeId` identifier. Subsequently, the `universalReceiver(...)` function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the `bytes32` as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique `bytes32 typeId` like [`LSP7Tokens_RecipientNotification`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-7-DigitalAsset.md#transfer)), the UniversalReceiverDelegate could contain logic that triggers a specific response such as reverting the entire transaction. 
 
-The UniversalReceiverDelegate address can be changeable in the contract implementing the `universalReceiver(..)` function, also there could be the case where multiple UniversalReceiverDeleagtes exist.
+The UniversalReceiverDelegate address can be changed in the contract implementing the `universalReceiver(..)` function. Also there could be the case where multiple UniversalReceiverDelegates exist.
 
 ## LSP14Ownable2Step
 
@@ -105,7 +105,7 @@ _[LSP14Ownable2Step]_ is an advanced ownership module designed to enable contrac
 
 _[LSP17ContractExtension]_ is designed to extend a contract's functionality post-deployment. Once a contract with a set of functions is deployed on the blockchain, it becomes immutable, meaning that no additional functions can be added after deployment. 
 
-The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contract that should support standards and functions that get standardized and discussed in the future.
+The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension contract through the `fallback` function, instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contract that should support standards and functions that get standardized and discussed in the future.
 
 ## LSP20CallVerification
 
