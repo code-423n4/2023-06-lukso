@@ -471,18 +471,18 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 
 <!-- Links to Libraries -->
 
-[`ECDSA.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/cryptography/ECDSA.sol
-[`ERC165Checker.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/introspection/ERC165Checker.sol
-[`Address.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/Address.sol
-[`ERC165.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/introspection/ERC165.sol
-[`Initializable.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.8.2/contracts/proxy/utils/Initializable.sol
-[`EnumerableSet.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/structs/EnumerableSet.sol
-[`ERC725.constants.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/constants.sol
-[`ERC725Y.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725Y.sol
-[`ERC725YCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725YCore.sol
-[`ERC725X.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725X.sol
-[`ERC725XCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725XCore.sol
-[`OwnableUnset.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/custom/OwnableUnset.sol
+[`ECDSA.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/cryptography/ECDSA.sol
+[`ERC165Checker.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/introspection/ERC165Checker.sol
+[`Address.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/Address.sol
+[`ERC165.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/introspection/ERC165.sol
+[`Initializable.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.9.2/contracts/proxy/utils/Initializable.sol
+[`EnumerableSet.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/structs/EnumerableSet.sol
+[`ERC725.constants.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/constants.sol
+[`ERC725Y.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725Y.sol
+[`ERC725YCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725YCore.sol
+[`ERC725X.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725X.sol
+[`ERC725XCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725XCore.sol
+[`OwnableUnset.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/custom/OwnableUnset.sol
 [`BytesLib.sol`]: https://github.com/GNSPS/solidity-bytes-utils/blob/v0.8.0/contracts/BytesLib.sol
 
 <!-- prettier-ignore-end -->
