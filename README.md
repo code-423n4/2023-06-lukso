@@ -85,6 +85,36 @@ _Note for C4 wardens: Anything included in the automated findings output is cons
 
 _[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
 
+## LSP6KeyManager
+
+_[LSP6KeyManager]_ is a smart contract that acts as a controller for another contract it is linked to (a smart contract based account, a token contract, etc...). It enables the linked contract to be controlled by multiple addresses. Such addresses called _"controllers"_ can be granted different permissions defined by the LSP6 standard that allow them to perform different type of actions, including setting data on the ERC725Y storage of the linked account, or using the linked account to interact with other addresses on the network (transferring LYX, interact with tokens or any other smart contracts, etc...). LSP6 enables meta transactions in its interface via the `executeRelayCall(...)` function, where any executor address can dispatch transactions signed by an other controller, and pay the gas fees on behalf of this controller. Finally, the LSP6KeyManager also allows batching transactions via both `executeBatch(...)` and `executeRelayCallBatch(...)`
+
+## Tokens
+
+The new token standards on LUKSO share the following similarities:
+
+- flexible data key value store via LSP4
+- similar interface for the `transfer(...)` function (only difference is the 3rd parameter where LSP7 takes a `uint256 amount` while LSP8 takes a `bytes32 tokenId`).
+- notify the receiver of the token via LSP1, using the 4th parameter `bool allowNonLSP1Recipient` in the `transfer(...)` function.
+
+### LSP4DigitalAssetMetadata
+
+_LSP4DigitalAssetMetadata_ is a metadata standard that defines metadata keys to store information related to a digital asset inside its ERC725Y storage, including the token name (`LSP4TokenName`) and its symbol (`LSP4TokenSymbol`). It also defines a standard JSON structure that can contain information describing the asset. Such standard information include a description of the asset, an icon for the digital asset, links to find out more (e.g: website, ...), or any additional custom attributes. Finally, it defines a metadata key that can contain the list of creator addresses for this asset (`LSP4Creators[]`).
+
+### LSP7DigitalAsset
+
+_LSP7DigitalAsset_ is a standard that defines a fungible token, meaning tokens that are mutually interchangeable (one token has the same value as another token). Like ERC20, tokens can be transferred in quantities, where a token holder can transfer multiple tokens by specifying an `uint256 amount` when using the `transfer(...)` function. By default, LSP7 Digital Assets are divisible like fiat currencies, where 1 token can be divided in smaller units (e.g: 1/10th of a token), with their `decimals()` set to 18 by default. However, LSP7 includes a feature that enables to make the token non divisible via the `isNonDivisible` parameter on deployment.
+
+### LSP8IdentifiableDigitalAsset
+
+_LSP8IdentifiableDigitalAsset_ is a standard that defines a non fungible token, meaning tokens that are unique and distinguishable from each other (one token cannot be replaced by another token). Each tokens are uniquely represented by their `bytes32 tokenId`, and can be transfered via the `transfer(...)` function, where the given as a parameter to the `transfer(...)` function.
+
+LSP8 includes a feature that enables to define different types of tokens IDs via the `LSP8TokenIdType` metadata key. Token ID type varies from simple to complex, for instance:
+
+- the token Ids can be represented by an address that represent an ERC725Y smart contract that can holds metadata in its storage for this specific NFT (`LSP8TokenIdType == 1`).
+- the token Ids can be represented by a number that increment on each newly minted NFT (`LSP8TokenIdType == 2`).
+- the token Ids can be represented as `string` for unique NFT names (`LSP8TokenIdType == 5`).
+
 ## LSP14Ownable2Step
 
 _[LSP14Ownable2Step]_ is an advanced ownership module designed to enable contracts to have a clear ownership structure. It introduces a crucial feature of two-step processes for both ownership transfer and renouncement, which significantly reduces the likelihood of accidental or unauthorized changes to the contract's ownership. This enhanced security mechanism ensures that ownership actions require deliberate and careful confirmation, minimizing the risk of unintended transfers or renouncements. Using a two-step process where the new owner has to accept ownership ensures that the contract is always owned by an address that has control over it since the new owner explicitly accepts ownership, proving that it has control over its address.
@@ -314,13 +344,13 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP0ERC725AccountInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountInit.sol
 [`LSP0Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Constants.sol
 
----
+<!-- --- -->
 
 [`UniversalProfileInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInitAbstract.sol
 [`UniversalProfile.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfile.sol
 [`UniversalProfileInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInit.sol
 
----
+<!-- --- -->
 
 [`LSP1UniversalReceiverDelegateUP.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol
 [`LSP1Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Utils.sol
@@ -329,7 +359,7 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP1Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Constants.sol
 [`LSP1Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Errors.sol
 
----
+<!-- --- -->
 
 [`LSP4DigitalAssetMetadataInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadataInitAbstract.sol
 [`LSP4DigitalAssetMetadata.sol`]: chttps://github.com/code-423n4/2023-06-lukso/tree/main/ontracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol
@@ -338,7 +368,7 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`ILSP4Compatibility.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/ILSP4Compatibility.sol
 [`LSP4Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Errors.sol
 
----
+<!-- --- -->
 
 [`LSP6SetDataModule.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6SetDataModule.sol
 [`LSP6KeyManagerCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerCore.sol
@@ -352,7 +382,7 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP6KeyManager.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManager.sol
 [`LSP6KeyManagerInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerInit.sol
 
----
+<!-- --- -->
 
 [`LSP7DigitalAssetCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7DigitalAssetCore.sol
 [`LSP7CompatibleERC20InitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20InitAbstract.sol
@@ -375,7 +405,7 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP7BurnableInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7BurnableInitAbstract.sol
 [`LSP7Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7Constants.sol
 
----
+<!-- --- -->
 
 [`LSP8IdentifiableDigitalAssetCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol
 [`LSP8CompatibleERC721InitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721InitAbstract.sol
@@ -399,14 +429,14 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`ILSP8Mintable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/ILSP8Mintable.sol
 [`LSP8Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.s
 
----
+<!-- --- -->
 
 [`LSP14Ownable2Step.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Ownable2Step.sol
 [`ILSP14Ownable2Step.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/ILSP14Ownable2Step.sol
 [`LSP14Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Constants.sol
 [`LSP14Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Errors.sol
 
----
+<!-- --- -->
 
 [`LSP17Extendable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Extendable.sol
 [`LSP17Extension.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Extension.sol
@@ -414,14 +444,14 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP17Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Errors.sol
 [`LSP17Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Utils.sol
 
----
+<!-- --- -->
 
 [`LSP20CallVerification.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20CallVerification.sol
 [`ILSP20CallVerification.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/ILSP20CallVerification.sol
 [`LSP20Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Constants.sol
 [`LSP20Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Errors.sol
 
----
+<!-- --- -->
 
 [`EIP191Signer.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/Custom/EIP191Signer.sol
 [`LSP2Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol
