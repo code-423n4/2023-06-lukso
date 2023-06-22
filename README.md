@@ -312,9 +312,15 @@ _List any files/contracts that are out of scope for this audit._
 
 # Additional Context
 
-_Describe any novel or unique curve logic or mathematical models implemented in the contracts_
+- The **LSP1UniversalReceiverDelegateUP** contract will be utilized as the primary UniversalReceiverDelegate (not a UniversalReceiverDelegate mapped to a specific typeId via the `LSP1UniversalReceiverDelegate:<typeId> data key) for the majority of **UniversalProfiles** deployed on the network. Instead of deploying a UniversalReceiverDelegate for each individual UniversalProfile, this contract operates based on global variables and parameters. A single instance of this contract will be deployed and assigned to all UniversalProfiles.
+  
+  Additionally, this contract will be granted the `SUPER_SETDATA` and `REENTRANCY` permissions across all UniversalProfiles according to [LSP6KeyManager]. Given this design and architecture, it's essential to thoroughly investigate and identify potential bugs or vulnerabilities. Particular attention should be given to any possible loopholes that could allow for unintended write access to the storage of contracts beyond the `msg.sender` (the UniversalProfile initiating the call), bypassing of permissions, among other security concerns.
 
-_Sponsor, please confirm/edit the information below._
+- The architecture implemented in this repository comprises a core contract that encapsulates the main logic, and two contracts that inherit from this core contract. One is designed for the standard constructor version, and the other is designed as an initializable version. The initializable version is intentionally created for the use of MinimalProxies, not for upgradeable proxies (as of the current state). Consequently, no gaps have been introduced or need to respect the use of a separate package. 
+
+  Meanwhile, the LUKSO team is developing a transpiler to streamline this process. This transpiler will eliminate the need for the core contract, allowing for constructor contracts in a repository. Then, the transpiler will convert all the code into an initializable version that is compatible with both upgradeable and minimal proxies in a separate repository.
+
+- In the `execute(uint256,address,uint256,bytes)` function of **ERC725X**, no additional checks have been introduced to verify that the owner has not changed following a delegatecall. This is a design choice, as introducing such checks might give a false sense of security. It's possible that a malicious actor could momentarily alter the owner variable during the delegatecall, and do malicious action and reset it afterwards, thereby bypassing the check. Additionally, the importance of the owner variable may vary between different contracts and implementations. For instance, a delegatecall could modify the ERC725Y storage, which in certain cases might serve as the principal access point to the account. This is particularly relevant for when the account is owned by an **LSP6KeyManager**, where permissions are stored in the ERC725Y storage rather than being tied to the owner variable. 
 
 ## Scoping Details
 
