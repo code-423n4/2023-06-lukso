@@ -85,9 +85,27 @@ _Note for C4 wardens: Anything included in the automated findings output is cons
 
 _[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
 
+## LSP1UniversalReceiver
+
+_[LSP1UniversalReceiver]_ is designed to facilitate a universally standardized way of receiving notifications about various actions, such as token transfers, new followers, or updated information. The core function of this standard, named `universalReceiver(..)`, operates as a common notification gateway. It standardizes the process of emitting data received, making the contract implementing the LSP1 standard the gateway of knowing various information, such which tokens or followers you own. LSP1UniversalReceiver standardizes as well an optional process of reacting to the action being notified about using the LSP1UniversalReceiverDelegate.
+
+## LSP1UniversalReceiverDelegate
+
+_[LSP1UniversalReceiverDelegate]_ standard formalize the procedure of reacting to specific actions. This standard is typically implemented once the `universalReceiver(..)` function is invoked.
+
+The `universalReceiver(..)` function is called with a unique `bytes32 typeId` identifier. Subsequently, the `universalReceiver(...)` function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the `bytes32` as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique `bytes32 typeId` like [`LSP7Tokens_RecipientNotification`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-7-DigitalAsset.md#transfer)), the UniversalReceiverDelegate could contain logic that triggers a specific response such as reverting the entire transaction. 
+
+The UniversalReceiverDelegate address can be changed in the contract implementing the `universalReceiver(..)` function. Also there could be the case where multiple UniversalReceiverDelegates exist.
+
 ## LSP14Ownable2Step
 
 _[LSP14Ownable2Step]_ is an advanced ownership module designed to enable contracts to have a clear ownership structure. It introduces a crucial feature of two-step processes for both ownership transfer and renouncement, which significantly reduces the likelihood of accidental or unauthorized changes to the contract's ownership. This enhanced security mechanism ensures that ownership actions require deliberate and careful confirmation, minimizing the risk of unintended transfers or renouncements. Using a two-step process where the new owner has to accept ownership ensures that the contract is always owned by an address that has control over it since the new owner explicitly accepts ownership, proving that it has control over its address.
+
+## LSP17ContractExtension
+
+_[LSP17ContractExtension]_ is designed to extend a contract's functionality post-deployment. Once a contract with a set of functions is deployed on the blockchain, it becomes immutable, meaning that no additional functions can be added after deployment. 
+
+The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension contract through the `fallback` function, instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contract that should support standards and functions that get standardized and discussed in the future.
 
 ## LSP20CallVerification
 
