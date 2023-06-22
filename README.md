@@ -85,6 +85,18 @@ _Note for C4 wardens: Anything included in the automated findings output is cons
 
 _[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
 
+## LSP1UniversalReceiver
+
+_[LSP1UniversalReceiver]_ is designed to facilitate a universally standardized way of receiving notifications about various actions, such as token transfers, new followers, or updated information. The core function of this standard, named `universalReceiver(..)`, operates as a common notification gateway. It standardizes the process of emitting data received, making the contract implementing the LSP1 standard the gateway of knowing various information, such which tokens or followers you own. LSP1UniversalReceiver standardizes as well an optional process of reacting to the action being notified about using the LSP1UniversalReceiverDelegate.
+
+## LSP1UniversalReceiverDelegate
+
+_[LSP1UniversalReceiverDelegate]_ standard formalize the procedure of reacting to specific actions. This standard is typically implemented once the `universalReceiver(..)` function is invoked.
+
+The `universalReceiver(..)` function is called with a unique `bytes32 typeId` identifier. Subsequently, the `universalReceiver(...)` function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the `bytes32` as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique `bytes32 typeId` like [`LSP7Tokens_RecipientNotification`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-7-DigitalAsset.md#transfer)), the UniversalReceiverDelegate could contain logic that triggers a specific response such as reverting the entire transaction.
+
+The UniversalReceiverDelegate address can be changed in the contract implementing the `universalReceiver(..)` function. Also there could be the case where multiple UniversalReceiverDelegates exist.
+
 ## LSP6KeyManager
 
 _[LSP6KeyManager]_ is a smart contract that acts as a controller for another contract it is linked to (a smart contract based account, a token contract, etc...). It enables the linked contract to be controlled by multiple addresses. Such addresses called _"controllers"_ can be granted different permissions defined by the LSP6 standard that allow them to perform different type of actions, including setting data on the ERC725Y storage of the linked account, or using the linked account to interact with other addresses on the network (transferring LYX, interact with tokens or any other smart contracts, etc...). LSP6 enables meta transactions in its interface via the `executeRelayCall(...)` function, where any executor address can dispatch transactions signed by an other controller, and pay the gas fees on behalf of this controller. Finally, the LSP6KeyManager also allows batching transactions via both `executeBatch(...)` and `executeRelayCallBatch(...)`
@@ -118,6 +130,12 @@ LSP8 includes a feature that enables to define different types of tokens IDs via
 ## LSP14Ownable2Step
 
 _[LSP14Ownable2Step]_ is an advanced ownership module designed to enable contracts to have a clear ownership structure. It introduces a crucial feature of two-step processes for both ownership transfer and renouncement, which significantly reduces the likelihood of accidental or unauthorized changes to the contract's ownership. This enhanced security mechanism ensures that ownership actions require deliberate and careful confirmation, minimizing the risk of unintended transfers or renouncements. Using a two-step process where the new owner has to accept ownership ensures that the contract is always owned by an address that has control over it since the new owner explicitly accepts ownership, proving that it has control over its address.
+
+## LSP17ContractExtension
+
+_[LSP17ContractExtension]_ is designed to extend a contract's functionality post-deployment. Once a contract with a set of functions is deployed on the blockchain, it becomes immutable, meaning that no additional functions can be added after deployment.
+
+The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension contract through the `fallback` function, instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contract that should support standards and functions that get standardized and discussed in the future.
 
 ## LSP20CallVerification
 
@@ -501,18 +519,18 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 
 <!-- Links to Libraries -->
 
-[`ECDSA.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/cryptography/ECDSA.sol
-[`ERC165Checker.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/introspection/ERC165Checker.sol
-[`Address.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/Address.sol
-[`ERC165.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/introspection/ERC165.sol
-[`Initializable.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.8.2/contracts/proxy/utils/Initializable.sol
-[`EnumerableSet.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.8.2/contracts/utils/structs/EnumerableSet.sol
-[`ERC725.constants.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/constants.sol
-[`ERC725Y.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725Y.sol
-[`ERC725YCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725YCore.sol
-[`ERC725X.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725X.sol
-[`ERC725XCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/ERC725XCore.sol
-[`OwnableUnset.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.0.0/implementations/contracts/custom/OwnableUnset.sol
+[`ECDSA.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/cryptography/ECDSA.sol
+[`ERC165Checker.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/introspection/ERC165Checker.sol
+[`Address.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/Address.sol
+[`ERC165.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/introspection/ERC165.sol
+[`Initializable.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts-upgradeable/blob/v4.9.2/contracts/proxy/utils/Initializable.sol
+[`EnumerableSet.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/structs/EnumerableSet.sol
+[`ERC725.constants.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/constants.sol
+[`ERC725Y.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725Y.sol
+[`ERC725YCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725YCore.sol
+[`ERC725X.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725X.sol
+[`ERC725XCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725XCore.sol
+[`OwnableUnset.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/custom/OwnableUnset.sol
 [`BytesLib.sol`]: https://github.com/GNSPS/solidity-bytes-utils/blob/v0.8.0/contracts/BytesLib.sol
 
 <!-- prettier-ignore-end -->
