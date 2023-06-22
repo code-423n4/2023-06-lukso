@@ -81,6 +81,8 @@ _Note for C4 wardens: Anything included in the automated findings output is cons
 
 # Overview
 
+![Universal Profile architecture overview](https://docs.lukso.tech/assets/images/universal-profile-architecture-335f9157e3ab222ff460c5816b2b90d3.jpeg)
+
 ## LSP0ERC725Account
 
 _[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
@@ -108,6 +110,8 @@ The new token standards on LUKSO share the following similarities:
 - flexible data key value store via LSP4
 - similar interface for the `transfer(...)` function (only difference is the 3rd parameter where LSP7 takes a `uint256 amount` while LSP8 takes a `bytes32 tokenId`).
 - notify the receiver of the token via LSP1, using the 4th parameter `bool allowNonLSP1Recipient` in the `transfer(...)` function.
+
+![LSP4, LSP7 and LSP8 Diagram](https://docs.lukso.tech/assets/images/LUKSO-Tokens-NFT-Standards-e9dfdf720f0c776ef4d33a515ffdeaf8.jpeg)
 
 ### LSP4DigitalAssetMetadata
 
@@ -140,6 +144,8 @@ The LSP17ContractExtension standard provides a solution to this limitation. It d
 ## LSP20CallVerification
 
 _[LSP20CallVerification]_ is an innovative module designed to simplify access control rules verification within smart contracts. By implementing a standardized approach, this module enables seamless validation of whether an address possesses the necessary permissions to initiate a specific call.
+
+![LSP20 Diagram](https://docs.lukso.tech/assets/images/LSP20-example-LSP6-2af355425a5873f9474cf4329ce859a7.jpeg)
 
 _Please provide some context about the code being audited, and identify any areas of specific concern in reviewing the code. (This is a good place to link to your docs, if you have them.)_
 
