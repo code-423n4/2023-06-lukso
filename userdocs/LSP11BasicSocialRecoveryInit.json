@@ -1,0 +1,29 @@
+{
+  "events": {
+    "GuardianAdded(address)": {
+      "notice": "Emitted when setting a new guardian for the target"
+    },
+    "GuardianRemoved(address)": {
+      "notice": "Emitted when removing an existing guardian for the target"
+    },
+    "GuardiansThresholdChanged(uint256)": {
+      "notice": "Emitted when changing the guardian threshold"
+    },
+    "RecoveryProcessSuccessful(uint256,address,bytes32,address[])": {
+      "notice": "Emitted when the recovery process is finished by the controller who reached the guardian threshold and submitted the string that produce the secretHash"
+    },
+    "SecretHashChanged(bytes32)": {
+      "notice": "Emitted when changing the secret hash"
+    },
+    "SelectedNewController(uint256,address,address)": {
+      "notice": "Emitted when a guardian select a new potentiel controller address for the target"
+    }
+  },
+  "kind": "user",
+  "methods": {
+    "initialize(address,address)": {
+      "notice": "Sets the target and the owner addresses"
+    }
+  },
+  "version": 1
+}

@@ -261,7 +261,8 @@ export const ErrorSelectors = {
           details:
             "reverts when the call to the owner does not return the magic value",
           params: {
-            postCall: "The data returned by the call to the logic verifier",
+            postCall: "True if the execution call was done, False otherwise",
+            returnedData: "The data returned by the call to the logic verifier",
           },
         },
       ],
@@ -583,7 +584,8 @@ export const ErrorSelectors = {
           details:
             "reverts when the call to the owner does not return the magic value",
           params: {
-            postCall: "The data returned by the call to the logic verifier",
+            postCall: "True if the execution call was done, False otherwise",
+            returnedData: "The data returned by the call to the logic verifier",
           },
         },
       ],
@@ -10042,7 +10044,8 @@ export const ErrorSelectors = {
           details:
             "reverts when the call to the owner does not return the magic value",
           params: {
-            postCall: "The data returned by the call to the logic verifier",
+            postCall: "True if the execution call was done, False otherwise",
+            returnedData: "The data returned by the call to the logic verifier",
           },
         },
       ],
@@ -10364,7 +10367,8 @@ export const ErrorSelectors = {
           details:
             "reverts when the call to the owner does not return the magic value",
           params: {
-            postCall: "The data returned by the call to the logic verifier",
+            postCall: "True if the execution call was done, False otherwise",
+            returnedData: "The data returned by the call to the logic verifier",
           },
         },
       ],
@@ -17738,8 +17742,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_SenderNotification')`. - When notifying the new owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_RecipientNotification')`.",
         details:
-          "Transfer ownership of the contract from the current `owner()` to the `pendingOwner()`. Once this function is called: - the current `owner()` will loose access to the functions restricted to the `owner()` only. - the `pendingOwner()` will gain access to the functions restricted to the `owner()` only. Requirements: - MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_SenderNotification'). - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_RecipientNotification').",
+          "Transfer ownership of the contract from the current {`owner()`} to the {`pendingOwner()`}. Once this function is called: - the current {`owner()`} will loose access to the functions restricted to the {`owner()`} only. - the {`pendingOwner()`} will gain access to the functions restricted to the {`owner()`} only.",
       },
       userdoc: {
         notice:
@@ -17796,13 +17802,17 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Executes any call on other addresses.",
         params: {
-          data: "The call data to execute on `target`, or the bytecode of the contract to deploy Requirements: - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 Emits a {ValueReceived} event when receiving native tokens.",
+          data: "The call data to execute on `target`, or the bytecode of the contract to deploy.",
           operationType:
-            "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "The operation to execute: `CALL = 0`, `CREATE = 1` `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           target:
-            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (operation 1 and 2)",
+            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (`CREATE` & `CREATE2`).",
           value: "The amount of native tokens to transfer (in Wei).",
         },
       },
@@ -17835,16 +17845,20 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details:
           "Generic batch executor function that executes any call on other addresses",
         params: {
           datas:
-            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy Requirements: - The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) Emits a {ValueReceived} event when receiving native tokens.",
+            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy.",
           operationsType:
-            "The list of operations type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4",
+            "The list of operations type used: `CALL = 0`, `CREATE = 1`, `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           targets:
-            "The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).",
-          values: "The list of native token amounts to transfer (in Wei)",
+            "The list of addresses to call. `targets` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+          values: "The list of native token amounts to transfer (in Wei).",
         },
       },
     },
@@ -17915,7 +17929,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Handles two cases: - If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating        that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. - If the owner is a smart contract, it forwards the call of {isValidSignature} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature} on the account returns the        fail value, indicating that the signature is not valid.      - If the {isValidSignature} on the owner returned the magicValue, the {isValidSignature} on the account        returns the magicValue, indicating that it's a valid signature.",
+          "Handles two cases: 1. If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. 2. If the owner is a smart contract, it forwards the call of {isValidSignature()} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature()} on the account returns the fail value, indicating that the signature is not valid.      - If the {isValidSignature()} on the owner returned the magicValue, the {isValidSignature()} on the account returns the magicValue, indicating that it's a valid signature.",
         params: {
           dataHash: "The hash of the data to be validated.",
           signature:
@@ -17928,7 +17942,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of EIP-1271 by validating signatures of smart contracts according to their own logic.",
+          "Achieves the goal of [EIP-1271] by validating signatures of smart contracts according to their own logic.",
       },
     },
 
@@ -17961,7 +17975,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -17978,8 +17992,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:danger":
+          "Leaves the contract without an owner. Once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
       },
       userdoc: {
         notice:
@@ -18006,11 +18022,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event.",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets singular data for a given `dataKey`",
         params: {
           dataKey: "The key to retrieve stored value",
-          dataValue:
-            "The value to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event.",
+          dataValue: "The value to set",
         },
       },
     },
@@ -18034,11 +18053,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event. (on each iteration of setting data)",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets array of data for multiple given `dataKeys`",
         params: {
           dataKeys: "The array of data keys for values to set",
-          dataValues:
-            "The array of values to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event. (on each iteration of setting data)",
+          dataValues: "The array of values to set",
         },
       },
     },
@@ -18069,7 +18091,7 @@ export const FunctionSelectors = {
 
     /**
      * function transferOwnership(
-     *  address _pendingOwner
+     *  address pendingNewOwner
      * )
      *
      * 0xf2fde38b = keccak256('transferOwnership(address)')
@@ -18077,19 +18099,18 @@ export const FunctionSelectors = {
     "0xf2fde38b": {
       sig: "transferOwnership(address)",
       inputs: [
-        { internalType: "address", name: "_pendingOwner", type: "address" },
+        { internalType: "address", name: "pendingNewOwner", type: "address" },
       ],
       name: "transferOwnership",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorized address that passes the verification check performed on the owner according to [LSP20-CallVerification] specification. - When notifying the new owner via LSP1, the `typeId` used MUST be `keccak256('LSP0OwnershipTransferStarted')`. - Pending owner cannot accept ownership in the same tx via the LSP1 hook.",
         details:
-          "Sets the pending owner address as an address that should call {acceptOwnership} in order to complete the ownership transfer of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver} on the pending owner if it's an address that supports LSP1.",
-        params: {
-          _pendingOwner:
-            "The address of the new pending owner. Requirements: - MUST pass when called by the owner or by an authorized address that passes the verification check performed   on the owner according to LSP20 - CallVerification specification. - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferStarted'). - pending owner cannot accept ownership in the same tx via the LSP1 hook.",
-        },
+          "Sets the address of the `pendingNewOwner` as a pending owner that should call {`acceptOwnership()`} in order to complete the ownership transfer to become the new {`owner()`} of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver()} on the pending owner if it's an address that supports LSP1.",
+        params: { pendingNewOwner: "The address of the new pending owner." },
       },
       userdoc: {
         notice:
@@ -18118,8 +18139,10 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} when receiving native tokens. - {UniversalReceiver} event.",
         details:
-          "The function performs the following steps: - Emits {ValueReceived} when receiving native tokens. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY}.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY + <bytes32 typeId>}.   (Check {LSP2-ERC725YJSONSchema} for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Emits a {UniversalReceiver} event.",
+          "The function performs the following steps: 1. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY]`.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function. 2. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY] + <bytes32 typeId>`.   (Check [LSP2-ERC725YJSONSchema] for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function.",
         params: {
           receivedData: "The data received.",
           typeId: "The type of call received.",
@@ -18131,7 +18154,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of LSP1-UniversalReceiver by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
+          "Achieves the goal of [LSP1-UniversalReceiver] by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
       },
     },
   },
@@ -18177,8 +18200,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_SenderNotification')`. - When notifying the new owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_RecipientNotification')`.",
         details:
-          "Transfer ownership of the contract from the current `owner()` to the `pendingOwner()`. Once this function is called: - the current `owner()` will loose access to the functions restricted to the `owner()` only. - the `pendingOwner()` will gain access to the functions restricted to the `owner()` only. Requirements: - MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_SenderNotification'). - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_RecipientNotification').",
+          "Transfer ownership of the contract from the current {`owner()`} to the {`pendingOwner()`}. Once this function is called: - the current {`owner()`} will loose access to the functions restricted to the {`owner()`} only. - the {`pendingOwner()`} will gain access to the functions restricted to the {`owner()`} only.",
       },
       userdoc: {
         notice:
@@ -18235,13 +18260,17 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Executes any call on other addresses.",
         params: {
-          data: "The call data to execute on `target`, or the bytecode of the contract to deploy Requirements: - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 Emits a {ValueReceived} event when receiving native tokens.",
+          data: "The call data to execute on `target`, or the bytecode of the contract to deploy.",
           operationType:
-            "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "The operation to execute: `CALL = 0`, `CREATE = 1` `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           target:
-            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (operation 1 and 2)",
+            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (`CREATE` & `CREATE2`).",
           value: "The amount of native tokens to transfer (in Wei).",
         },
       },
@@ -18274,16 +18303,20 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details:
           "Generic batch executor function that executes any call on other addresses",
         params: {
           datas:
-            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy Requirements: - The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) Emits a {ValueReceived} event when receiving native tokens.",
+            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy.",
           operationsType:
-            "The list of operations type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4",
+            "The list of operations type used: `CALL = 0`, `CREATE = 1`, `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           targets:
-            "The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).",
-          values: "The list of native token amounts to transfer (in Wei)",
+            "The list of addresses to call. `targets` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+          values: "The list of native token amounts to transfer (in Wei).",
         },
       },
     },
@@ -18336,22 +18369,26 @@ export const FunctionSelectors = {
 
     /**
      * function initialize(
-     *  address newOwner
+     *  address initialOwner
      * )
      *
      * 0xc4d66de8 = keccak256('initialize(address)')
      */
     "0xc4d66de8": {
       sig: "initialize(address)",
-      inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+      inputs: [
+        { internalType: "address", name: "initialOwner", type: "address" },
+      ],
       name: "initialize",
       outputs: [],
       stateMutability: "payable",
       type: "function",
       devdoc: {
-        details: "Sets the owner of the contract",
-        params: { newOwner: "the owner of the contract" },
+        details:
+          "Set `initialOwner` as the contract owner. The `initialOwner` will then be allowed to call protected functions marked with the `onlyOwner` modifier. The `initialize(address)` function also allows funding the contract on initialization. Emitted Events: - ValueReceived: when the contract is funded on initialization.",
+        params: { initialOwner: "the owner of the contract" },
       },
+      userdoc: { notice: "Initializing the contract owner to: `initialOwner`" },
     },
 
     /**
@@ -18374,7 +18411,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Handles two cases: - If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating        that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. - If the owner is a smart contract, it forwards the call of {isValidSignature} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature} on the account returns the        fail value, indicating that the signature is not valid.      - If the {isValidSignature} on the owner returned the magicValue, the {isValidSignature} on the account        returns the magicValue, indicating that it's a valid signature.",
+          "Handles two cases: 1. If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. 2. If the owner is a smart contract, it forwards the call of {isValidSignature()} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature()} on the account returns the fail value, indicating that the signature is not valid.      - If the {isValidSignature()} on the owner returned the magicValue, the {isValidSignature()} on the account returns the magicValue, indicating that it's a valid signature.",
         params: {
           dataHash: "The hash of the data to be validated.",
           signature:
@@ -18387,7 +18424,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of EIP-1271 by validating signatures of smart contracts according to their own logic.",
+          "Achieves the goal of [EIP-1271] by validating signatures of smart contracts according to their own logic.",
       },
     },
 
@@ -18420,7 +18457,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -18437,8 +18474,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:danger":
+          "Leaves the contract without an owner. Once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
       },
       userdoc: {
         notice:
@@ -18465,11 +18504,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event.",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets singular data for a given `dataKey`",
         params: {
           dataKey: "The key to retrieve stored value",
-          dataValue:
-            "The value to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event.",
+          dataValue: "The value to set",
         },
       },
     },
@@ -18493,11 +18535,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event. (on each iteration of setting data)",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets array of data for multiple given `dataKeys`",
         params: {
           dataKeys: "The array of data keys for values to set",
-          dataValues:
-            "The array of values to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event. (on each iteration of setting data)",
+          dataValues: "The array of values to set",
         },
       },
     },
@@ -18528,7 +18573,7 @@ export const FunctionSelectors = {
 
     /**
      * function transferOwnership(
-     *  address _pendingOwner
+     *  address pendingNewOwner
      * )
      *
      * 0xf2fde38b = keccak256('transferOwnership(address)')
@@ -18536,19 +18581,18 @@ export const FunctionSelectors = {
     "0xf2fde38b": {
       sig: "transferOwnership(address)",
       inputs: [
-        { internalType: "address", name: "_pendingOwner", type: "address" },
+        { internalType: "address", name: "pendingNewOwner", type: "address" },
       ],
       name: "transferOwnership",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorized address that passes the verification check performed on the owner according to [LSP20-CallVerification] specification. - When notifying the new owner via LSP1, the `typeId` used MUST be `keccak256('LSP0OwnershipTransferStarted')`. - Pending owner cannot accept ownership in the same tx via the LSP1 hook.",
         details:
-          "Sets the pending owner address as an address that should call {acceptOwnership} in order to complete the ownership transfer of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver} on the pending owner if it's an address that supports LSP1.",
-        params: {
-          _pendingOwner:
-            "The address of the new pending owner. Requirements: - MUST pass when called by the owner or by an authorized address that passes the verification check performed   on the owner according to LSP20 - CallVerification specification. - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferStarted'). - pending owner cannot accept ownership in the same tx via the LSP1 hook.",
-        },
+          "Sets the address of the `pendingNewOwner` as a pending owner that should call {`acceptOwnership()`} in order to complete the ownership transfer to become the new {`owner()`} of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver()} on the pending owner if it's an address that supports LSP1.",
+        params: { pendingNewOwner: "The address of the new pending owner." },
       },
       userdoc: {
         notice:
@@ -18577,8 +18621,10 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} when receiving native tokens. - {UniversalReceiver} event.",
         details:
-          "The function performs the following steps: - Emits {ValueReceived} when receiving native tokens. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY}.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY + <bytes32 typeId>}.   (Check {LSP2-ERC725YJSONSchema} for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Emits a {UniversalReceiver} event.",
+          "The function performs the following steps: 1. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY]`.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function. 2. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY] + <bytes32 typeId>`.   (Check [LSP2-ERC725YJSONSchema] for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function.",
         params: {
           receivedData: "The data received.",
           typeId: "The type of call received.",
@@ -18590,7 +18636,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of LSP1-UniversalReceiver by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
+          "Achieves the goal of [LSP1-UniversalReceiver] by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
       },
     },
   },
@@ -32090,7 +32136,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -32108,7 +32154,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a two step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner.",
       },
     },
 
@@ -32207,10 +32253,7 @@ export const FunctionSelectors = {
       devdoc: {
         details:
           "same as ILSP14.transferOwnership with the additional requirement: Requirements:  - when notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP9OwnershipTransferStarted')",
-        params: {
-          newOwner:
-            "the address of the new owner. Requirements: - `newOwner` MUST NOT accept ownership of the contract in the same transaction.",
-        },
+        params: { newOwner: "the address of the new owner." },
       },
     },
 
@@ -32486,7 +32529,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -32504,7 +32547,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a two step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner.",
       },
     },
 
@@ -32603,10 +32646,7 @@ export const FunctionSelectors = {
       devdoc: {
         details:
           "same as ILSP14.transferOwnership with the additional requirement: Requirements:  - when notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP9OwnershipTransferStarted')",
-        params: {
-          newOwner:
-            "the address of the new owner. Requirements: - `newOwner` MUST NOT accept ownership of the contract in the same transaction.",
-        },
+        params: { newOwner: "the address of the new owner." },
       },
     },
 
@@ -32852,8 +32892,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_SenderNotification')`. - When notifying the new owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_RecipientNotification')`.",
         details:
-          "Transfer ownership of the contract from the current `owner()` to the `pendingOwner()`. Once this function is called: - the current `owner()` will loose access to the functions restricted to the `owner()` only. - the `pendingOwner()` will gain access to the functions restricted to the `owner()` only. Requirements: - MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_SenderNotification'). - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_RecipientNotification').",
+          "Transfer ownership of the contract from the current {`owner()`} to the {`pendingOwner()`}. Once this function is called: - the current {`owner()`} will loose access to the functions restricted to the {`owner()`} only. - the {`pendingOwner()`} will gain access to the functions restricted to the {`owner()`} only.",
       },
       userdoc: {
         notice:
@@ -32910,13 +32952,17 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Executes any call on other addresses.",
         params: {
-          data: "The call data to execute on `target`, or the bytecode of the contract to deploy Requirements: - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 Emits a {ValueReceived} event when receiving native tokens.",
+          data: "The call data to execute on `target`, or the bytecode of the contract to deploy.",
           operationType:
-            "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "The operation to execute: `CALL = 0`, `CREATE = 1` `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           target:
-            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (operation 1 and 2)",
+            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (`CREATE` & `CREATE2`).",
           value: "The amount of native tokens to transfer (in Wei).",
         },
       },
@@ -32949,16 +32995,20 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details:
           "Generic batch executor function that executes any call on other addresses",
         params: {
           datas:
-            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy Requirements: - The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) Emits a {ValueReceived} event when receiving native tokens.",
+            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy.",
           operationsType:
-            "The list of operations type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4",
+            "The list of operations type used: `CALL = 0`, `CREATE = 1`, `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           targets:
-            "The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).",
-          values: "The list of native token amounts to transfer (in Wei)",
+            "The list of addresses to call. `targets` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+          values: "The list of native token amounts to transfer (in Wei).",
         },
       },
     },
@@ -33029,7 +33079,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Handles two cases: - If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating        that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. - If the owner is a smart contract, it forwards the call of {isValidSignature} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature} on the account returns the        fail value, indicating that the signature is not valid.      - If the {isValidSignature} on the owner returned the magicValue, the {isValidSignature} on the account        returns the magicValue, indicating that it's a valid signature.",
+          "Handles two cases: 1. If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. 2. If the owner is a smart contract, it forwards the call of {isValidSignature()} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature()} on the account returns the fail value, indicating that the signature is not valid.      - If the {isValidSignature()} on the owner returned the magicValue, the {isValidSignature()} on the account returns the magicValue, indicating that it's a valid signature.",
         params: {
           dataHash: "The hash of the data to be validated.",
           signature:
@@ -33042,7 +33092,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of EIP-1271 by validating signatures of smart contracts according to their own logic.",
+          "Achieves the goal of [EIP-1271] by validating signatures of smart contracts according to their own logic.",
       },
     },
 
@@ -33075,7 +33125,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -33092,8 +33142,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:danger":
+          "Leaves the contract without an owner. Once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
       },
       userdoc: {
         notice:
@@ -33120,11 +33172,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event.",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets singular data for a given `dataKey`",
         params: {
           dataKey: "The key to retrieve stored value",
-          dataValue:
-            "The value to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event.",
+          dataValue: "The value to set",
         },
       },
     },
@@ -33148,11 +33203,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event. (on each iteration of setting data)",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets array of data for multiple given `dataKeys`",
         params: {
           dataKeys: "The array of data keys for values to set",
-          dataValues:
-            "The array of values to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event. (on each iteration of setting data)",
+          dataValues: "The array of values to set",
         },
       },
     },
@@ -33183,7 +33241,7 @@ export const FunctionSelectors = {
 
     /**
      * function transferOwnership(
-     *  address _pendingOwner
+     *  address pendingNewOwner
      * )
      *
      * 0xf2fde38b = keccak256('transferOwnership(address)')
@@ -33191,19 +33249,18 @@ export const FunctionSelectors = {
     "0xf2fde38b": {
       sig: "transferOwnership(address)",
       inputs: [
-        { internalType: "address", name: "_pendingOwner", type: "address" },
+        { internalType: "address", name: "pendingNewOwner", type: "address" },
       ],
       name: "transferOwnership",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorized address that passes the verification check performed on the owner according to [LSP20-CallVerification] specification. - When notifying the new owner via LSP1, the `typeId` used MUST be `keccak256('LSP0OwnershipTransferStarted')`. - Pending owner cannot accept ownership in the same tx via the LSP1 hook.",
         details:
-          "Sets the pending owner address as an address that should call {acceptOwnership} in order to complete the ownership transfer of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver} on the pending owner if it's an address that supports LSP1.",
-        params: {
-          _pendingOwner:
-            "The address of the new pending owner. Requirements: - MUST pass when called by the owner or by an authorized address that passes the verification check performed   on the owner according to LSP20 - CallVerification specification. - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferStarted'). - pending owner cannot accept ownership in the same tx via the LSP1 hook.",
-        },
+          "Sets the address of the `pendingNewOwner` as a pending owner that should call {`acceptOwnership()`} in order to complete the ownership transfer to become the new {`owner()`} of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver()} on the pending owner if it's an address that supports LSP1.",
+        params: { pendingNewOwner: "The address of the new pending owner." },
       },
       userdoc: {
         notice:
@@ -33232,8 +33289,10 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} when receiving native tokens. - {UniversalReceiver} event.",
         details:
-          "The function performs the following steps: - Emits {ValueReceived} when receiving native tokens. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY}.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY + <bytes32 typeId>}.   (Check {LSP2-ERC725YJSONSchema} for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Emits a {UniversalReceiver} event.",
+          "The function performs the following steps: 1. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY]`.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function. 2. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY] + <bytes32 typeId>`.   (Check [LSP2-ERC725YJSONSchema] for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function.",
         params: {
           receivedData: "The data received.",
           typeId: "The type of call received.",
@@ -33245,7 +33304,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of LSP1-UniversalReceiver by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
+          "Achieves the goal of [LSP1-UniversalReceiver] by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
       },
     },
   },
@@ -33291,8 +33350,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_SenderNotification')`. - When notifying the new owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_RecipientNotification')`.",
         details:
-          "Transfer ownership of the contract from the current `owner()` to the `pendingOwner()`. Once this function is called: - the current `owner()` will loose access to the functions restricted to the `owner()` only. - the `pendingOwner()` will gain access to the functions restricted to the `owner()` only. Requirements: - MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_SenderNotification'). - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferred_RecipientNotification').",
+          "Transfer ownership of the contract from the current {`owner()`} to the {`pendingOwner()`}. Once this function is called: - the current {`owner()`} will loose access to the functions restricted to the {`owner()`} only. - the {`pendingOwner()`} will gain access to the functions restricted to the {`owner()`} only.",
       },
       userdoc: {
         notice:
@@ -33349,13 +33410,17 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Executes any call on other addresses.",
         params: {
-          data: "The call data to execute on `target`, or the bytecode of the contract to deploy Requirements: - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 Emits a {ValueReceived} event when receiving native tokens.",
+          data: "The call data to execute on `target`, or the bytecode of the contract to deploy.",
           operationType:
-            "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3 DELEGATECALL = 4",
+            "The operation to execute: `CALL = 0`, `CREATE = 1` `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           target:
-            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (operation 1 and 2)",
+            "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (`CREATE` & `CREATE2`).",
           value: "The amount of native tokens to transfer (in Wei).",
         },
       },
@@ -33388,16 +33453,20 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) - {ValueReceived} event when receiving native tokens.",
+        "custom:requirements":
+          "- The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details:
           "Generic batch executor function that executes any call on other addresses",
         params: {
           datas:
-            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy Requirements: - The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is {STATICCALL} or {DELEGATECALL}, `value` SHOULD be 0. - `target` SHOULD be address(0) when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) Emits a {ValueReceived} event when receiving native tokens.",
+            "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy.",
           operationsType:
-            "The list of operations type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4",
+            "The list of operations type used: `CALL = 0`, `CREATE = 1`, `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
           targets:
-            "The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).",
-          values: "The list of native token amounts to transfer (in Wei)",
+            "The list of addresses to call. `targets` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+          values: "The list of native token amounts to transfer (in Wei).",
         },
       },
     },
@@ -33450,23 +33519,26 @@ export const FunctionSelectors = {
 
     /**
      * function initialize(
-     *  address newOwner
+     *  address initialOwner
      * )
      *
      * 0xc4d66de8 = keccak256('initialize(address)')
      */
     "0xc4d66de8": {
       sig: "initialize(address)",
-      inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+      inputs: [
+        { internalType: "address", name: "initialOwner", type: "address" },
+      ],
       name: "initialize",
       outputs: [],
       stateMutability: "payable",
       type: "function",
-      devdoc: { params: { newOwner: "the owner of the contract" } },
-      userdoc: {
-        notice:
-          "Sets the owner of the contract and sets the SupportedStandards:LSP3UniversalProfile key",
+      devdoc: {
+        details:
+          "Set `initialOwner` as the contract owner and set the `SupportedStandards:LSP3UniversalProfile` data key in the ERC725Y data key/value store. The `initialOwner` will then be allowed to call protected functions marked with the `onlyOwner` modifier. The `initialize(address)` function also allows funding the contract on initialization. Emitted Events: - ValueReceived: when the contract is funded on initialization.",
+        params: { initialOwner: "the owner of the contract" },
       },
+      userdoc: { notice: "Initializing the contract owner to: `initialOwner`" },
     },
 
     /**
@@ -33489,7 +33561,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "Handles two cases: - If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating        that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. - If the owner is a smart contract, it forwards the call of {isValidSignature} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature} on the account returns the        fail value, indicating that the signature is not valid.      - If the {isValidSignature} on the owner returned the magicValue, the {isValidSignature} on the account        returns the magicValue, indicating that it's a valid signature.",
+          "Handles two cases: 1. If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. 2. If the owner is a smart contract, it forwards the call of {isValidSignature()} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature()} on the account returns the fail value, indicating that the signature is not valid.      - If the {isValidSignature()} on the owner returned the magicValue, the {isValidSignature()} on the account returns the magicValue, indicating that it's a valid signature.",
         params: {
           dataHash: "The hash of the data to be validated.",
           signature:
@@ -33502,7 +33574,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of EIP-1271 by validating signatures of smart contracts according to their own logic.",
+          "Achieves the goal of [EIP-1271] by validating signatures of smart contracts according to their own logic.",
       },
     },
 
@@ -33535,7 +33607,7 @@ export const FunctionSelectors = {
       type: "function",
       devdoc: {
         details:
-          "The address that ownership of the contract is transferred to. This address may use `acceptOwnership()` to gain ownership of the contract.",
+          "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract.",
       },
     },
 
@@ -33552,8 +33624,10 @@ export const FunctionSelectors = {
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:danger":
+          "Leaves the contract without an owner. Once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
         details:
-          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification WARNING: once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+          "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
       },
       userdoc: {
         notice:
@@ -33580,11 +33654,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event.",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets singular data for a given `dataKey`",
         params: {
           dataKey: "The key to retrieve stored value",
-          dataValue:
-            "The value to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event.",
+          dataValue: "The value to set",
         },
       },
     },
@@ -33608,11 +33685,14 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} event when receiving native tokens. - {DataChanged} event. (on each iteration of setting data)",
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
         details: "Sets array of data for multiple given `dataKeys`",
         params: {
           dataKeys: "The array of data keys for values to set",
-          dataValues:
-            "The array of values to set Requirements: - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to LSP20 - CallVerification specification Emits a {ValueReceived} event when receiving native tokens. Emits a {DataChanged} event. (on each iteration of setting data)",
+          dataValues: "The array of values to set",
         },
       },
     },
@@ -33643,7 +33723,7 @@ export const FunctionSelectors = {
 
     /**
      * function transferOwnership(
-     *  address _pendingOwner
+     *  address pendingNewOwner
      * )
      *
      * 0xf2fde38b = keccak256('transferOwnership(address)')
@@ -33651,19 +33731,18 @@ export const FunctionSelectors = {
     "0xf2fde38b": {
       sig: "transferOwnership(address)",
       inputs: [
-        { internalType: "address", name: "_pendingOwner", type: "address" },
+        { internalType: "address", name: "pendingNewOwner", type: "address" },
       ],
       name: "transferOwnership",
       outputs: [],
       stateMutability: "nonpayable",
       type: "function",
       devdoc: {
+        "custom:requirements":
+          "- MUST pass when called by the owner or by an authorized address that passes the verification check performed on the owner according to [LSP20-CallVerification] specification. - When notifying the new owner via LSP1, the `typeId` used MUST be `keccak256('LSP0OwnershipTransferStarted')`. - Pending owner cannot accept ownership in the same tx via the LSP1 hook.",
         details:
-          "Sets the pending owner address as an address that should call {acceptOwnership} in order to complete the ownership transfer of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver} on the pending owner if it's an address that supports LSP1.",
-        params: {
-          _pendingOwner:
-            "The address of the new pending owner. Requirements: - MUST pass when called by the owner or by an authorized address that passes the verification check performed   on the owner according to LSP20 - CallVerification specification. - When notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP0OwnershipTransferStarted'). - pending owner cannot accept ownership in the same tx via the LSP1 hook.",
-        },
+          "Sets the address of the `pendingNewOwner` as a pending owner that should call {`acceptOwnership()`} in order to complete the ownership transfer to become the new {`owner()`} of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver()} on the pending owner if it's an address that supports LSP1.",
+        params: { pendingNewOwner: "The address of the new pending owner." },
       },
       userdoc: {
         notice:
@@ -33692,8 +33771,10 @@ export const FunctionSelectors = {
       stateMutability: "payable",
       type: "function",
       devdoc: {
+        "custom:events":
+          "- {ValueReceived} when receiving native tokens. - {UniversalReceiver} event.",
         details:
-          "The function performs the following steps: - Emits {ValueReceived} when receiving native tokens. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY}.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Query the ERC725Y storage with the data key {_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY + <bytes32 typeId>}.   (Check {LSP2-ERC725YJSONSchema} for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting        of 20 bytes of {msg.sender} and 32 bytes of {msg.value}. If not, continue the execution of the function. - Emits a {UniversalReceiver} event.",
+          "The function performs the following steps: 1. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY]`.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function. 2. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY] + <bytes32 typeId>`.   (Check [LSP2-ERC725YJSONSchema] for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function.",
         params: {
           receivedData: "The data received.",
           typeId: "The type of call received.",
@@ -33705,7 +33786,7 @@ export const FunctionSelectors = {
       },
       userdoc: {
         notice:
-          "Achieves the goal of LSP1-UniversalReceiver by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
+          "Achieves the goal of [LSP1-UniversalReceiver] by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract.",
       },
     },
   },

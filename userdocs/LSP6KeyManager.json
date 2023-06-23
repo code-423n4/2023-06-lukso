@@ -1,0 +1,18 @@
+{
+  "kind": "user",
+  "methods": {
+    "constructor": {
+      "notice": "Initiate the account with the address of the ERC725Account contract and sets LSP6KeyManager InterfaceId"
+    },
+    "execute(bytes)": {
+      "notice": "execute the following payload on the ERC725Account: `payload`"
+    },
+    "getNonce(address,uint128)": {
+      "notice": "get latest nonce for `from` in channel ID: `channelId`"
+    },
+    "target()": {
+      "notice": "returns the address of the account linked to this KeyManager"
+    }
+  },
+  "version": 1
+}

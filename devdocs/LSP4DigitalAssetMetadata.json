@@ -1,0 +1,84 @@
+{
+  "author": "Matthew Stevens",
+  "details": "Implementation of a LSP8 compliant contract.",
+  "errors": {
+    "ERC725Y_DataKeysValuesEmptyArray()": [
+      {
+        "details": "reverts when one of the array parameter provided to `setDataBatch` is an empty array"
+      }
+    ],
+    "ERC725Y_DataKeysValuesLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of elements in the lists of data keys and data values when calling setDataBatch."
+      }
+    ],
+    "ERC725Y_MsgValueDisallowed()": [
+      {
+        "details": "reverts when sending value to the `setData(..)` functions"
+      }
+    ],
+    "LSP4TokenNameNotEditable()": [
+      {
+        "details": "Reverts when trying to edit the data key `LSP4TokenName` after the digital asset contract has been deployed.      The `LSP4TokenName` data key is located inside the ERC725Y Data key-value store of the digital asset contract.      It can be set only once inside the constructor/initializer when the digital asset contract is being deployed."
+      }
+    ],
+    "LSP4TokenSymbolNotEditable()": [
+      {
+        "details": "Reverts when trying to edit the data key `LSP4TokenSymbol` after the digital asset contract has been deployed.      The `LSP4TokenSymbol` data key is located inside the ERC725Y Data key-value store of the digital asset contract.      It can be set only once inside the constructor/initializer when the digital asset contract is being deployed."
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "constructor": {
+      "params": {
+        "name_": "The name of the token",
+        "newOwner_": "The owner of the token contract",
+        "symbol_": "The symbol of the token"
+      }
+    },
+    "getData(bytes32)": {
+      "params": {
+        "dataKey": "The key which value to retrieve"
+      },
+      "returns": {
+        "dataValue": "The data stored at the key"
+      }
+    },
+    "getDataBatch(bytes32[])": {
+      "params": {
+        "dataKeys": "The array of keys which values to retrieve"
+      },
+      "returns": {
+        "dataValues": "The array of data stored at multiple keys"
+      }
+    },
+    "owner()": {
+      "details": "Returns the address of the current owner."
+    },
+    "renounceOwnership()": {
+      "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+    },
+    "setData(bytes32,bytes)": {
+      "params": {
+        "dataKey": "The key to retrieve stored value",
+        "dataValue": "The value to set SHOULD only be callable by the owner of the contract set via ERC173 The function is marked as payable to enable flexibility on child contracts If the function is not intended to receive value, an additional check should be implemented to check that value equal 0. Emits a {DataChanged} event."
+      }
+    },
+    "setDataBatch(bytes32[],bytes[])": {
+      "details": "Sets array of data for multiple given `dataKeys` SHOULD only be callable by the owner of the contract set via ERC173 The function is marked as payable to enable flexibility on child contracts If the function is not intended to receive value, an additional check should be implemented to check that value equal 0. Emits a {DataChanged} event.",
+      "params": {
+        "dataKeys": "The array of data keys for values to set",
+        "dataValues": "The array of values to set"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "See {IERC165-supportsInterface}."
+    },
+    "transferOwnership(address)": {
+      "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+    }
+  },
+  "title": "LSP4DigitalAssetMetadata",
+  "version": 1
+}

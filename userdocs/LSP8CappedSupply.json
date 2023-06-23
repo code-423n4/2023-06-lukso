@@ -1,0 +1,23 @@
+{
+  "events": {
+    "DataChanged(bytes32,bytes)": {
+      "notice": "Emitted when data at a key is changed"
+    }
+  },
+  "kind": "user",
+  "methods": {
+    "constructor": {
+      "notice": "Sets the token max supply"
+    },
+    "getData(bytes32)": {
+      "notice": "Gets singular data at a given `dataKey`"
+    },
+    "getDataBatch(bytes32[])": {
+      "notice": "Gets array of data for multiple given keys"
+    },
+    "setData(bytes32,bytes)": {
+      "notice": "Sets singular data for a given `dataKey`"
+    }
+  },
+  "version": 1
+}

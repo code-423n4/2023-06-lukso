@@ -1,0 +1,245 @@
+{
+  "details": "LSP8 extension.",
+  "errors": {
+    "ERC725Y_DataKeysValuesEmptyArray()": [
+      {
+        "details": "reverts when one of the array parameter provided to `setDataBatch` is an empty array"
+      }
+    ],
+    "ERC725Y_DataKeysValuesLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of elements in the lists of data keys and data values when calling setDataBatch."
+      }
+    ],
+    "ERC725Y_MsgValueDisallowed()": [
+      {
+        "details": "reverts when sending value to the `setData(..)` functions"
+      }
+    ],
+    "LSP4TokenNameNotEditable()": [
+      {
+        "details": "Reverts when trying to edit the data key `LSP4TokenName` after the digital asset contract has been deployed.      The `LSP4TokenName` data key is located inside the ERC725Y Data key-value store of the digital asset contract.      It can be set only once inside the constructor/initializer when the digital asset contract is being deployed."
+      }
+    ],
+    "LSP4TokenSymbolNotEditable()": [
+      {
+        "details": "Reverts when trying to edit the data key `LSP4TokenSymbol` after the digital asset contract has been deployed.      The `LSP4TokenSymbol` data key is located inside the ERC725Y Data key-value store of the digital asset contract.      It can be set only once inside the constructor/initializer when the digital asset contract is being deployed."
+      }
+    ],
+    "LSP8CannotSendToAddressZero()": [
+      {
+        "details": "reverts when trying to send token to the zero address."
+      }
+    ],
+    "LSP8CannotSendToSelf()": [
+      {
+        "details": "reverts when specifying the same address for `from` and `to` in a token transfer."
+      }
+    ],
+    "LSP8CannotUseAddressZeroAsOperator()": [
+      {
+        "details": "reverts when trying to set the zero address as an operator."
+      }
+    ],
+    "LSP8InvalidTransferBatch()": [
+      {
+        "details": "reverts when the parameters used for `transferBatch` have different lengths."
+      }
+    ],
+    "LSP8NonExistentTokenId(bytes32)": [
+      {
+        "details": "reverts when `tokenId` has not been minted."
+      }
+    ],
+    "LSP8NonExistingOperator(address,bytes32)": [
+      {
+        "details": "reverts when `operator` is not an operator for the `tokenId`."
+      }
+    ],
+    "LSP8NotTokenOperator(bytes32,address)": [
+      {
+        "details": "reverts when `caller` is not an allowed operator for `tokenId`."
+      }
+    ],
+    "LSP8NotTokenOwner(address,bytes32,address)": [
+      {
+        "details": "reverts when `caller` is not the `tokenOwner` of the `tokenId`."
+      }
+    ],
+    "LSP8NotifyTokenReceiverContractMissingLSP1Interface(address)": [
+      {
+        "details": "reverts if the `tokenReceiver` does not implement LSP1 when minting or transferring tokens with `bool allowNonLSP1Recipient` set as `false`."
+      }
+    ],
+    "LSP8NotifyTokenReceiverIsEOA(address)": [
+      {
+        "details": "reverts if the `tokenReceiver` is an EOA when minting or transferring tokens with `bool allowNonLSP1Recipient` set as `false`."
+      }
+    ],
+    "LSP8OperatorAlreadyAuthorized(address,bytes32)": [
+      {
+        "details": "reverts when `operator` is already authorized for the `tokenId`."
+      }
+    ],
+    "LSP8TokenIdAlreadyMinted(bytes32)": [
+      {
+        "details": "reverts when `tokenId` has already been minted."
+      }
+    ],
+    "LSP8TokenOwnerCannotBeOperator()": [
+      {
+        "details": "reverts when trying to authorize or revoke the token's owner as an operator."
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "authorizeOperator(address,bytes32)": {
+      "details": "Makes `operator` address an operator of `tokenId`. See {isOperatorFor}. Requirements - `tokenId` must exist. - caller must be current `tokenOwner` of `tokenId`. - `operator` cannot be the zero address. Emits an {AuthorizedOperator} event.",
+      "params": {
+        "operator": "The address to authorize as an operator.",
+        "tokenId": "The tokenId operator has access to."
+      }
+    },
+    "balanceOf(address)": {
+      "details": "Returns the number of tokens owned by `tokenOwner`.",
+      "params": {
+        "tokenOwner": "The address to query"
+      },
+      "returns": {
+        "_0": "The number of tokens owned by this address"
+      }
+    },
+    "constructor": {
+      "details": "initialize (= lock) base implementation contract on deployment"
+    },
+    "getData(bytes32)": {
+      "params": {
+        "dataKey": "The key which value to retrieve"
+      },
+      "returns": {
+        "dataValue": "The data stored at the key"
+      }
+    },
+    "getDataBatch(bytes32[])": {
+      "params": {
+        "dataKeys": "The array of keys which values to retrieve"
+      },
+      "returns": {
+        "dataValues": "The array of data stored at multiple keys"
+      }
+    },
+    "getOperatorsOf(bytes32)": {
+      "details": "Returns all `operator` addresses of `tokenId`. Requirements - `tokenId` must exist.",
+      "params": {
+        "tokenId": "The tokenId to query"
+      },
+      "returns": {
+        "_0": "The list of operators for the `tokenId`"
+      }
+    },
+    "initialize(string,string,address)": {
+      "params": {
+        "name_": "The name of the token",
+        "newOwner_": "The owner of the the token-Metadata",
+        "symbol_": "The symbol of the token"
+      }
+    },
+    "isOperatorFor(address,bytes32)": {
+      "details": "Returns whether `operator` address is an operator of `tokenId`. Operators can send and burn tokens on behalf of their owners. The tokenOwner is their own operator. Requirements - `tokenId` must exist.",
+      "params": {
+        "operator": "The address to query",
+        "tokenId": "The tokenId to query"
+      },
+      "returns": {
+        "_0": "True if the owner of `tokenId` is `operator` address, false otherwise"
+      }
+    },
+    "mint(address,bytes32,bool,bytes)": {
+      "details": "Mints `amount` tokens and transfers it to `to`. Requirements: - `to` cannot be the zero address. Emits a {Transfer} event.",
+      "params": {
+        "allowNonLSP1Recipient": "When set to TRUE, to may be any address but when set to FALSE to must be a contract that supports LSP1 UniversalReceiver",
+        "data": "Additional data the caller wants included in the emitted event, and sent in the hooks to `from` and `to` addresses.",
+        "to": "The address to mint tokens",
+        "tokenId": "The tokenId to mint"
+      }
+    },
+    "owner()": {
+      "details": "Returns the address of the current owner."
+    },
+    "renounceOwnership()": {
+      "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+    },
+    "revokeOperator(address,bytes32)": {
+      "details": "Removes `operator` address as an operator of `tokenId`. See {isOperatorFor}. Requirements - `tokenId` must exist. - caller must be current `tokenOwner` of `tokenId`. - `operator` cannot be the zero address. Emits a {RevokedOperator} event.",
+      "params": {
+        "operator": "The address to revoke as an operator.",
+        "tokenId": "The tokenId `operator` is revoked from operating"
+      }
+    },
+    "setData(bytes32,bytes)": {
+      "params": {
+        "dataKey": "The key to retrieve stored value",
+        "dataValue": "The value to set SHOULD only be callable by the owner of the contract set via ERC173 The function is marked as payable to enable flexibility on child contracts If the function is not intended to receive value, an additional check should be implemented to check that value equal 0. Emits a {DataChanged} event."
+      }
+    },
+    "setDataBatch(bytes32[],bytes[])": {
+      "details": "Sets array of data for multiple given `dataKeys` SHOULD only be callable by the owner of the contract set via ERC173 The function is marked as payable to enable flexibility on child contracts If the function is not intended to receive value, an additional check should be implemented to check that value equal 0. Emits a {DataChanged} event.",
+      "params": {
+        "dataKeys": "The array of data keys for values to set",
+        "dataValues": "The array of values to set"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "See {IERC165-supportsInterface}."
+    },
+    "tokenIdsOf(address)": {
+      "details": "Returns the list of `tokenIds` for the `tokenOwner` address.",
+      "params": {
+        "tokenOwner": "The address to query owned tokens"
+      },
+      "returns": {
+        "_0": "List of owned tokens by `tokenOwner` address"
+      }
+    },
+    "tokenOwnerOf(bytes32)": {
+      "details": "Returns the `tokenOwner` address of the `tokenId` token. Requirements: - `tokenId` must exist.",
+      "params": {
+        "tokenId": "The tokenId to query"
+      },
+      "returns": {
+        "_0": "The address owning the `tokenId`"
+      }
+    },
+    "totalSupply()": {
+      "details": "Returns the number of existing tokens.",
+      "returns": {
+        "_0": "The number of existing tokens"
+      }
+    },
+    "transfer(address,address,bytes32,bool,bytes)": {
+      "details": "Transfers `tokenId` token from `from` to `to`. Requirements: - `from` cannot be the zero address. - `to` cannot be the zero address. - `from` and `to` cannot be the same address. - `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be an operator of `tokenId`. Emits a {Transfer} event.",
+      "params": {
+        "allowNonLSP1Recipient": "When set to TRUE, to may be any address but when set to FALSE to must be a contract that supports LSP1 UniversalReceiver",
+        "data": "Additional data the caller wants included in the emitted event, and sent in the hooks to `from` and `to` addresses.",
+        "from": "The sending address.",
+        "to": "The receiving address.",
+        "tokenId": "The tokenId to transfer."
+      }
+    },
+    "transferBatch(address[],address[],bytes32[],bool[],bytes[])": {
+      "details": "Transfers many tokens based on the list `from`, `to`, `tokenId`. If any transfer fails the call will revert. Requirements: - `from`, `to`, `tokenId` lists are the same length. - no values in `from` can be the zero address. - no values in `to` can be the zero address. - `from` and `to` cannot be the same address at the same index of each lists. - each `tokenId` token must be owned by `from`. - If the caller is not `from`, it must be an operator of each `tokenId`. Emits {Transfer} events.",
+      "params": {
+        "allowNonLSP1Recipient": "When set to TRUE, to may be any address but when set to FALSE to must be a contract that supports LSP1 UniversalReceiver",
+        "data": "Additional data the caller wants included in the emitted event, and sent in the hooks to `from` and `to` addresses.",
+        "from": "The list of sending addresses.",
+        "to": "The list of receiving addresses.",
+        "tokenId": "The list of tokenId to transfer."
+      }
+    },
+    "transferOwnership(address)": {
+      "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+    }
+  },
+  "version": 1
+}

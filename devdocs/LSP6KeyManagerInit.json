@@ -1,0 +1,260 @@
+{
+  "author": "Fabian Vogelsteller <frozeman>, Jean Cavallera (CJ42), Yamen Merhi (YamenMerhi)",
+  "details": "all the permissions can be set on the ERC725 Account using `setData(...)` with the keys constants below",
+  "errors": {
+    "AddressPermissionArrayIndexValueNotAnAddress(bytes32,bytes)": [
+      {
+        "details": "reverts when trying to set a value that is not 20 bytes long under AddressPermissions[index]",
+        "params": {
+          "dataKey": "the AddressPermissions[index] data key",
+          "invalidValue": "the invalid value that was attempted to be set under AddressPermissions[index]"
+        }
+      }
+    ],
+    "BatchExecuteParamsLengthMismatch()": [
+      {
+        "details": "there should be the same number of elements for each array parameters in the following batch functions:  - execute(uint256[],bytes[])  - executeRelayCall(bytes[],uint256[],uint256[],bytes[])"
+      }
+    ],
+    "BatchExecuteRelayCallParamsLengthMismatch()": [
+      {
+        "details": "reverts when providing array parameters of different sizes to `executeRelayCall(bytes[],uint256[],bytes[])`"
+      }
+    ],
+    "CallingKeyManagerNotAllowed()": [
+      {
+        "details": "reverts when calling the KeyManager through execute(..)"
+      }
+    ],
+    "CannotSendValueToSetData()": [
+      {
+        "details": "reverts when sending value to the `setData(..)` functions"
+      }
+    ],
+    "DelegateCallDisallowedViaKeyManager()": [
+      {
+        "details": "ERC725X operation type 4 (DELEGATECALL) is disallowed by default"
+      }
+    ],
+    "ERC725Y_DataKeysValuesLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of elements in the lists of data keys and data values when calling setDataBatch."
+      }
+    ],
+    "InvalidERC725Function(bytes4)": [
+      {
+        "details": "reverts when trying to run an invalid function on the linked target account via the Key Manager.",
+        "params": {
+          "invalidFunction": "the bytes4 selector of the invalid function"
+        }
+      }
+    ],
+    "InvalidEncodedAllowedCalls(bytes)": [
+      {
+        "details": "reverts when `allowedCallsValue` is not properly encoded as a bytes28[CompactBytesArray] (CompactBytesArray of bytes28 entries). See LSP2 value type `CompactBytesArray` for details.",
+        "params": {
+          "allowedCallsValue": "the list of allowedCalls"
+        }
+      }
+    ],
+    "InvalidEncodedAllowedERC725YDataKeys(bytes,string)": [
+      {
+        "details": "reverts when `value` is not encoded properly using the CompactBytesArray",
+        "params": {
+          "context": "a brief description of where the error occured",
+          "value": "the value to check for an CompactBytesArray"
+        }
+      }
+    ],
+    "InvalidLSP6Target()": [
+      {
+        "details": "reverts when the address provided as a target (= account) linked to this KeyManager is invalid      e.g. address(0)"
+      }
+    ],
+    "InvalidPayload(bytes)": [
+      {
+        "details": "reverts when the payload is invalid."
+      }
+    ],
+    "InvalidRelayNonce(address,uint256,bytes)": [
+      {
+        "details": "reverts when the `signer` address retrieved from the `signature` has an invalid nonce: `invalidNonce`.",
+        "params": {
+          "invalidNonce": "the nonce retrieved for the `signer` address",
+          "signature": "the signature used to retrieve the `signer` address",
+          "signer": "the address of the signer"
+        }
+      }
+    ],
+    "InvalidWhitelistedCall(address)": [
+      {
+        "details": "a `from` address is not allowed to have 0xffffffffffffffffffffffffffffffffffffffffffffffffffffffff in its list of AddressPermissions:AllowedCalls:<address>, as this allows any STANDARD:ADDRESS:FUNCTION. This is equivalent to granting the SUPER permission and should never be valid.",
+        "params": {
+          "from": "the address that has any allowed calls whitelisted."
+        }
+      }
+    ],
+    "LSP6BatchExcessiveValueSent(uint256,uint256)": [
+      {
+        "details": "reverts to avoid the KeyManager to holds some remaining funds sent to the following batch functions:  - execute(uint256[],bytes[])  - executeRelayCall(bytes[],uint256[],uint256[],bytes[]) This error occurs when `msg.value` is more than the sum of all the values being forwarded on each payloads (`values[]` parameter from the batch functions above)."
+      }
+    ],
+    "LSP6BatchInsufficientValueSent(uint256,uint256)": [
+      {
+        "details": "the `msg.value` sent is not enough to cover the sum of all the values being forwarded on each payloads (`values[]` parameter) in the following batch functions:  - execute(uint256[],bytes[])  - executeRelayCall(bytes[],uint256[],uint256[],bytes[])"
+      }
+    ],
+    "NoCallsAllowed(address)": [
+      {
+        "details": "reverts if there are no allowed calls set for `from`",
+        "params": {
+          "from": "the address that has no AllowedCalls"
+        }
+      }
+    ],
+    "NoERC725YDataKeysAllowed(address)": [
+      {
+        "details": "reverts if there are no AllowedERC725YDataKeys set for the caller",
+        "params": {
+          "from": "the address that has no AllowedERC725YDataKeys"
+        }
+      }
+    ],
+    "NoPermissionsSet(address)": [
+      {
+        "details": "reverts when address `from` does not have any permissions set on the account linked to this Key Manager",
+        "params": {
+          "from": "the address that does not have permissions"
+        }
+      }
+    ],
+    "NotAllowedCall(address,address,bytes4)": [
+      {
+        "details": "reverts when `from` is not authorised to make the call because of a not allowed standard, address or function.",
+        "params": {
+          "from": "address making the request",
+          "selector": "if `to` is a contract, the bytes4 selector of the function that `from` is trying to call. If no function is called (e.g: a native token transfer), selector = 0x00000000",
+          "to": "the address of an EOA or contract that `from` is trying to interact with"
+        }
+      }
+    ],
+    "NotAllowedERC725YDataKey(address,bytes32)": [
+      {
+        "details": "reverts when address `from` is not authorised to set the key `disallowedKey` on the linked account",
+        "params": {
+          "disallowedKey": "a bytes32 key that `from` is not authorised to set on the ERC725Y storage",
+          "from": "address making the request"
+        }
+      }
+    ],
+    "NotAuthorised(address,string)": [
+      {
+        "details": "reverts when address `from` is not authorised to perform `permission` on the linked account",
+        "params": {
+          "from": "address not-authorised",
+          "permission": "permission required"
+        }
+      }
+    ],
+    "NotRecognisedPermissionKey(bytes32)": [
+      {
+        "details": "reverts when `dataKey` is a bytes32 that does not adhere to any of the      permission data keys specified by the LSP6 standard",
+        "params": {
+          "dataKey": "the dataKey that does not match with any of the standard LSP6 permission data keys"
+        }
+      }
+    ],
+    "RelayCallBeforeStartTime()": [
+      {
+        "details": "reverts when relay call start timestamp is bigger than the current timestamp"
+      }
+    ],
+    "RelayCallExpired()": [
+      {
+        "details": "reverts when the period to execute the relay call has expired"
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "constructor": {
+      "details": "initialize (= lock) base implementation contract on deployment"
+    },
+    "execute(bytes)": {
+      "details": "the ERC725Account will return some data on successful call, or revert on failure",
+      "params": {
+        "payload": "the payload to execute. Obtained in web3 via encodeABI()"
+      },
+      "returns": {
+        "_0": "the data being returned by the ERC725 Account"
+      }
+    },
+    "executeBatch(uint256[],bytes[])": {
+      "details": "batch `execute(bytes)`"
+    },
+    "executeRelayCall(bytes,uint256,uint256,bytes)": {
+      "details": "allows anybody to execute given they have a signed message from an executor",
+      "params": {
+        "nonce": "the address' nonce (in a specific `_channel`), obtained via `getNonce(...)`. Used to prevent replay attack",
+        "payload": "obtained via encodeABI() in web3",
+        "signature": "bytes32 ethereum signature",
+        "validityTimestamps": "two `uint128` timestamps concatenated, the first timestamp determines from when the payload can be executed, the second timestamp delimits the end of the validity of the payload. If `validityTimestamps` is 0, the checks regardin the timestamps are skipped"
+      },
+      "returns": {
+        "_0": "the data being returned by the ERC725 Account"
+      }
+    },
+    "executeRelayCallBatch(bytes[],uint256[],uint256[],uint256[],bytes[])": {
+      "details": "batch `executeRelayCall(...)`"
+    },
+    "getNonce(address,uint128)": {
+      "details": "use channel ID = 0 for sequential nonces, any other number for out-of-order execution (= execution in parallel)",
+      "params": {
+        "channelId": "the channel id to retrieve the nonce from",
+        "from": "the caller or signer address"
+      }
+    },
+    "initialize(address)": {
+      "params": {
+        "target_": "The address of the ER725Account to control"
+      }
+    },
+    "isValidSignature(bytes32,bytes)": {
+      "details": "Should return whether the signature provided is valid for the provided data",
+      "params": {
+        "hash": "Hash of the data to be signed",
+        "signature": "Signature byte array associated with _data"
+      }
+    },
+    "lsp20VerifyCall(address,uint256,bytes)": {
+      "params": {
+        "caller": "The address who called the function on the msg.sender",
+        "receivedCalldata": "The receivedCalldata sent by the caller to the msg.sender",
+        "value": "The value sent by the caller to the function called on the msg.sender"
+      },
+      "returns": {
+        "_0": "MUST return the first 3 bytes of `lsp20VerifyCall(address,uint256,bytes)` function selector if the call to the function is allowed, concatened with a byte that determines if the lsp20VerifyCallResult function should be called after the original function call. The byte that invoke the lsp20VerifyCallResult function is strictly `0x01`."
+      }
+    },
+    "lsp20VerifyCallResult(bytes32,bytes)": {
+      "params": {
+        "callHash": "The keccak256 of the parameters of {lsp20VerifyCall} concatenated",
+        "result": "The value result of the function called on the msg.sender"
+      },
+      "returns": {
+        "_0": "MUST return the lsp20VerifyCallResult function selector if the call to the function is allowed"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "See {IERC165-supportsInterface}."
+    },
+    "target()": {
+      "details": "this can be a contract that implements  - ERC725X only  - ERC725Y only  - any ERC725 based contract (so implementing both ERC725X and ERC725Y)",
+      "returns": {
+        "_0": "the address of the linked account"
+      }
+    }
+  },
+  "title": "Proxy implementation of a contract acting as a controller of an ERC725 Account, using permissions stored in the ERC725Y storage",
+  "version": 1
+}

@@ -1,0 +1,10 @@
+{
+  "events": {
+    "UniversalReceiver(address,uint256,bytes32,bytes,bytes)": {
+      "notice": "Emitted when the universalReceiver function is succesfully executed"
+    }
+  },
+  "kind": "user",
+  "methods": {},
+  "version": 1
+}

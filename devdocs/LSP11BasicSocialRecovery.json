@@ -1,0 +1,146 @@
+{
+  "details": "Sets permission for a controller address after a recovery process to interact with an ERC725 contract via the LSP6KeyManager",
+  "errors": {
+    "AddressZeroNotAllowed()": [
+      {
+        "details": "reverts when the address zero calls `recoverOwnership(..)` function"
+      }
+    ],
+    "CallerIsNotGuardian(address)": [
+      {
+        "details": "reverts when the caller is not a guardian"
+      }
+    ],
+    "GuardianAlreadyExist(address)": [
+      {
+        "details": "reverts when adding an already existing guardian"
+      }
+    ],
+    "GuardianDoNotExist(address)": [
+      {
+        "details": "reverts when removing a non-existing guardian"
+      }
+    ],
+    "GuardiansNumberCannotGoBelowThreshold(uint256)": [
+      {
+        "details": "reverts when removing a guardian and the threshold is equal to the number of guardians"
+      }
+    ],
+    "SecretHashCannotBeZero()": [
+      {
+        "details": "reverts when the secret hash provided is equal to bytes32(0)"
+      }
+    ],
+    "ThresholdCannotBeHigherThanGuardiansNumber(uint256,uint256)": [
+      {
+        "details": "reverts when setting the guardians threshold to a number higher than the guardians number"
+      }
+    ],
+    "ThresholdNotReachedForRecoverer(address,uint256,uint256)": [
+      {
+        "details": "reverts when `recoverOwnership(..)` is called with a recoverer that didn't reach the guardians threshold",
+        "params": {
+          "guardiansThreshold": "The minimum number of selection needed",
+          "recoverer": "The address of the recoverer",
+          "selections": "The number of selections that the recoverer have"
+        }
+      }
+    ],
+    "WrongPlainSecret()": [
+      {
+        "details": "reverts when the plain secret produce a different hash than the secret hash originally set"
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "addGuardian(address)": {
+      "details": "Adds a guardian of the targetCan be called only by the owner",
+      "params": {
+        "newGuardian": "The address to add as a guardian"
+      }
+    },
+    "constructor": {
+      "params": {
+        "_owner": "The owner of the LSP11 contract",
+        "target_": "The address of the ER725 contract to recover"
+      }
+    },
+    "getGuardianChoice(address)": {
+      "details": "Returns the address of a controller that a `guardian` selected for in order to recover the target",
+      "params": {
+        "guardian": "the address of a guardian to query his selection"
+      },
+      "returns": {
+        "_0": "the address that `guardian` selected"
+      }
+    },
+    "getGuardians()": {
+      "details": "Returns the addresses of all guardians The guardians will select an address to be added as a controller key for the linked `target` if he reaches the guardian threshold and provide the correct string that produce the secretHash"
+    },
+    "getGuardiansThreshold()": {
+      "details": "Returns the guardian threshold The guardian threshold represents the minimum number of selection by guardians required for an address to start a recovery process"
+    },
+    "getRecoveryCounter()": {
+      "details": "Returns the current recovery counter When a recovery process is successfully finished the recovery counter is incremented"
+    },
+    "getRecoverySecretHash()": {
+      "details": "Returns the recovery secret hash"
+    },
+    "isGuardian(address)": {
+      "details": "Returns TRUE if the address provided is a guardian, FALSE otherwise",
+      "params": {
+        "_address": "The address to query"
+      }
+    },
+    "owner()": {
+      "details": "Returns the address of the current owner."
+    },
+    "recoverOwnership(address,string,bytes32)": {
+      "details": "Recovers the ownership permissions of an address in the linked target and increment the recover counter Requirements - the address of the recoverer must have a selection equal or higher than the threshold defined in `getGuardiansThreshold(...)` - must have provided the right `plainSecret` that produces the secret Hash",
+      "params": {
+        "newHash": "The new secret Hash to be used in the next recovery process",
+        "plainSecret": "The secret word that produce the secret Hash",
+        "recoverer": "The address of the recoverer"
+      }
+    },
+    "removeGuardian(address)": {
+      "details": "Removes a guardian of the targetCan be called only by the owner",
+      "params": {
+        "currentGuardian": "The address of the existing guardian to remove Requirements: - The guardians count should be higher or equal to the guardain threshold"
+      }
+    },
+    "renounceOwnership()": {
+      "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions anymore. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby removing any functionality that is only available to the owner."
+    },
+    "selectNewController(address)": {
+      "details": "select an address to be a potentiel controller address if he reaches the guardian threshold and provide the correct secret string Requirements: - only guardians can select an address",
+      "params": {
+        "addressSelected": "The address selected by the guardian"
+      }
+    },
+    "setGuardiansThreshold(uint256)": {
+      "details": "Sets the minimum number of selection by the guardians required so that an address can recover ownershipCan be called only by the owner",
+      "params": {
+        "guardiansThreshold": "The threshold to set Requirements: - `guardiansThreshold` cannot be more than the guardians count."
+      }
+    },
+    "setRecoverySecretHash(bytes32)": {
+      "details": "Throws if hash provided is bytes32(0)",
+      "params": {
+        "newRecoverSecretHash": "The hash of the secret string Requirements: - `secretHash` cannot be bytes32(0)"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "See {IERC165-supportsInterface}."
+    },
+    "target()": {
+      "details": "The address of an ERC725 contract where we want to recover and set permissions for a controller address"
+    },
+    "transferOwnership(address)": {
+      "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+    }
+  },
+  "title": "Implementation of LSP11 - Basic Social Recovery standard",
+  "version": 1
+}

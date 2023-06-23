@@ -1,0 +1,175 @@
+{
+  "author": "Fabian Vogelsteller, Yamen Merhi, Jean Cavallera",
+  "details": "Could be owned by a UniversalProfile and able to register received asset with UniversalReceiverDelegateVault",
+  "errors": {
+    "CannotTransferOwnershipToSelf()": [
+      {
+        "details": "reverts when trying to transfer ownership to the address(this)"
+      }
+    ],
+    "ERC725X_ContractDeploymentFailed()": [
+      {
+        "details": "reverts when contract deployment via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` failed. whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_CreateOperationsRequireEmptyRecipientAddress()": [
+      {
+        "details": "reverts when passing a `to` address while deploying a contract va `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_ExecuteParametersEmptyArray()": [
+      {
+        "details": "reverts when one of the array parameter provided to `executeBatch(uint256[],address[],uint256[],bytes[]) is an empty array"
+      }
+    ],
+    "ERC725X_ExecuteParametersLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of operation, to addresses, value, and data."
+      }
+    ],
+    "ERC725X_InsufficientBalance(uint256,uint256)": [
+      {
+        "details": "reverts when trying to send more native tokens `value` than available in current `balance`.",
+        "params": {
+          "balance": "the balance of the ERC725X contract.",
+          "value": "the amount of native tokens sent via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)`."
+        }
+      }
+    ],
+    "ERC725X_MsgValueDisallowedInStaticCall()": [
+      {
+        "details": "the `value` parameter (= sending native tokens) is not allowed when making a staticcall via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` because sending native tokens is a state changing operation."
+      }
+    ],
+    "ERC725X_NoContractBytecodeProvided()": [
+      {
+        "details": "reverts when no contract bytecode was provided as parameter when trying to deploy a contract via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_UnknownOperationType(uint256)": [
+      {
+        "details": "reverts when the `operationTypeProvided` is none of the default operation types available. (CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4)"
+      }
+    ],
+    "ERC725Y_DataKeysValuesLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of elements in the lists of data keys and data values when calling setDataBatch."
+      }
+    ],
+    "ERC725Y_MsgValueDisallowed()": [
+      {
+        "details": "reverts when sending value to the `setData(..)` functions"
+      }
+    ],
+    "LSP1DelegateNotAllowedToSetDataKey(bytes32)": [
+      {
+        "details": "reverts when the UniversalReceiverDelegates of the Vault sets LSP1/6/17 Data Keys",
+        "params": {
+          "dataKey": "The data key that the UniversalReceiverDelegate is not allowed to set"
+        }
+      }
+    ],
+    "NoExtensionFoundForFunctionSelector(bytes4)": [
+      {
+        "details": "reverts when there is no extension for the function selector being called with"
+      }
+    ],
+    "NotInRenounceOwnershipInterval(uint256,uint256)": [
+      {
+        "details": "reverts when trying to renounce ownership before the initial confirmation delay"
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "acceptOwnership()": {
+      "details": "same as ILSP14.acceptOwnership with the additional requirement: Requirements: - when notifying the previous owner via LSP1, the typeId used MUST be keccak256('LSP9OwnershipTransferred_SenderNotification') - when notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP9OwnershipTransferred_RecipientNotification')"
+    },
+    "batchCalls(bytes[])": {
+      "details": "Receives and executes a batch of function calls on this contract."
+    },
+    "constructor": {
+      "details": "initialize (= lock) base implementation contract on deployment"
+    },
+    "execute(uint256,address,uint256,bytes)": {
+      "details": "Executes any other smart contract. SHOULD only be callable by the owner of the contract set via ERC173 Emits a {Executed} event, when a call is executed under `operationType` 0 and 3 Emits a {ContractCreated} event, when a contract is created under `operationType` 1 and 2 Emits a {ValueReceived} event, when receives native token",
+      "params": {
+        "operationType": "The operation to execute: CALL = 0 CREATE = 1 CREATE2 = 2 STATICCALL = 3"
+      }
+    },
+    "executeBatch(uint256[],address[],uint256[],bytes[])": {
+      "details": "Emits a {ValueReceived} event when receiving native tokens.",
+      "params": {
+        "datas": "The list of call data, or the creation bytecode of the contract to deploy",
+        "operationsType": "The list of operations type used: CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4",
+        "targets": "The list of addresses to call. `targets` will be unused if a contract is created (operation types 1 and 2).",
+        "values": "The list of native token amounts to transfer (in Wei)"
+      }
+    },
+    "getData(bytes32)": {
+      "params": {
+        "dataKey": "The key which value to retrieve"
+      },
+      "returns": {
+        "dataValue": "The data stored at the key"
+      }
+    },
+    "getDataBatch(bytes32[])": {
+      "params": {
+        "dataKeys": "The array of keys which values to retrieve"
+      },
+      "returns": {
+        "dataValues": "The array of data stored at multiple keys"
+      }
+    },
+    "initialize(address)": {
+      "details": "Sets the owner of the contract and sets the SupportedStandards:LSP9Vault key",
+      "params": {
+        "newOwner": "the owner of the contract"
+      }
+    },
+    "owner()": {
+      "details": "Returns the address of the current owner."
+    },
+    "pendingOwner()": {
+      "details": "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract."
+    },
+    "renounceOwnership()": {
+      "details": "Renounce ownership of the contract in a two step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner."
+    },
+    "setData(bytes32,bytes)": {
+      "details": "Sets data as bytes in the vault storage for a single key. SHOULD only be callable by the owner of the contract set via ERC173 and the UniversalReceiverDelegate Emits a {DataChanged} event.",
+      "params": {
+        "dataKey": "The key to retrieve stored value",
+        "dataValue": "The value to set SHOULD only be callable by the owner of the contract set via ERC173 The function is marked as payable to enable flexibility on child contracts If the function is not intended to receive value, an additional check should be implemented to check that value equal 0. Emits a {DataChanged} event."
+      }
+    },
+    "setDataBatch(bytes32[],bytes[])": {
+      "details": "Sets array of data at multiple given `key` SHOULD only be callable by the owner of the contract set via ERC173 and the UniversalReceiverDelegate Emits a {DataChanged} event.",
+      "params": {
+        "dataKeys": "The array of data keys for values to set",
+        "dataValues": "The array of values to set"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "Returns true if this contract implements the interface defined by `interfaceId`. If the contract doesn't support the `interfaceId`, it forwards the call to the `supportsInterface` extension according to LSP17, and checks if the extension implements the interface defined by `interfaceId`."
+    },
+    "transferOwnership(address)": {
+      "details": "same as ILSP14.transferOwnership with the additional requirement: Requirements:  - when notifying the new owner via LSP1, the typeId used MUST be keccak256('LSP9OwnershipTransferStarted')",
+      "params": {
+        "newOwner": "the address of the new owner."
+      }
+    },
+    "universalReceiver(bytes32,bytes)": {
+      "params": {
+        "receivedData": "The data received.",
+        "typeId": "The type of call received."
+      },
+      "returns": {
+        "returnedValues": "The ABI encoded return value of the LSP1UniversalReceiverDelegate call and the LSP1TypeIdDelegate call."
+      }
+    }
+  },
+  "title": "Deployable Proxy Implementation of LSP9Vault built on top of ERC725, LSP1UniversalReceiver",
+  "version": 1
+}

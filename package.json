@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This `README.md` contains a set of checklists for our audit collaboration.",
   "main": "index.js",
-    "exports": {
+  "exports": {
     ".": {
       "import": "./dist/constants.cjs.js",
       "require": "./dist/constants.es.js",
@@ -50,17 +50,16 @@
     "test:foundry": "forge test --no-match-test Skip -vvv --gas-report > gasreport.ansi",
     "clean": "hardhat clean && rm -rf module common",
     "build": "hardhat compile",
-    "package": "hardhat prepare-package",
     "linter": "solhint 'contracts/**/*.sol'",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
   "author": "",
   "license": "ISC",
- "dependencies": {
-    "@erc725/smart-contracts": "^5.0.0",
-    "@openzeppelin/contracts": "^4.8.2",
-    "@openzeppelin/contracts-upgradeable": "^4.8.2",
+  "dependencies": {
+    "@erc725/smart-contracts": "^5.1.0",
+    "@openzeppelin/contracts": "^4.9.2",
+    "@openzeppelin/contracts-upgradeable": "^4.9.2",
     "solidity-bytes-utils": "0.8.0"
   },
   "devDependencies": {

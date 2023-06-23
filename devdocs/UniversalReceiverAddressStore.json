@@ -1,0 +1,9 @@
+{
+  "kind": "dev",
+  "methods": {
+    "supportsInterface(bytes4)": {
+      "details": "See {IERC165-supportsInterface}."
+    }
+  },
+  "version": 1
+}

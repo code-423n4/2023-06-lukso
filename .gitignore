@@ -118,4 +118,6 @@ types
 
 out/
 forge-cache/
-./benchmark.md
+benchmark.md
+
+gasreport.ansi

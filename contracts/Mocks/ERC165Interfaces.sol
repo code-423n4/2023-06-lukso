@@ -27,9 +27,7 @@ import {
 
 import {ILSP9Vault as ILSP9} from "../LSP9Vault/ILSP9Vault.sol";
 import {ILSP14Ownable2Step as ILSP14} from "../LSP14Ownable2Step/ILSP14Ownable2Step.sol";
-import {
-    ILSP20CallVerification as ILSP20
-} from "../LSP20CallVerification/ILSP20CallVerification.sol";
+import {ILSP20CallVerifier as ILSP20} from "../LSP20CallVerification/ILSP20CallVerifier.sol";
 
 // constants
 import {_INTERFACEID_LSP0} from "../LSP0ERC725Account/LSP0Constants.sol";
