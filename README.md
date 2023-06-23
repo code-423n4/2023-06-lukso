@@ -48,7 +48,6 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 ---
 
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
-[![Telegram](https://img.shields.io/badge/Telegram-555?logo=telegram)](https://t.me/LUKSO)
 [![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
 [![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts)
 [![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
@@ -308,7 +307,10 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 ## Out of scope
 
-_List any files/contracts that are out of scope for this audit._
+| Out of Scope          | Details                                                                                                                                                                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `contracts/LSP9Vault` | We decided to incude them in this repository in order for the wardens to get familiar with `LSP9Vault`, because it's used and mentioned in the `LSP1UniversalReceiverDelegateUP` to register the addresses of the received vaults to an `LSP0ERC725Account`. |
+| `contracts/Mocks`     | Those contracts are only used for testing.                                                                                                                                                                                                                   |
 
 # Additional Context
 
