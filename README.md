@@ -48,7 +48,6 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 ---
 
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
-[![Telegram](https://img.shields.io/badge/Telegram-555?logo=telegram)](https://t.me/LUKSO)
 [![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
 [![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts)
 [![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
@@ -308,7 +307,10 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 ## Out of scope
 
-_List any files/contracts that are out of scope for this audit._
+| Out of Scope          | Details                                                                                                                                                                                                                                                      |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `contracts/LSP9Vault` | We decided to incude them in this repository in order for the wardens to get familiar with `LSP9Vault`, because it's used and mentioned in the `LSP1UniversalReceiverDelegateUP` to register the addresses of the received vaults to an `LSP0ERC725Account`. |
+| `contracts/Mocks`     | Those contracts are only used for testing.                                                                                                                                                                                                                   |
 
 # Additional Context
 
@@ -356,6 +358,7 @@ _Note: Many wardens run Slither as a first pass for testing. Please document any
 # Publicly Known Issues
 
 Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as a known issue.
+
 ### General
 
 - No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
@@ -367,10 +370,11 @@ Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as 
 - The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
 
 - When the owner of the LSP0 is an EOA, if a caller calls the protected functions:
-    1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner). 
-    2. but it will fail because the owner being an EOA cannot return the magic value.
 
-- A potential collision can happen in the `universalReceiver(..)` function when 2 type IDs start with the same 20 bytes. *See Trust audit report finding M2 for more details.*
+  1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner).
+  2. but it will fail because the owner being an EOA cannot return the magic value.
+
+- A potential collision can happen in the `universalReceiver(..)` function when 2 type IDs start with the same 20 bytes. _See Trust audit report finding M2 for more details._
 
 - The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
 
@@ -379,8 +383,8 @@ Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as 
 ### LSP1UniversalReceiverDelegateUP.sol
 
 - The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
-    1. faking the typeIDs of LSP7 and LSP8 
-    2. creating a contract that fakes the `balanceOf(…)` function for LSP7 or LSP8 assets transfer. 
+  1. faking the typeIDs of LSP7 and LSP8
+  2. creating a contract that fakes the `balanceOf(…)` function for LSP7 or LSP8 assets transfer.
 
 The caller will, however, have to pay for the gas of spamming the account.
 
@@ -391,16 +395,13 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 - It is possible to spam fake vaults that you own in multiple ways:
 
 > Example 1:
-> 
+>
 > 1. Do `Vault.execute(…)` (from ERC725X)
 > 2. → the data payload would be the `universalReceiver(…)` function of the UP user you want to spam, passing the right `typeId` for VaultTransferRecipient.
 
 > Example 2:
-> 
-> 
-> On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
 >
-
+> On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
 
 ### LSP6KeyManager.sol
 
@@ -409,21 +410,21 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 - The relayer can choose the amount of gas provided when interacting with the `executeRelayCall(...)` functions. For more details, see Trust audit report finding L3.
 
 - The overlapping issue between the two permissions `ADDCONTROLLER` / `EDITPERMISSIONS` is known. For instance:
-    - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
-    - **if you have permission `EDITPERMISSIONS`:** You can grant yourself all the permissions and take control of the account (you can also grant yourself `ADDCONTROLLER`, and create a new wallet that you control).
-    
-    These two permissions are separated for legal reasons. In some implementations or use cases, applications or protocols might require giving a controller only one of the two permissions, not the other (and vice versa).
+
+  - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
+  - **if you have permission `EDITPERMISSIONS`:** You can grant yourself all the permissions and take control of the account (you can also grant yourself `ADDCONTROLLER`, and create a new wallet that you control).
+
+  These two permissions are separated for legal reasons. In some implementations or use cases, applications or protocols might require giving a controller only one of the two permissions, not the other (and vice versa).
 
 - It is possible to execute some code in the receive/fallback functions of the recipient by only having the permission transferValue/SuperTransferValue.
 
 - It is not possible to call LSP17 extensions through the KeyManager.
 
-- Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector. 
+- Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector.
 
 - Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 transactions in one channel and the first one is failing, one would have to re-sign the next 2 transactions with a different nonce in order to execute them. Another solution would be signing all 3 transactions in 3 different channels. See first audit report from Watchpug finding M3 for details.
 
 - `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
-
 
 ### LSP7DigitalAsset.sol
 
@@ -446,7 +447,6 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 ### LSP20CallVerification.sol
 
 - Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
-
 
 # Slither Known Issues
 
