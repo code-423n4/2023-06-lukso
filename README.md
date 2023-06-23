@@ -324,6 +324,21 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 - In the `execute(uint256,address,uint256,bytes)` function of **ERC725X**, no additional checks have been introduced to verify that the owner has not changed following a delegatecall. This is a design choice, as introducing such checks might give a false sense of security. It's possible that a malicious actor could momentarily alter the owner variable during the delegatecall, and do malicious action and reset it afterwards, thereby bypassing the check. Additionally, the importance of the owner variable may vary between different contracts and implementations. For instance, a delegatecall could modify the ERC725Y storage, which in certain cases might serve as the principal access point to the account. This is particularly relevant for when the account is owned by an **LSP6KeyManager**, where permissions are stored in the ERC725Y storage rather than being tied to the owner variable.
 
+## `LSP7CompatibleERC20` and `LSP8CompatibleERC721`
+
+LSP7 and LSP8 are different in terms of their interface and the way to interact with them compared to the traditional ERC20 and ERC721 token standards.
+We have also included two contracts that can be used and interacted with the same way as you would interact with ERC20 / ERC721 tokens, while leveraging the core functionalities of the LSP7/8 standards.
+
+- `LSP7CompatibleERC20`, which contains all the LSP7 public functions + the following ERC20 public functions: `allowance(...)`, `approve(...)`, `transfer(...)` and `transferFrom(...)`
+- `LSP8CompatibleERC721`, which contains the LSP8 public functions + the following ERC721 public functions: `tokenURI(...)`, `ownerOf(...)`, `getApproved(...)`, `isApprovedForAll(...)`, `approve(...)`, `setApprovalForAll(...)`, `transferFrom(...)`, `safeTransferFrom(...)` and `authorizeOperator(...)`
+
+When doing token transfers or approving operators either using the LSP7/LSP8 functions or the ERC20/721 function, will behave the same way as the respective ERC20 / ERC721 functions, with the addition to wrap all the logic of the native LSP7/LSP8 functions inside them. This include:
+
+- for `LSP7CompatibleERC20`
+  - returning `true` on `transfer(...)` or `transferFrom(...)`
+  - emitting the ERC20 `Transfer` when doing token transfer.
+  - emitting the ERC20 `Approval` event when calling the ERC20 function `approve(...)`.
+
 ## Scoping Details
 
 ```
@@ -399,7 +414,7 @@ You can find the full list of tests commands in [package.json](https://github.co
 
 ### Gas benchmark
 
-> The test benchmark is for the standard version of the contract and not the proxy version. 
+> The test benchmark is for the standard version of the contract and not the proxy version.
 
 To run the gas benchmark tests:
 
@@ -439,6 +454,7 @@ Additionally, you can run the coverage:
 ```
 npm run test:coverage
 ```
+
 To view the report, open coverage/index.html in your browser.
 
 ### Contract Size
