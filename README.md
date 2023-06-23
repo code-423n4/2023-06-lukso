@@ -71,13 +71,101 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 - Starts June 20, 2023 20:00 UTC
 - Ends July 05, 2023 20:00 UTC
 
-## Automated Findings / Publicly Known Issues
+## Publicly Known Issues
 
-Automated findings output for the audit can be found [here](add link to report) within 24 hours of audit opening.
+Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as a known issue.
+### General
 
-_Note for C4 wardens: Anything included in the automated findings output is considered a publicly known issue and is ineligible for awards._
+- No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
 
-[ ⭐️ SPONSORS ADD INFO HERE ]
+- The contracts are using `supportsERC165Unchecked` to check for support of a single InterfaceId for gas cost optimization. It does not conform to the ERC165 standard but we do this out of gas optimization as our implementations do a lot of external calls to check for interfaces IDs.
+
+### LSP0ERC725Account.sol
+
+- The effect of using msg.value with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned [here](https://github.com/Uniswap/v3-periphery/issues/52).
+
+- When the owner of the LSP0 is an EOA, if a caller calls the protected functions:
+    1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner). 
+    2. but it will fail because the owner being an EOA cannot return the magic value.
+
+- A potential collision can happen in the `universalReceiver` function when 2 type IDs start with the same 20 bytes. *See Trust audit report finding M2 for more details.*
+
+- The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
+
+- You can have delegate call with selfdestruct that will bypass the second lsp20 check (`lsp20VerifyCallResult(…)`). Mentioned in Trust audit report, see finding M3 for more details.
+
+### LSP1UniversalReceiverDelegateUP.sol
+
+- The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
+    1. faking the typeIDs of LSP7 and LSP8 
+    2. creating a contract that fakes the `balanceOf(…)` function for LSP7 or LSP8 assets transfer. 
+
+The caller will, however, have to pay for the gas of spamming the account.
+
+- It is allowed with LSP7 token transfers to transfer `0` as an amount and that it calls the `universalReceiver(...)` function of the sender and recipient.
+
+The reason is we want to allow to react on the `data` parameter, for instance.
+
+- It is possible to spam fake vaults that you own in multiple ways:
+
+> Example 1:
+> 
+> 1. Do `Vault.execute(…)` (from ERC725X)
+> 2. → the data payload would be the `universalReceiver(…)` function of the UP user you want to spam, passing the right `typeId` for VaultTransferRecipient.
+
+> Example 2:
+> 
+> 
+> On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
+>
+
+
+### LSP6KeyManager.sol
+
+- The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
+
+- The relayer can choose the amount of gas provided when interacting with the executeRelayCall(...) functions. For more details, see Trust audit report finding L3.
+
+- The overlapping issue between the two permissions `ADDCONTROLLER` / `EDITPERMISSIONS` is known. For instance:
+    - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
+    - **if you have permission `EDITPERMISSIONS`:** You can grant yourself all the permissions and take control of the account (you can also grant yourself `ADDCONTROLLER`, and create a new wallet that you control).
+    
+    These two permissions are separated for legal reasons. In some implementations or use cases, applications or protocols might require giving a controller only one of the two permissions, not the other (and vice versa).
+
+- It is possible to execute some code in the receive/fallback functions of the recipient by only having the permission transferValue/SuperTransferValue.
+
+- It is not possible to call LSP17 extensions through the KeyManager.
+
+- Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector. 
+
+- Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 txs in one channel and the first one is failing, one would have to re-sign the next 2 txs with a different nonce in order to execute them. Another solution would be signing all 3 txs in 3 different channels. See first audit report from Watchpug finding M3 for details.
+
+- `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
+
+
+### LSP7DigitalAsset.sol
+
+- `authorizeOperator()` CAN NOT avoid front-running and Allowance Double-Spend Exploit.
+
+Can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
+
+- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
+
+### LSP8IdentifiableDigitalAsset.sol
+
+- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
+
+### LSP14Ownable2Step.sol
+
+- When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in his `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
+
+### LSP17Extendable.sol
+
+- Setting extensions for functions that operate on `msg.sender` (eg: tokens transfer) is dangerous.
+
+### LSP20CallVerification.sol
+
+- Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
 
 # Overview
 
