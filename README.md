@@ -302,17 +302,17 @@ Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as 
 
 - No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
 
-- The contracts are using `supportsERC165Unchecked` to check for support of a single InterfaceId for gas cost optimization. It does not conform to the ERC165 standard but we do this out of gas optimization as our implementations do a lot of external calls to check for interfaces IDs.
+- The contracts are using [`supportsERC165InterfaceUnchecked`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/utils/introspection/ERC165Checker.sol#L110) to check for support of a single interfaceId for gas cost optimisation. It does not conform to the ERC165 standard but we do this out of gas optimisation as our implementations do a lot of external calls to check for interfaces IDs.
 
 ### LSP0ERC725Account.sol
 
-- The effect of using msg.value with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned [here](https://github.com/Uniswap/v3-periphery/issues/52).
+- The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
 
 - When the owner of the LSP0 is an EOA, if a caller calls the protected functions:
     1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner). 
     2. but it will fail because the owner being an EOA cannot return the magic value.
 
-- A potential collision can happen in the `universalReceiver` function when 2 type IDs start with the same 20 bytes. *See Trust audit report finding M2 for more details.*
+- A potential collision can happen in the `universalReceiver(..)` function when 2 type IDs start with the same 20 bytes. *See Trust audit report finding M2 for more details.*
 
 - The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
 
@@ -348,7 +348,7 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 - The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
 
-- The relayer can choose the amount of gas provided when interacting with the executeRelayCall(...) functions. For more details, see Trust audit report finding L3.
+- The relayer can choose the amount of gas provided when interacting with the `executeRelayCall(...)` functions. For more details, see Trust audit report finding L3.
 
 - The overlapping issue between the two permissions `ADDCONTROLLER` / `EDITPERMISSIONS` is known. For instance:
     - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
@@ -362,16 +362,14 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 - Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector. 
 
-- Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 txs in one channel and the first one is failing, one would have to re-sign the next 2 txs with a different nonce in order to execute them. Another solution would be signing all 3 txs in 3 different channels. See first audit report from Watchpug finding M3 for details.
+- Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 transactions in one channel and the first one is failing, one would have to re-sign the next 2 transactions with a different nonce in order to execute them. Another solution would be signing all 3 transactions in 3 different channels. See first audit report from Watchpug finding M3 for details.
 
 - `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
 
 
 ### LSP7DigitalAsset.sol
 
-- `authorizeOperator()` CAN NOT avoid front-running and Allowance Double-Spend Exploit.
-
-Can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
+- `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
@@ -381,7 +379,7 @@ Can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` 
 
 ### LSP14Ownable2Step.sol
 
-- When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in his `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
+- When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in its `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
 
 ### LSP17Extendable.sol
 
