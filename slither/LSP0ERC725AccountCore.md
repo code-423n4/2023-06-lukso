@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [uninitialized-local](#uninitialized-local)
 - [calls-loop](#calls-loop)
