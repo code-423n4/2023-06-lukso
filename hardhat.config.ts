@@ -21,7 +21,6 @@ import "hardhat-deploy";
 // Typescript types for web3.js
 import "@nomiclabs/hardhat-web3";
 
-
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 
 const config: HardhatUserConfig = {
@@ -45,7 +44,7 @@ const config: HardhatUserConfig = {
     showMethodSig: true,
   },
   solidity: {
-    version: "0.8.15",
+    version: "0.8.17",
     settings: {
       optimizer: {
         enabled: true,
@@ -125,7 +124,7 @@ const config: HardhatUserConfig = {
   typechain: {
     outDir: "types",
     target: "ethers-v5",
-  }
+  },
 };
 
 export default config;
