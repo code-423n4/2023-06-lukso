@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [unused-return](#unused-return-1)
 - [calls-loop](#calls-loop-2)

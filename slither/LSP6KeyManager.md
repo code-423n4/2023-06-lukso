@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [msg-value-loop](#msg-value-loop)
 - [reentrancy-eth](#reentrancy-eth)

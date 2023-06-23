@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [unused-return](#unused-return-3)
 - [assembly](#assembly-2)

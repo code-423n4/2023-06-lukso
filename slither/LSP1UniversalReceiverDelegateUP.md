@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [incorrect-equality](#incorrect-equality)
 - [locked-ether](#locked-ether)

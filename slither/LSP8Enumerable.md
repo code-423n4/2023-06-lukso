@@ -1,4 +1,4 @@
-Summary
+**Summary**
 
 - [costly-loop](#costly-loop)
 
