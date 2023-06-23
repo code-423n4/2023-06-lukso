@@ -425,6 +425,48 @@ Get the contract size by running
 npx hardhat size-contracts
 ```
 
+### Deployment
+
+> Before deployment, add a private key to `.env` file in the root of the project in this variable `DEPLOYER_PRIVATE_KEY= ".."` and make sure the EOA has enough LYXt to fund the deployment of the contracts on LUKSO's Testnet (Faucet link: https://faucet.testnet.lukso.network/)
+
+It is possible to run the following commands to deploy few contracts according to the scripts in [./deploy](./deploy/) folder:
+
+```bash
+npx hardhat deploy --network luksoTestnet --tags UniversalProfile
+
+npx hardhat deploy --network luksoTestnet --tags LSP6KeyManager
+
+npx hardhat deploy --network luksoTestnet --tags LSP1UniversalReceiverDelegateUP
+
+// The Mintable preset of LSP7
+npx hardhat deploy --network luksoTestnet --tags LSP7Mintable
+
+// The Mintable preset of LSP8
+npx hardhat deploy --network luksoTestnet --tags LSP8Mintable
+
+npx hardhat deploy --network luksoTestnet --tags LSP9Vault
+```
+
+It is also possible to verify the contracts deployed:
+
+```bash
+npx hardhat verify --network luksoTestnet --contract contracts/UniversalProfile.sol:UniversalProfile <address of the UniversalProfile deployed> <address of the deployer>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP6KeyManager/LSP6KeyManager.sol:LSP6KeyManager <address of the KeyManager deployed> <address of the target controlled (UP)>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP6KeyManager/LSP6KeyManager.sol:LSP6KeyManager <address of the KeyManager deployed> <address of the target controlled (UP)>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol:LSP1UniversalReceiverDelegateUP <address of the LSP1UniversalReceiverDelegateUP deployed>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol:LSP1UniversalReceiverDelegateUP <address of the LSP1UniversalReceiverDelegateUP deployed>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP7DigitalAsset/presets/LSP7Mintable.sol:LSP7Mintable <address of the LSP7 deployed> 'LSP7 Mintable' 'LSP7M' <address of the deployer> false
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP8IdentifiableDigitalAsset/presets/LSP8Mintable.sol:LSP8Mintable <address of the LSP8 deployed> 'LSP8 Mintable' 'LSP8M' <address of the deployer>
+
+npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vault.sol:LSP9Vault <address of the LSP9 deployed> <address of the deployer>
+```
+
 # Publicly Known Issues
 
 Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as a known issue.

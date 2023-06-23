@@ -1,4 +1,5 @@
 import { HardhatUserConfig } from 'hardhat/config';
+import { NetworkUserConfig } from 'hardhat/types';
 import { config as dotenvConfig } from 'dotenv';
 import { resolve } from 'path';
 
@@ -23,6 +24,20 @@ import '@nomiclabs/hardhat-web3';
 
 dotenvConfig({ path: resolve(__dirname, './.env') });
 
+function getTestnetChainConfig(): NetworkUserConfig {
+  const config: NetworkUserConfig = {
+    live: true,
+    url: 'https://rpc.testnet.lukso.network',
+    chainId: 4201,
+  };
+
+  if (process.env.DEPLOYER_PRIVATE_KEY !== undefined) {
+    config['accounts'] = [process.env.DEPLOYER_PRIVATE_KEY];
+  }
+
+  return config;
+}
+
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
   networks: {
@@ -31,9 +46,23 @@ const config: HardhatUserConfig = {
       saveDeployments: false,
       allowBlocksWithSameTimestamp: true,
     },
+    luksoTestnet: getTestnetChainConfig(),
   },
   namedAccounts: {
     owner: 0,
+  },
+  etherscan: {
+    apiKey: 'no-api-key-needed',
+    customChains: [
+      {
+        network: 'luksoTestnet',
+        chainId: 4201,
+        urls: {
+          apiURL: 'https://explorer.execution.testnet.lukso.network/api',
+          browserURL: 'https://explorer.execution.testnet.lukso.network/',
+        },
+      },
+    ],
   },
   gasReporter: {
     enabled: true,
