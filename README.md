@@ -373,7 +373,13 @@ npm run build
 
 ### Tests
 
-To run the mocha tests:
+To run the gas benchmark tests:
+
+```bash
+npm run test:benchmark
+```
+
+To run the mocha unit tests:
 
 ```bash
 npm run test
