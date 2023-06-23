@@ -49,7 +49,7 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
 [![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
-[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts)
+[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
 [![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
 [![Docs](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
 
@@ -327,7 +327,7 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 ## Scoping Details
 
 ```
-- If you have a public code repo, please share it here:  https://github.com/lukso-network/lsp-smart-contracts
+- If you have a public code repo, please share it here:  https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2
 - How many contracts are in scope?:   53
 - Total SLoC for these contracts?:  3469
 - How many external imports are there?: 3
@@ -373,13 +373,7 @@ To compile the contracts
 npm run build
 ```
 
-### Tests
-
-To run the gas benchmark tests:
-
-```bash
-npm run test:benchmark
-```
+### Hardhat Tests
 
 To run the mocha unit tests:
 
@@ -401,15 +395,42 @@ npm run test:up
 npm run test:lsp7
 ```
 
-You can find the full list of tests commands in [package.json](./package.json#L32-L49)
+You can find the full list of tests commands in [package.json](https://github.com/code-423n4/2023-06-lukso/blob/main/package.json#L32-L49)
 
-To run foundry tests
+### Gas benchmark
+
+> The test benchmark is for the standard version of the contract and not the proxy version. 
+
+To run the gas benchmark tests:
+
+```bash
+npm run test:benchmark
+```
+
+> The foundry tests will also output a gas report.
+
+### Foundry Tests
+
+To run foundry tests (with gas report)
+
+Setup:
+
+```bash
+git submodule update --init --recursive --remote
+yarn
+curl -L https://foundry.paradigm.xyz | bash
+foundryup
+```
+
+Test:
 
 ```bash
 forge install
 
 forge test
 ```
+
+### Code Coverage
 
 Additionally, you can run the coverage:
 
@@ -418,6 +439,9 @@ Additionally, you can run the coverage:
 ```
 npm run test:coverage
 ```
+To view the report, open coverage/index.html in your browser.
+
+### Contract Size
 
 Get the contract size by running
 
@@ -429,7 +453,7 @@ npx hardhat size-contracts
 
 > Before deployment, add a private key to `.env` file in the root of the project in this variable `DEPLOYER_PRIVATE_KEY= ".."` and make sure the EOA has enough LYXt to fund the deployment of the contracts on LUKSO's Testnet (Faucet link: https://faucet.testnet.lukso.network/)
 
-It is possible to run the following commands to deploy few contracts according to the scripts in [./deploy](./deploy/) folder:
+It is possible to run the following commands to deploy few contracts according to the scripts in [./deploy](https://github.com/code-423n4/2023-06-lukso/tree/main/deploy) folder:
 
 ```bash
 npx hardhat deploy --network luksoTestnet --tags UniversalProfile
@@ -469,7 +493,7 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vau
 
 # Publicly Known Issues
 
-Any issue mentioned in the [`./audits`](./audits/) folder MUST be considered as a known issue.
+Any issue mentioned in the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
 
 ### General
 
@@ -562,7 +586,7 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 # Slither Known Issues
 
-Any known issues from Slither for each contract are listed under the [`slither/`](./slither/) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
+Any known issues from Slither for each contract are listed under the [`slither/`](https://github.com/code-423n4/2023-06-lukso/tree/main/slither) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
 
 <!-- Global Links -->
 <!-- prettier-ignore-start -->
