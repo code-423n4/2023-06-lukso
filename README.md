@@ -150,6 +150,17 @@ _List all files in scope in the table below (along with hyperlinks) -- and feel 
 
 _For line of code counts, we recommend using [cloc](https://github.com/AlDanial/cloc)._
 
+## Areas of Concern
+
+Any vulnerability found is welcome. Here are some examples of issues that we are mostly concerned about:
+
+- Ownership bypassing.
+- Executing without the right permission. (bypassing perrmissions)
+- Permissions overlap. (meaning if i have permission X and added permission Y, i can execute an action only allowed by permission Z)
+- Locking the account due to a certain chain of actions.
+- Reentrancy without the right premissions. (bypassing perrmissions)
+- LSP1UniversalReceiverDelegateUP will be set as a default UniversalReceiverDelegate for the UniversalProfiles deployed by the LUKSO foundation, is there a potential risk to deploy just 1 UniverrsalReceiverDelegate contract and grant it `SUPER_SETDATA` and `REENTRANCY` permission on all of these UniversalProfiles?
+
 ## Summary
 
 | Scope                         | code | Standard Specifications           | Standard Documentation                                    |
