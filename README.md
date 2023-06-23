@@ -1,77 +1,12 @@
-# ✨ So you want to run an audit
-
-This `README.md` contains a set of checklists for our audit collaboration.
-
-Your audit will use two repos:
-
-- **an _audit_ repo** (this one), which is used for scoping your audit and for providing information to wardens
-- **a _findings_ repo**, where issues are submitted (shared with you after the audit)
-
-Ultimately, when we launch the audit, this repo will be made public and will contain the smart contracts to be reviewed and all the information needed for audit participants. The findings repo will be made public after the audit report is published and your team has mitigated the identified issues.
-
-Some of the checklists in this doc are for **C4 (🐺)** and some of them are for **you as the audit sponsor (⭐️)**.
-
----
-
-# Repo setup
-
-## ⭐️ Sponsor: Add code to this repo
-
-- [ ] Create a PR to this repo with the below changes:
-- [ ] Provide a self-contained repository with working commands that will build (at least) all in-scope contracts, and commands that will run tests producing gas reports for the relevant contracts.
-- [ ] Make sure your code is thoroughly commented using the [NatSpec format](https://docs.soliditylang.org/en/v0.5.10/natspec-format.html#natspec-format).
-- [ ] Please have final versions of contracts and documentation added/updated in this repo **no less than 24 hours prior to audit start time.**
-- [ ] Be prepared for a 🚨code freeze🚨 for the duration of the audit — important because it establishes a level playing field. We want to ensure everyone's looking at the same code, no matter when they look during the audit. (Note: this includes your own repo, since a PR can leak alpha to our wardens!)
-
----
-
-## ⭐️ Sponsor: Edit this README
-
-Under "SPONSORS ADD INFO HERE" heading below, include the following:
-
-- [ ] Modify the bottom of this `README.md` file to describe how your code is supposed to work with links to any relevent documentation and any other criteria/details that the C4 Wardens should keep in mind when reviewing. ([Here's a well-constructed example.](https://github.com/code-423n4/2022-08-foundation#readme))
-  - [ ] When linking, please provide all links as full absolute links versus relative links
-  - [ ] All information should be provided in markdown format (HTML does not render on Code4rena.com)
-- [x] Under the "Scope" heading, provide the name of each contract and:
-  - [x] source lines of code (excluding blank lines and comments) in each
-  - [x] external contracts called in each
-  - [x] libraries used in each
-- [ ] Describe any novel or unique curve logic or mathematical models implemented in the contracts
-- [ ] Does the token conform to the ERC-20 standard? In what specific ways does it differ?
-- [ ] Describe anything else that adds any special logic that makes your approach unique
-- [ ] Identify any areas of specific concern in reviewing the code
-- [ ] Review the Gas award pool amount. This can be adjusted up or down, based on your preference - just flag it for Code4rena staff so we can update the pool totals across all comms channels.
-- [ ] Optional / nice to have: pre-record a high-level overview of your protocol (not just specific smart contract functions). This saves wardens a lot of time wading through documentation.
-- [ ] See also: [this checklist in Notion](https://code4rena.notion.site/Key-info-for-Code4rena-sponsors-f60764c4c4574bbf8e7a6dbd72cc49b4#0cafa01e6201462e9f78677a39e09746)
-- [ ] Delete this checklist and all text above the line below when you're ready.
-
----
-
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
 [![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
 [![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
 [![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
 [![Docs](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
 
-# LUKSO audit details
+# Table of Content
 
-- Total Prize Pool: $100,000 USDC
-  - HM awards: $70,000 USDC
-  - Analysis awards: $4,250 USDC
-  - QA awards: $2,000 USDC
-  - Bot Race awards: $6,250 USDC
-  - Gas awards: $2,000 USDC
-  - Judge awards: $9,000 USDC
-  - Lookout awards: $6,000 USDC
-  - Scout awards: $500 USDC
-- Join [C4 Discord](https://discord.gg/code4rena) to register
-- Submit findings [using the C4 form](https://code4rena.com/contests/2023-06-lukso/submit)
-- [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
-- Starts June 20, 2023 20:00 UTC
-- Ends July 05, 2023 20:00 UTC
-
-**Table Of Content**
-
+- [LUKSO audit details](#lukso-audit-details)
 - [Automated Findings](#automated-findings)
 - [Overview](#overview)
   - [LSP0ERC725Account](#lsp0erc725account)
@@ -91,7 +26,10 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
   - [Out of scope](#out-of-scope)
 - [Additional Context](#additional-context)
   - [Scoping Details](#scoping-details)
-- [Tests](#tests)
+- [Instructions](#instructions)
+  - [Setup](#setup)
+  - [Build](#build)
+  - [Tests](#tests)
 - [Publicly Known Issues](#publicly-known-issues)
   - [General](#general)
   - [LSP0ERC725Account.sol](#lsp0erc725accountsol)
@@ -103,6 +41,23 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
   - [LSP17Extendable.sol](#lsp17extendablesol)
   - [LSP20CallVerification.sol](#lsp20callverificationsol)
 - [Slither Known Issues](#slither-known-issues)
+
+# LUKSO audit details
+
+- Total Prize Pool: $100,000 USDC
+  - HM awards: $70,000 USDC
+  - Analysis awards: $4,250 USDC
+  - QA awards: $2,000 USDC
+  - Bot Race awards: $6,250 USDC
+  - Gas awards: $2,000 USDC
+  - Judge awards: $9,000 USDC
+  - Lookout awards: $6,000 USDC
+  - Scout awards: $500 USDC
+- Join [C4 Discord](https://discord.gg/code4rena) to register
+- Submit findings [using the C4 form](https://code4rena.com/contests/2023-06-lukso/submit)
+- [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
+- Starts June 20, 2023 20:00 UTC
+- Ends July 05, 2023 20:00 UTC
 
 # Automated Findings
 
@@ -144,15 +99,15 @@ The new token standards on LUKSO share the following similarities:
 
 ### LSP4DigitalAssetMetadata
 
-_LSP4DigitalAssetMetadata_ is a metadata standard that defines metadata keys to store information related to a digital asset inside its ERC725Y storage, including the token name (`LSP4TokenName`) and its symbol (`LSP4TokenSymbol`). It also defines a standard JSON structure that can contain information describing the asset. Such standard information include a description of the asset, an icon for the digital asset, links to find out more (e.g: website, ...), or any additional custom attributes. Finally, it defines a metadata key that can contain the list of creator addresses for this asset (`LSP4Creators[]`).
+_[LSP4DigitalAssetMetadata]_ is a metadata standard that defines metadata keys to store information related to a digital asset inside its ERC725Y storage, including the token name (`LSP4TokenName`) and its symbol (`LSP4TokenSymbol`). It also defines a standard JSON structure that can contain information describing the asset. Such standard information include a description of the asset, an icon for the digital asset, links to find out more (e.g: website, ...), or any additional custom attributes. Finally, it defines a metadata key that can contain the list of creator addresses for this asset (`LSP4Creators[]`).
 
 ### LSP7DigitalAsset
 
-_LSP7DigitalAsset_ is a standard that defines a fungible token, meaning tokens that are mutually interchangeable (one token has the same value as another token). Like ERC20, tokens can be transferred in quantities, where a token holder can transfer multiple tokens by specifying an `uint256 amount` when using the `transfer(...)` function. By default, LSP7 Digital Assets are divisible like fiat currencies, where 1 token can be divided in smaller units (e.g: 1/10th of a token), with their `decimals()` set to 18 by default. However, LSP7 includes a feature that enables to make the token non divisible via the `isNonDivisible` parameter on deployment.
+_[LSP7DigitalAsset]_ is a standard that defines a fungible token, meaning tokens that are mutually interchangeable (one token has the same value as another token). Like ERC20, tokens can be transferred in quantities, where a token holder can transfer multiple tokens by specifying an `uint256 amount` when using the `transfer(...)` function. By default, LSP7 Digital Assets are divisible like fiat currencies, where 1 token can be divided in smaller units (e.g: 1/10th of a token), with their `decimals()` set to 18 by default. However, LSP7 includes a feature that enables to make the token non divisible via the `isNonDivisible` parameter on deployment.
 
 ### LSP8IdentifiableDigitalAsset
 
-_LSP8IdentifiableDigitalAsset_ is a standard that defines a non fungible token, meaning tokens that are unique and distinguishable from each other (one token cannot be replaced by another token). Each tokens are uniquely represented by their `bytes32 tokenId`, and can be transfered via the `transfer(...)` function, where the given as a parameter to the `transfer(...)` function.
+_[LSP8IdentifiableDigitalAsset]_ is a standard that defines a non fungible token, meaning tokens that are unique and distinguishable from each other (one token cannot be replaced by another token). Each tokens are uniquely represented by their `bytes32 tokenId`, and can be transfered via the `transfer(...)` function, where the given as a parameter to the `transfer(...)` function.
 
 LSP8 includes a feature that enables to define different types of tokens IDs via the `LSP8TokenIdType` metadata key. Token ID type varies from simple to complex, for instance:
 
@@ -201,7 +156,7 @@ Here are some examples of issues that we are mostly concerned about:
 | LSP0ERC725Account             | 532  | [LSP-0-ERC725Account]             | [LSP0ERC725Account]                                       |
 | UniversalProfile              | 47   | [LSP-3-UniversalProfile-Metadata] | [UniversalProfile]                                        |
 | LSP1UniversalReceiverDelegate | 252  | [LSP-1-UniversalReceiver]         | [LSP1UniversalReceiver] & [LSP1UniversalReceiverDelegate] |
-| LSP4DigitalAssetMetadata      | 116  | [LSP-4-DigitalAsset-Metadata]     | [LSP4DigitalAsset]                                        |
+| LSP4DigitalAssetMetadata      | 116  | [LSP-4-DigitalAsset-Metadata]     | [LSP4DigitalAssetMetadata]                                |
 | LSP6KeyManager                | 1439 | [LSP-6-KeyManager]                | [LSP6KeyManager]                                          |
 | LSP7DigitalAsset              | 860  | [LSP-7-DigitalAsset]              | [LSP7DigitalAsset]                                        |
 | LSP8IdentifiableDigitalAsset  | 1233 | [LSP-8-IdentifiableDigitalAsset]  | [LSP8IdentifiableDigitalAsset]                            |
@@ -533,7 +488,7 @@ forge test
 
 Additionally, you can run the coverage:
 
-> Coverage might fail if the contract size exceeds the limit (covergae run without optimization)
+> Coverage might fail if the contract size exceeds the limit (coverage run without optimization)
 
 ```
 npm run test:coverage
@@ -876,9 +831,9 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [LSP1UniversalReceiver]: https://docs.lukso.tech/standards/generic-standards/lsp1-universal-receiver
 [LSP1UniversalReceiverDelegate]: https://docs.lukso.tech/standards/generic-standards/lsp1-universal-receiver-delegate
 [LSP2ERC725YJSONSchema]: https://docs.lukso.tech/standards/generic-standards/lsp2-json-schema
-[LSP4DigitalAsset]: https://docs.lukso.tech/standards/nft-2.0/LSP4-Digital-Asset-Metadata
-[LSP6KeyManager]: https://docs.lukso.tech/standards/universal-profile/lsp5-received-assets
-[LSP5ReceivedVaults]: https://docs.lukso.tech/standards/universal-profile/lsp6-key-manager
+[LSP4DigitalAssetMetadata]: https://docs.lukso.tech/standards/nft-2.0/LSP4-Digital-Asset-Metadata
+[LSP5ReceivedVaults]: https://docs.lukso.tech/standards/universal-profile/lsp5-received-assets
+[LSP6KeyManager]: https://docs.lukso.tech/standards/universal-profile/lsp6-key-manager
 [LSP7DigitalAsset]: https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset
 [LSP8IdentifiableDigitalAsset]: https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset
 [LSP10ReceivedVaults]: https://docs.lukso.tech/standards/universal-profile/lsp10-received-vaults
