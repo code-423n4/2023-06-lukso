@@ -24,8 +24,6 @@ import '@nomiclabs/hardhat-web3';
 
 dotenvConfig({ path: resolve(__dirname, './.env') });
 
-dotenvConfig({ path: resolve(__dirname, './.env') });
-
 function getTestnetChainConfig(): NetworkUserConfig {
   const config: NetworkUserConfig = {
     live: true,
@@ -33,8 +31,8 @@ function getTestnetChainConfig(): NetworkUserConfig {
     chainId: 4201,
   };
 
-  if (process.env.CONTRACT_VERIFICATION_TESTNET_PK !== undefined) {
-    config['accounts'] = [process.env.CONTRACT_VERIFICATION_TESTNET_PK];
+  if (process.env.DEPLOYER_PRIVATE_KEY !== undefined) {
+    config['accounts'] = [process.env.DEPLOYER_PRIVATE_KEY];
   }
 
   return config;

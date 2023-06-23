@@ -428,7 +428,7 @@ npx hardhat size-contracts
 ### Deployment
 
 > Before deployment, add a private key to `.env` file in the root of the project
-> `CONTRACT_VERIFICATION_TESTNET_PK= ".."`
+> `DEPLOYER_PRIVATE_KEY= ".."`
 > Make sure the EOA have enough LYXt to fund the deployment of the contracts on LUKSO's Testnet
 > Faucet link: https://faucet.testnet.lukso.network/
 
