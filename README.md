@@ -70,6 +70,40 @@ Under "SPONSORS ADD INFO HERE" heading below, include the following:
 - Starts June 20, 2023 20:00 UTC
 - Ends July 05, 2023 20:00 UTC
 
+**Table Of Content**
+
+- [Automated Findings](#automated-findings)
+- [Overview](#overview)
+  - [LSP0ERC725Account](#lsp0erc725account)
+  - [LSP1UniversalReceiver](#lsp1universalreceiver)
+  - [LSP1UniversalReceiverDelegate](#lsp1universalreceiverdelegate)
+  - [LSP6KeyManager](#lsp6keymanager)
+  - [Tokens](#tokens)
+    - [LSP4DigitalAssetMetadata](#lsp4digitalassetmetadata)
+    - [LSP7DigitalAsset](#lsp7digitalasset)
+    - [LSP8IdentifiableDigitalAsset](#lsp8identifiabledigitalasset)
+  - [LSP14Ownable2Step](#lsp14ownable2step)
+  - [LSP17ContractExtension](#lsp17contractextension)
+  - [LSP20CallVerification](#lsp20callverification)
+- [Scope](#scope)
+  - [Summary](#summary)
+  - [Contracts in scope](#contracts-in-scope)
+  - [Out of scope](#out-of-scope)
+- [Additional Context](#additional-context)
+  - [Scoping Details](#scoping-details)
+- [Tests](#tests)
+- [Publicly Known Issues](#publicly-known-issues)
+  - [General](#general)
+  - [LSP0ERC725Account.sol](#lsp0erc725accountsol)
+  - [LSP1UniversalReceiverDelegateUP.sol](#lsp1universalreceiverdelegateupsol)
+  - [LSP6KeyManager.sol](#lsp6keymanagersol)
+  - [LSP7DigitalAsset.sol](#lsp7digitalassetsol)
+  - [LSP8IdentifiableDigitalAsset.sol](#lsp8identifiabledigitalassetsol)
+  - [LSP14Ownable2Step.sol](#lsp14ownable2stepsol)
+  - [LSP17Extendable.sol](#lsp17extendablesol)
+  - [LSP20CallVerification.sol](#lsp20callverificationsol)
+- [Slither Known Issues](#slither-known-issues)
+
 # Automated Findings
 
 Automated findings output for the audit can be found within 24 hours of audit opening.
