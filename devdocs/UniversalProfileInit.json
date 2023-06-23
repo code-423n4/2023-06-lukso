@@ -1,0 +1,216 @@
+{
+  "author": "Fabian Vogelsteller <fabian@lukso.network>",
+  "details": "Implementation of the ERC725Account + LSP1 universalReceiver",
+  "errors": {
+    "CannotTransferOwnershipToSelf()": [
+      {
+        "details": "reverts when trying to transfer ownership to the address(this)"
+      }
+    ],
+    "ERC725X_ContractDeploymentFailed()": [
+      {
+        "details": "reverts when contract deployment via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` failed. whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_CreateOperationsRequireEmptyRecipientAddress()": [
+      {
+        "details": "reverts when passing a `to` address while deploying a contract va `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_ExecuteParametersEmptyArray()": [
+      {
+        "details": "reverts when one of the array parameter provided to `executeBatch(uint256[],address[],uint256[],bytes[]) is an empty array"
+      }
+    ],
+    "ERC725X_ExecuteParametersLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of operation, to addresses, value, and data."
+      }
+    ],
+    "ERC725X_InsufficientBalance(uint256,uint256)": [
+      {
+        "details": "reverts when trying to send more native tokens `value` than available in current `balance`.",
+        "params": {
+          "balance": "the balance of the ERC725X contract.",
+          "value": "the amount of native tokens sent via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)`."
+        }
+      }
+    ],
+    "ERC725X_MsgValueDisallowedInDelegateCall()": [
+      {
+        "details": "the `value` parameter (= sending native tokens) is not allowed when making a delegatecall via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` because msg.value is persisting."
+      }
+    ],
+    "ERC725X_MsgValueDisallowedInStaticCall()": [
+      {
+        "details": "the `value` parameter (= sending native tokens) is not allowed when making a staticcall via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)` because sending native tokens is a state changing operation."
+      }
+    ],
+    "ERC725X_NoContractBytecodeProvided()": [
+      {
+        "details": "reverts when no contract bytecode was provided as parameter when trying to deploy a contract via `ERC725X.execute(...)`/`ERC725X.executeBatch(...)`, whether using operation type 1 (CREATE) or 2 (CREATE2)."
+      }
+    ],
+    "ERC725X_UnknownOperationType(uint256)": [
+      {
+        "details": "reverts when the `operationTypeProvided` is none of the default operation types available. (CALL = 0; CREATE = 1; CREATE2 = 2; STATICCALL = 3; DELEGATECALL = 4)"
+      }
+    ],
+    "ERC725Y_DataKeysValuesLengthMismatch()": [
+      {
+        "details": "reverts when there is not the same number of elements in the lists of data keys and data values when calling setDataBatch."
+      }
+    ],
+    "LSP20CallingVerifierFailed(bool)": [
+      {
+        "details": "reverts when the call to the owner fail with no revert reason",
+        "params": {
+          "postCall": "True if the execution call was done, False otherwise"
+        }
+      }
+    ],
+    "LSP20InvalidMagicValue(bool,bytes)": [
+      {
+        "details": "reverts when the call to the owner does not return the magic value",
+        "params": {
+          "postCall": "True if the execution call was done, False otherwise",
+          "returnedData": "The data returned by the call to the logic verifier"
+        }
+      }
+    ],
+    "NoExtensionFoundForFunctionSelector(bytes4)": [
+      {
+        "details": "reverts when there is no extension for the function selector being called with"
+      }
+    ],
+    "NotInRenounceOwnershipInterval(uint256,uint256)": [
+      {
+        "details": "reverts when trying to renounce ownership before the initial confirmation delay"
+      }
+    ]
+  },
+  "kind": "dev",
+  "methods": {
+    "acceptOwnership()": {
+      "custom:requirements": "- MUST be called by the pendingOwner. - When notifying the previous owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_SenderNotification')`. - When notifying the new owner via LSP1, the typeId used MUST be `keccak256('LSP0OwnershipTransferred_RecipientNotification')`.",
+      "details": "Transfer ownership of the contract from the current {`owner()`} to the {`pendingOwner()`}. Once this function is called: - the current {`owner()`} will loose access to the functions restricted to the {`owner()`} only. - the {`pendingOwner()`} will gain access to the functions restricted to the {`owner()`} only."
+    },
+    "batchCalls(bytes[])": {
+      "details": "Allows a caller to batch different function calls in one call. Perform a delegatecall on self, to call different functions with preserving the context It is not possible to send value along the functions call due to the use of delegatecall.",
+      "params": {
+        "data": "An array of ABI encoded function calls to be called on the contract."
+      },
+      "returns": {
+        "results": "An array of values returned by the executed functions."
+      }
+    },
+    "constructor": {
+      "details": "Locks the base contract on deployment, so that it cannot be initialized, owned and controlled by anyone after it has been deployed. This is intended so that the sole purpose of this contract is to be used as a base contract behind a proxy."
+    },
+    "execute(uint256,address,uint256,bytes)": {
+      "custom:events": "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 - {ValueReceived} event when receiving native tokens.",
+      "custom:requirements": "- if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
+      "details": "Executes any call on other addresses.",
+      "params": {
+        "data": "The call data to execute on `target`, or the bytecode of the contract to deploy.",
+        "operationType": "The operation to execute: `CALL = 0`, `CREATE = 1` `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
+        "target": "The address (smart contract/EOA) to interact with, `target` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+        "value": "The amount of native tokens to transfer (in Wei)."
+      }
+    },
+    "executeBatch(uint256[],address[],uint256[],bytes[])": {
+      "custom:events": "- {Executed} event, when a call is executed under `operationType` 0, 3 and 4 (each iteration) - {ContractCreated} event, when a contract is created under `operationType` 1 and 2 (each iteration) - {ValueReceived} event when receiving native tokens.",
+      "custom:requirements": "- The length of the parameters provided MUST be equal - if a `value` is provided, the contract MUST have at least this amount in its balance to execute successfully. - if the operation type is `STATICCALL` or `DELEGATECALL`, `value` SHOULD be 0. - `target` SHOULD be `address(0)` when deploying a contract. - MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
+      "details": "Generic batch executor function that executes any call on other addresses",
+      "params": {
+        "datas": "The list of call data to execute on `targets`, or the creation bytecode of the contracts to deploy.",
+        "operationsType": "The list of operations type used: `CALL = 0`, `CREATE = 1`, `CREATE2 = 2`, `STATICCALL = 3`, `DELEGATECALL = 4`.",
+        "targets": "The list of addresses to call. `targets` will be unused if a contract is created (`CREATE` & `CREATE2`).",
+        "values": "The list of native token amounts to transfer (in Wei)."
+      }
+    },
+    "getData(bytes32)": {
+      "params": {
+        "dataKey": "The key which value to retrieve"
+      },
+      "returns": {
+        "dataValue": "The data stored at the key"
+      }
+    },
+    "getDataBatch(bytes32[])": {
+      "params": {
+        "dataKeys": "The array of keys which values to retrieve"
+      },
+      "returns": {
+        "dataValues": "The array of data stored at multiple keys"
+      }
+    },
+    "initialize(address)": {
+      "details": "Set `initialOwner` as the contract owner and set the `SupportedStandards:LSP3UniversalProfile` data key in the ERC725Y data key/value store. The `initialOwner` will then be allowed to call protected functions marked with the `onlyOwner` modifier. The `initialize(address)` function also allows funding the contract on initialization. Emitted Events: - ValueReceived: when the contract is funded on initialization.",
+      "params": {
+        "initialOwner": "the owner of the contract"
+      }
+    },
+    "isValidSignature(bytes32,bytes)": {
+      "details": "Handles two cases: 1. If the owner is an EOA, recovers an address from the hash and the signature provided:      - Returns the magicValue if the address recovered is the same as the owner, indicating that it was a valid signature.      - If the address is different, it returns the fail value indicating that the signature is not valid. 2. If the owner is a smart contract, it forwards the call of {isValidSignature()} to the owner contract:      - If the contract fails or returns the fail value, the {isValidSignature()} on the account returns the fail value, indicating that the signature is not valid.      - If the {isValidSignature()} on the owner returned the magicValue, the {isValidSignature()} on the account returns the magicValue, indicating that it's a valid signature.",
+      "params": {
+        "dataHash": "The hash of the data to be validated.",
+        "signature": "A signature that can validate the previous parameter (Hash)."
+      },
+      "returns": {
+        "magicValue": "A bytes4 value that indicates if the signature is valid or not."
+      }
+    },
+    "owner()": {
+      "details": "Returns the address of the current owner."
+    },
+    "pendingOwner()": {
+      "details": "The address that ownership of the contract is transferred to. This address may use {acceptOwnership()} to gain ownership of the contract."
+    },
+    "renounceOwnership()": {
+      "custom:danger": "Leaves the contract without an owner. Once ownership of the contract has been renounced, any functions that are restricted to be called by the owner will be permanently inaccessible, making these functions not callable anymore and unusable.",
+      "details": "Renounce ownership of the contract in a 2-step process. 1. the first call will initiate the process of renouncing ownership. 2. the second is used as a confirmation and will leave the contract without an owner. MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification"
+    },
+    "setData(bytes32,bytes)": {
+      "custom:events": "- {ValueReceived} event when receiving native tokens. - {DataChanged} event.",
+      "custom:requirements": "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
+      "details": "Sets singular data for a given `dataKey`",
+      "params": {
+        "dataKey": "The key to retrieve stored value",
+        "dataValue": "The value to set"
+      }
+    },
+    "setDataBatch(bytes32[],bytes[])": {
+      "custom:events": "- {ValueReceived} event when receiving native tokens. - {DataChanged} event. (on each iteration of setting data)",
+      "custom:requirements": "- MUST pass when called by the owner or by an authorised address that pass the verification check performed on the owner accordinng to [LSP20-CallVerification] specification",
+      "details": "Sets array of data for multiple given `dataKeys`",
+      "params": {
+        "dataKeys": "The array of data keys for values to set",
+        "dataValues": "The array of values to set"
+      }
+    },
+    "supportsInterface(bytes4)": {
+      "details": "Returns true if this contract implements the interface defined by `interfaceId`. If the contract doesn't support the `interfaceId`, it forwards the call to the `supportsInterface` extension according to LSP17, and checks if the extension implements the interface defined by `interfaceId`."
+    },
+    "transferOwnership(address)": {
+      "custom:requirements": "- MUST pass when called by the owner or by an authorized address that passes the verification check performed on the owner according to [LSP20-CallVerification] specification. - When notifying the new owner via LSP1, the `typeId` used MUST be `keccak256('LSP0OwnershipTransferStarted')`. - Pending owner cannot accept ownership in the same tx via the LSP1 hook.",
+      "details": "Sets the address of the `pendingNewOwner` as a pending owner that should call {`acceptOwnership()`} in order to complete the ownership transfer to become the new {`owner()`} of the account. Notifies the pending owner via LSP1Standard by calling {universalReceiver()} on the pending owner if it's an address that supports LSP1.",
+      "params": {
+        "pendingNewOwner": "The address of the new pending owner."
+      }
+    },
+    "universalReceiver(bytes32,bytes)": {
+      "custom:events": "- {ValueReceived} when receiving native tokens. - {UniversalReceiver} event.",
+      "details": "The function performs the following steps: 1. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY]`.      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function. 2. Query the ERC725Y storage with the data key `[_LSP1_UNIVERSAL_RECEIVER_DELEGATE_KEY] + <bytes32 typeId>`.   (Check [LSP2-ERC725YJSONSchema] for encoding the data key)      - If there is an address stored under the data key, check if this address supports the LSP1 interfaceId.      - If yes, call this address with the typeId and data (params), along with additional calldata consisting of 20 bytes of `msg.sender` and 32 bytes of `msg.value`. If not, continue the execution of the function.",
+      "params": {
+        "receivedData": "The data received.",
+        "typeId": "The type of call received."
+      },
+      "returns": {
+        "returnedValues": "The ABI encoded return value of the LSP1UniversalReceiverDelegate call and the LSP1TypeIdDelegate call."
+      }
+    }
+  },
+  "title": "Deployable Proxy implementation of a LUKSO's Universal Profile based on LSP3",
+  "version": 1
+}

@@ -1,0 +1,38 @@
+{
+  "events": {
+    "ContractCreated(uint256,address,uint256,bytes32)": {
+      "notice": "Emitted when deploying a contract"
+    },
+    "DataChanged(bytes32,bytes)": {
+      "notice": "Emitted when data at a key is changed"
+    },
+    "Executed(uint256,address,uint256,bytes4)": {
+      "notice": "Emitted when calling an address (EOA or contract)"
+    },
+    "UniversalReceiver(address,uint256,bytes32,bytes,bytes)": {
+      "notice": "Emitted when the universalReceiver function is succesfully executed"
+    },
+    "ValueReceived(address,uint256)": {
+      "notice": "Emitted when receiving native tokens"
+    }
+  },
+  "kind": "user",
+  "methods": {
+    "getData(bytes32)": {
+      "notice": "Gets singular data at a given `dataKey`"
+    },
+    "getDataBatch(bytes32[])": {
+      "notice": "Gets array of data for multiple given keys"
+    },
+    "initialize(address)": {
+      "notice": "Initializing the contract owner to: `newOwner`"
+    },
+    "setData(bytes32,bytes)": {
+      "notice": "Sets singular data for a given `dataKey`"
+    },
+    "universalReceiver(bytes32,bytes)": {
+      "notice": "Triggers the UniversalReceiver event when this function gets executed successfully. Forwards the call to the addresses stored in the ERC725Y storage under the LSP1UniversalReceiverDelegate Key and the typeId Key (param) respectively. The call will be discarded if no addresses are set."
+    }
+  },
+  "version": 1
+}

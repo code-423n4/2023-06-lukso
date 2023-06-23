@@ -1,0 +1,53 @@
+{
+  "events": {
+    "ContractCreated(uint256,address,uint256,bytes32)": {
+      "notice": "Emitted when deploying a contract"
+    },
+    "DataChanged(bytes32,bytes)": {
+      "notice": "Emitted when data at a key is changed"
+    },
+    "Executed(uint256,address,uint256,bytes4)": {
+      "notice": "Emitted when calling an address (EOA or contract)"
+    },
+    "UniversalReceiver(address,uint256,bytes32,bytes,bytes)": {
+      "notice": "Emitted when the universalReceiver function is succesfully executed"
+    },
+    "ValueReceived(address,uint256)": {
+      "notice": "Emitted when receiving native tokens"
+    }
+  },
+  "kind": "user",
+  "methods": {
+    "acceptOwnership()": {
+      "notice": "Achieves the goal of LSP14Ownable2Step by implementing a 2-step ownership transfer process."
+    },
+    "constructor": {
+      "notice": "deploying a `LSP0ERC725AccountInit` base contract to be used behind proxy"
+    },
+    "getData(bytes32)": {
+      "notice": "Gets singular data at a given `dataKey`"
+    },
+    "getDataBatch(bytes32[])": {
+      "notice": "Gets array of data for multiple given keys"
+    },
+    "initialize(address)": {
+      "notice": "Initializing the contract owner to: `initialOwner`"
+    },
+    "isValidSignature(bytes32,bytes)": {
+      "notice": "Achieves the goal of [EIP-1271] by validating signatures of smart contracts according to their own logic."
+    },
+    "renounceOwnership()": {
+      "notice": "Achieves the goal of LSP14Ownable2Step by implementing a 2-step ownership renouncing process."
+    },
+    "supportsInterface(bytes4)": {
+      "notice": "Achieves the goal of ERC165 to detect supported interfaces and LSP17 by checking if the interfaceId being queried is supported on another linked extension."
+    },
+    "transferOwnership(address)": {
+      "notice": "Achieves the goal of LSP14Ownable2Step by implementing a 2-step ownership transfer process."
+    },
+    "universalReceiver(bytes32,bytes)": {
+      "notice": "Achieves the goal of [LSP1-UniversalReceiver] by allowing the account to be notified about incoming/outgoing transactions and enabling reactions to these actions. The reaction is achieved by having two external contracts (UniversalReceiverDelegates) that react on the whole transaction and on the specific typeId, respectively. The notification is achieved by emitting a {UniversalReceiver} event on the call with the function parameters, call options, and the response of the UniversalReceiverDelegates (URD) contract."
+    }
+  },
+  "version": 1
+}

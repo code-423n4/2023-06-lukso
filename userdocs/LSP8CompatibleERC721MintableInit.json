@@ -1,0 +1,29 @@
+{
+  "events": {
+    "Approval(address,address,uint256)": {
+      "notice": "To provide compatibility with indexing ERC721 events."
+    },
+    "DataChanged(bytes32,bytes)": {
+      "notice": "Emitted when data at a key is changed"
+    },
+    "Transfer(address,address,uint256)": {
+      "notice": "To provide compatibility with indexing ERC721 events."
+    }
+  },
+  "kind": "user",
+  "methods": {
+    "getData(bytes32)": {
+      "notice": "Gets singular data at a given `dataKey`"
+    },
+    "getDataBatch(bytes32[])": {
+      "notice": "Gets array of data for multiple given keys"
+    },
+    "initialize(string,string,address)": {
+      "notice": "Sets the name, the symbol and the owner of the token"
+    },
+    "setData(bytes32,bytes)": {
+      "notice": "Sets singular data for a given `dataKey`"
+    }
+  },
+  "version": 1
+}
