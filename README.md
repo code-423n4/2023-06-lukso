@@ -330,14 +330,38 @@ LSP7 and LSP8 are different in terms of their interface and the way to interact 
 We have also included two contracts that can be used and interacted with the same way as you would interact with ERC20 / ERC721 tokens, while leveraging the core functionalities of the LSP7/8 standards.
 
 - `LSP7CompatibleERC20`, which contains all the LSP7 public functions + the following ERC20 public functions: `allowance(...)`, `approve(...)`, `transfer(...)` and `transferFrom(...)`
-- `LSP8CompatibleERC721`, which contains the LSP8 public functions + the following ERC721 public functions: `tokenURI(...)`, `ownerOf(...)`, `getApproved(...)`, `isApprovedForAll(...)`, `approve(...)`, `setApprovalForAll(...)`, `transferFrom(...)`, `safeTransferFrom(...)` and `authorizeOperator(...)`
+- `LSP8CompatibleERC721`, which contains the LSP8 public functions + the following ERC721 public functions: `tokenURI(...)`, `ownerOf(...)`, `getApproved(...)`, `isApprovedForAll(...)`, `approve(...)`, `setApprovalForAll(...)`, `transferFrom(...)`, `safeTransferFrom(...)` and `authorizeOperator(...)`.
 
-When doing token transfers or approving operators either using the LSP7/LSP8 functions or the ERC20/721 function, will behave the same way as the respective ERC20 / ERC721 functions, with the addition to wrap all the logic of the native LSP7/LSP8 functions inside them. This include:
+This means that all the logic of the native LSP7/LSP8 functions for token transfers and operator approvals are wrapped inside the ERC20/ERC721 related functions.
 
-- for `LSP7CompatibleERC20`
-  - returning `true` on `transfer(...)` or `transferFrom(...)`
-  - emitting the ERC20 `Transfer` when doing token transfer.
-  - emitting the ERC20 `Approval` event when calling the ERC20 function `approve(...)`.
+In details, in `LSP7CompatibleERC20`, for any of these transfer and approval functions.
+
+- `LSP7.transfer(address,address,uint256,bool,bytes)`
+- `LSP7.authorizeOperator(address,address,uint256)`
+- `ERC20.transfer(address,uint256)`
+- `ERC20.transferFrom(address,address,uint256)`
+- `ERC20.approve(address,uint256)`
+
+The behavior specific to this contract is as follow:
+
+- the `LSP1.universalReceiver(...)` function on the `from` and `to` address is made when calling any of the transfer functions listed above (whether from LSP7 or ERC20).
+- the ERC20 `Transfer` event is emitted for any of the transfer functions listed above (whether from LSP7 or ERC20).
+- the ERC20 `Approval` event is emitted in both the `LSP7.authorizeOperator(...)` and the `ERC20.approve(...)` function.
+
+In details, in `LSP8CompatibleERC721`, for any of these transfer and approval functions.
+
+- `LSP8.transfer(address,address,bytes32,bool,bytes)`
+- `LSP8.authorizeOperator(address,address,bytes32)`
+- `ERC721.transferFrom(address,address,uint256)`
+- `ERC721.safeTransferFrom(address,address,uint256)`
+- `ERC721.safeTransferFrom(address,address,uint256,bytes)`
+- `ERC721.approve(address,uint256)`
+
+The behavior specific to this contract is as follow:
+
+- the `LSP1.universalReceiver(...)` function on the `from` and `to` address is made when calling any of the transfer functions listed above (whether from LSP8 or ERC721).
+- the ERC721 `Transfer` event is emitted for any of the transfer functions listed above (whether from LSP8 or ERC721).
+- the ERC721 `Approval` event is emitted in both the `LSP8.authorizeOperator(...)` and the `ERC721.approve(...)` function.
 
 ## Scoping Details
 
