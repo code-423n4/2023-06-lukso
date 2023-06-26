@@ -1,8 +1,8 @@
 [![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
-[![Discord](https://img.shields.io/badge/Discord-555?logo=discord)](https://discord.com/invite/lukso)
-[![Contracts](https://img.shields.io/badge/Contracts-555)](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
-[![LIPs](https://img.shields.io/badge/LIPs-555)](https://github.com/lukso-network/LIPs)
-[![Docs](https://img.shields.io/badge/Docs-555)](https://docs.lukso.tech)
+[![Discord](https://img.shields.io/badge/Discord-7289da?logo=discord)](https://discord.com/invite/lukso)
+[![Contracts](https://img.shields.io/badge/Smart-Contracts-555?logo=solidity)](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
+[![LIPs](https://img.shields.io/badge/LIPs-555?logo=github)](https://github.com/lukso-network/LIPs)
+[![Docs](https://img.shields.io/badge/Docs-007500?logo=readthedocs)](https://docs.lukso.tech)
 
 # Table of Content
 
@@ -25,17 +25,25 @@
   - [Contracts in scope](#contracts-in-scope)
   - [Out of scope](#out-of-scope)
 - [Additional Context](#additional-context)
+  - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#-lsp7compatibleerc20--and--lsp8compatibleerc721-)
   - [Scoping Details](#scoping-details)
 - [Instructions](#instructions)
   - [Setup](#setup)
   - [Build](#build)
-  - [Tests](#tests)
+  - [Hardhat Tests](#hardhat-tests)
+  - [Gas benchmark](#gas-benchmark)
+  - [Foundry Tests](#foundry-tests)
+  - [Code Coverage](#code-coverage)
+  - [Contract Size](#contract-size)
+  - [Deployment](#deployment)
 - [Publicly Known Issues](#publicly-known-issues)
+  - [Previous audits](#previous-audits)
   - [General](#general)
   - [LSP0ERC725Account.sol](#lsp0erc725accountsol)
   - [LSP1UniversalReceiverDelegateUP.sol](#lsp1universalreceiverdelegateupsol)
   - [LSP6KeyManager.sol](#lsp6keymanagersol)
   - [LSP7DigitalAsset.sol](#lsp7digitalassetsol)
+  - [LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
   - [LSP8IdentifiableDigitalAsset.sol](#lsp8identifiabledigitalassetsol)
   - [LSP14Ownable2Step.sol](#lsp14ownable2stepsol)
   - [LSP17Extendable.sol](#lsp17extendablesol)
@@ -131,13 +139,7 @@ _[LSP20CallVerification]_ is an innovative module designed to simplify access co
 
 ![LSP20 Diagram](https://docs.lukso.tech/assets/images/LSP20-example-LSP6-2af355425a5873f9474cf4329ce859a7.jpeg)
 
-_Please provide some context about the code being audited, and identify any areas of specific concern in reviewing the code. (This is a good place to link to your docs, if you have them.)_
-
 # Scope
-
-_List all files in scope in the table below (along with hyperlinks) -- and feel free to add notes here to emphasize areas of focus._
-
-_For line of code counts, we recommend using [cloc](https://github.com/AlDanial/cloc)._
 
 Here are some examples of issues that we are mostly concerned about:
 
@@ -150,23 +152,23 @@ Here are some examples of issues that we are mostly concerned about:
 
 ## Summary
 
-| Scope                         | code | Standard Specifications           | Standard Documentation                                    |
-| ----------------------------- | ---- | --------------------------------- | --------------------------------------------------------- |
-| ERC725                        | 503  | [ERC-725]                         | [ERC725]                                                  |
-| LSP0ERC725Account             | 532  | [LSP-0-ERC725Account]             | [LSP0ERC725Account]                                       |
-| UniversalProfile              | 47   | [LSP-3-UniversalProfile-Metadata] | [UniversalProfile]                                        |
-| LSP1UniversalReceiverDelegate | 252  | [LSP-1-UniversalReceiver]         | [LSP1UniversalReceiver] & [LSP1UniversalReceiverDelegate] |
-| LSP4DigitalAssetMetadata      | 116  | [LSP-4-DigitalAsset-Metadata]     | [LSP4DigitalAssetMetadata]                                |
-| LSP6KeyManager                | 1439 | [LSP-6-KeyManager]                | [LSP6KeyManager]                                          |
-| LSP7DigitalAsset              | 860  | [LSP-7-DigitalAsset]              | [LSP7DigitalAsset]                                        |
-| LSP8IdentifiableDigitalAsset  | 1233 | [LSP-8-IdentifiableDigitalAsset]  | [LSP8IdentifiableDigitalAsset]                            |
-| LSP14Ownable2Step             | 119  | [LSP-14-Ownable2Step]             | [LSP14Ownable2Step]                                       |
-| LSP17ContractExtension        | 103  | [LSP-17-ContractExtension]        | [LSP17ContractExtension]                                  |
-| LSP20CallVerification         | 81   | [LSP-20-CallVerification]         | [LSP20CallVerification]                                   |
-| LSP2Utils                     | 51   | [LSP-2-ERC725YJSONSchema]         | [LSP2ERC725YJSONSchema]                                   |
-| LSP5Utils                     | 126  | [LSP-4-DigitalAsset-Metadata]     | [LSP5ReceivedVaults]                                      |
-| LSP10Utils                    | 116  | [LSP-10-ReceivedVaults]           | [LSP10ReceivedVaults]                                     |
-| SUM                           | 5578 |                                   |                                                           |
+| Scope                         | lines of code | 📄 Standard Specifications        | 📚 Documentation                                          |
+| ----------------------------- | :------------ | --------------------------------- | --------------------------------------------------------- |
+| ERC725                        | 503           | [ERC-725]                         | [ERC725]                                                  |
+| LSP0ERC725Account             | 532           | [LSP-0-ERC725Account]             | [LSP0ERC725Account]                                       |
+| UniversalProfile              | 47            | [LSP-3-UniversalProfile-Metadata] | [UniversalProfile]                                        |
+| LSP1UniversalReceiverDelegate | 252           | [LSP-1-UniversalReceiver]         | [LSP1UniversalReceiver] & [LSP1UniversalReceiverDelegate] |
+| LSP4DigitalAssetMetadata      | 116           | [LSP-4-DigitalAsset-Metadata]     | [LSP4DigitalAssetMetadata]                                |
+| LSP6KeyManager                | 1439          | [LSP-6-KeyManager]                | [LSP6KeyManager]                                          |
+| LSP7DigitalAsset              | 860           | [LSP-7-DigitalAsset]              | [LSP7DigitalAsset]                                        |
+| LSP8IdentifiableDigitalAsset  | 1233          | [LSP-8-IdentifiableDigitalAsset]  | [LSP8IdentifiableDigitalAsset]                            |
+| LSP14Ownable2Step             | 119           | [LSP-14-Ownable2Step]             | [LSP14Ownable2Step]                                       |
+| LSP17ContractExtension        | 103           | [LSP-17-ContractExtension]        | [LSP17ContractExtension]                                  |
+| LSP20CallVerification         | 81            | [LSP-20-CallVerification]         | [LSP20CallVerification]                                   |
+| LSP2Utils                     | 51            | [LSP-2-ERC725YJSONSchema]         | [LSP2ERC725YJSONSchema]                                   |
+| LSP5Utils                     | 126           | [LSP-4-DigitalAsset-Metadata]     | [LSP5ReceivedVaults]                                      |
+| LSP10Utils                    | 116           | [LSP-10-ReceivedVaults]           | [LSP10ReceivedVaults]                                     |
+| SUM                           | 5578          |                                   |                                                           |
 
 ---
 
@@ -329,7 +331,7 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 # Additional Context
 
-- The **LSP1UniversalReceiverDelegateUP** contract will be utilized as the primary UniversalReceiverDelegate (not a UniversalReceiverDelegate mapped to a specific typeId via the `LSP1UniversalReceiverDelegate:<typeId> data key) for the majority of **UniversalProfiles** deployed on the network. Instead of deploying a UniversalReceiverDelegate for each individual UniversalProfile, this contract operates based on global variables and parameters. A single instance of this contract will be deployed and assigned to all UniversalProfiles.
+- The **LSP1UniversalReceiverDelegateUP** contract will be utilized as the primary UniversalReceiverDelegate (not a UniversalReceiverDelegate mapped to a specific typeId via the `LSP1UniversalReceiverDelegate:<typeId>` data key) for the majority of **UniversalProfiles** deployed on the network. Instead of deploying a UniversalReceiverDelegate for each individual UniversalProfile, this contract operates based on global variables and parameters. A single instance of this contract will be deployed and assigned to all UniversalProfiles.
 
   Additionally, this contract will be granted the `SUPER_SETDATA` and `REENTRANCY` permissions across all UniversalProfiles according to [LSP6KeyManager]. Given this design and architecture, it's essential to thoroughly investigate and identify potential bugs or vulnerabilities. Particular attention should be given to any possible loopholes that could allow for unintended write access to the storage of contracts beyond the `msg.sender` (the UniversalProfile initiating the call), bypassing of permissions, among other security concerns.
 
@@ -548,7 +550,19 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vau
 
 # Publicly Known Issues
 
-Any issue mentioned in the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
+### Previous audits
+
+The current contract have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
+
+Any issue mentioned in the report listed under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
+
+- [Chainsulting audit report (06/07/2022)](./audits/Chainsulting_audit_2022_07_06.pdf)
+- [Quantstamp audit (07/09/2022)](./audits/Quantstamp_audit_2022_09_07.pdf)
+- [Watchpug audit (20/10/2022)](./audits/Watchpug_audit_2022_10_20.pdf)
+- [Watchpug audit (15/12/2022)](./audits/Watchpug_audit_2022_12_15.pdf)
+- [RuntimeVerification formalVerification (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
+- [Trust audit (2023/04/13)](./audits/Trust_audit_2023_04_13.pdf)
+- [Watchpug audit (2023/04/21)](./audits/Watchpug_audit_2023_04_21.pdf)
 
 ### General
 
