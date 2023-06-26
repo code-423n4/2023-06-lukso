@@ -608,6 +608,38 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
+### LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol
+
+`LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
+
+We do not return a boolean in LSP7 because we want to stay consistent with the other functions from the LSP7 interface (like `authorizeOperator(...)` and `transfer(...)`) that do not return anything, as defined in the `ILSP7DigitalAsset.sol` interface.
+
+In `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`, we cannot override the LSP7 function to return a boolean in these two contracts, because we cannot override the function definitions _"from returning nothing to returning something"_ (the Solidity compiler does not allow this).
+
+We are currently aware of this issue being not completely in-line with ERC20 in `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`.
+
+One way we are planning to mitigate this issue is by adding an assembly block that returns a `true` boolean in these two functions in these two contracts. This will not change anything if these function are interacted with the Solidity function call syntax (_e.g: `LSP7CompatibleERC20.increaseAllowance(operatorAddress, 10 ether)`_), but if interacted via low level call, it will enable to decode the returned data as a `bool` and process it, as shown below:
+
+```solidity
+bytes memory increaseAllowanceCalldata = abi.encodeWithSelector(
+    this.increaseAllowance.selector,
+    operatorAddress,
+    10 ether
+);
+
+(bool success, bytes memory result) = address(
+    lsp7CompatibleContractAddress
+).call(increaseAllowanceCalldata);
+
+// if the external call completed successfully
+if (success) {
+    // decode the `result` as a boolean and ensure it is `true`
+    bool booleanReturned = abi.decode(result, (bool));
+
+    require(booleanReturned == true);
+}
+```
+
 ### LSP8IdentifiableDigitalAsset.sol
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
