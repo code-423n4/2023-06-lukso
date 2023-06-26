@@ -324,6 +324,45 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 - In the `execute(uint256,address,uint256,bytes)` function of **ERC725X**, no additional checks have been introduced to verify that the owner has not changed following a delegatecall. This is a design choice, as introducing such checks might give a false sense of security. It's possible that a malicious actor could momentarily alter the owner variable during the delegatecall, and do malicious action and reset it afterwards, thereby bypassing the check. Additionally, the importance of the owner variable may vary between different contracts and implementations. For instance, a delegatecall could modify the ERC725Y storage, which in certain cases might serve as the principal access point to the account. This is particularly relevant for when the account is owned by an **LSP6KeyManager**, where permissions are stored in the ERC725Y storage rather than being tied to the owner variable.
 
+## `LSP7CompatibleERC20` and `LSP8CompatibleERC721`
+
+LSP7 and LSP8 are different in terms of their interface and the way to interact with them compared to the traditional ERC20 and ERC721 token standards.
+We have also included two contracts that can be used and interacted with the same way as you would interact with ERC20 / ERC721 tokens, while leveraging the core functionalities of the LSP7/8 standards.
+
+- `LSP7CompatibleERC20`, which contains all the LSP7 public functions + the following ERC20 public functions: `allowance(...)`, `approve(...)`, `transfer(...)` and `transferFrom(...)`
+- `LSP8CompatibleERC721`, which contains the LSP8 public functions + the following ERC721 public functions: `tokenURI(...)`, `ownerOf(...)`, `getApproved(...)`, `isApprovedForAll(...)`, `approve(...)`, `setApprovalForAll(...)`, `transferFrom(...)`, `safeTransferFrom(...)` and `authorizeOperator(...)`.
+
+This means that all the logic of the native LSP7/LSP8 functions for token transfers and operator approvals are wrapped inside the ERC20/ERC721 related functions.
+
+In details, in `LSP7CompatibleERC20`, for any of these transfer and approval functions.
+
+- `LSP7.transfer(address,address,uint256,bool,bytes)`
+- `LSP7.authorizeOperator(address,address,uint256)`
+- `ERC20.transfer(address,uint256)`
+- `ERC20.transferFrom(address,address,uint256)`
+- `ERC20.approve(address,uint256)`
+
+The behavior specific to this contract is as follow:
+
+- the `LSP1.universalReceiver(...)` function on the `from` and `to` address is made when calling any of the transfer functions listed above (whether from LSP7 or ERC20).
+- the ERC20 `Transfer` event is emitted for any of the transfer functions listed above (whether from LSP7 or ERC20).
+- the ERC20 `Approval` event is emitted in both the `LSP7.authorizeOperator(...)` and the `ERC20.approve(...)` function.
+
+In details, in `LSP8CompatibleERC721`, for any of these transfer and approval functions.
+
+- `LSP8.transfer(address,address,bytes32,bool,bytes)`
+- `LSP8.authorizeOperator(address,address,bytes32)`
+- `ERC721.transferFrom(address,address,uint256)`
+- `ERC721.safeTransferFrom(address,address,uint256)`
+- `ERC721.safeTransferFrom(address,address,uint256,bytes)`
+- `ERC721.approve(address,uint256)`
+
+The behavior specific to this contract is as follow:
+
+- the `LSP1.universalReceiver(...)` function on the `from` and `to` address is made when calling any of the transfer functions listed above (whether from LSP8 or ERC721).
+- the ERC721 `Transfer` event is emitted for any of the transfer functions listed above (whether from LSP8 or ERC721).
+- the ERC721 `Approval` event is emitted in both the `LSP8.authorizeOperator(...)` and the `ERC721.approve(...)` function.
+
 ## Scoping Details
 
 ```
@@ -399,7 +438,7 @@ You can find the full list of tests commands in [package.json](https://github.co
 
 ### Gas benchmark
 
-> The test benchmark is for the standard version of the contract and not the proxy version. 
+> The test benchmark is for the standard version of the contract and not the proxy version.
 
 To run the gas benchmark tests:
 
@@ -439,6 +478,7 @@ Additionally, you can run the coverage:
 ```
 npm run test:coverage
 ```
+
 To view the report, open coverage/index.html in your browser.
 
 ### Contract Size
@@ -567,6 +607,38 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 - `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
+
+### LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol
+
+`LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
+
+We do not return a boolean in LSP7 because we want to stay consistent with the other functions from the LSP7 interface (like `authorizeOperator(...)` and `transfer(...)`) that do not return anything, as defined in the `ILSP7DigitalAsset.sol` interface.
+
+In `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`, we cannot override the LSP7 function to return a boolean in these two contracts, because we cannot override the function definitions _"from returning nothing to returning something"_ (the Solidity compiler does not allow this).
+
+We are currently aware of this issue being not completely in-line with ERC20 in `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`.
+
+One way we are planning to mitigate this issue is by adding an assembly block that returns a `true` boolean in these two functions in these two contracts. This will not change anything if these function are interacted with the Solidity function call syntax (_e.g: `LSP7CompatibleERC20.increaseAllowance(operatorAddress, 10 ether)`_), but if interacted via low level call, it will enable to decode the returned data as a `bool` and process it, as shown below:
+
+```solidity
+bytes memory increaseAllowanceCalldata = abi.encodeWithSelector(
+    this.increaseAllowance.selector,
+    operatorAddress,
+    10 ether
+);
+
+(bool success, bytes memory result) = address(
+    lsp7CompatibleContractAddress
+).call(increaseAllowanceCalldata);
+
+// if the external call completed successfully
+if (success) {
+    // decode the `result` as a boolean and ensure it is `true`
+    bool booleanReturned = abi.decode(result, (bool));
+
+    require(booleanReturned == true);
+}
+```
 
 ### LSP8IdentifiableDigitalAsset.sol
 
