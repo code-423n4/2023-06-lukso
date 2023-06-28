@@ -25,7 +25,7 @@
   - [Contracts in scope](#contracts-in-scope)
   - [Out of scope](#out-of-scope)
 - [Additional Context](#additional-context)
-  - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#-lsp7compatibleerc20--and--lsp8compatibleerc721-)
+  - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#lsp7compatibleerc20-and-lsp8compatibleerc721)
   - [Scoping Details](#scoping-details)
 - [Instructions](#instructions)
   - [Setup](#setup)
@@ -39,15 +39,15 @@
 - [Publicly Known Issues](#publicly-known-issues)
   - [Previous audits](#previous-audits)
   - [General](#general)
-  - [LSP0ERC725Account.sol](#lsp0erc725accountsol)
-  - [LSP1UniversalReceiverDelegateUP.sol](#lsp1universalreceiverdelegateupsol)
-  - [LSP6KeyManager.sol](#lsp6keymanagersol)
-  - [LSP7DigitalAsset.sol](#lsp7digitalassetsol)
-  - [LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
-  - [LSP8IdentifiableDigitalAsset.sol](#lsp8identifiabledigitalassetsol)
-  - [LSP14Ownable2Step.sol](#lsp14ownable2stepsol)
-  - [LSP17Extendable.sol](#lsp17extendablesol)
-  - [LSP20CallVerification.sol](#lsp20callverificationsol)
+  - [`LSP0ERC725Account.sol`](#lsp0erc725accountsol)
+  - [`LSP1UniversalReceiverDelegateUP.sol`](#lsp1universalreceiverdelegateupsol)
+  - [`LSP6KeyManager.sol`](#lsp6keymanagersol)
+  - [`LSP7DigitalAsset.sol`](#lsp7digitalassetsol)
+  - [`LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
+  - [`LSP8IdentifiableDigitalAsset.sol`](#lsp8identifiabledigitalassetsol)
+  - [`LSP14Ownable2Step.sol`](#lsp14ownable2stepsol)
+  - [`LSP17Extendable.sol`](#lsp17extendablesol)
+  - [`LSP20CallVerification.sol`](#lsp20callverificationsol)
 - [Slither Known Issues](#slither-known-issues)
 
 # LUKSO audit details
@@ -77,7 +77,15 @@ Automated findings output for the audit can be found within 24 hours of audit op
 
 ## LSP0ERC725Account
 
-_[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
+_[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It is composed of multiple and standards and modules:
+
+- a generic data storage ([ERC725Y](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc725y---generic-key-value-store))
+- a generic execution medium ([ERC725X](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc725x---generic-executor))
+- signature validation via [ERC1271](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc1271)
+- a universal function to be notified about different actions ([LSP1](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp1---universalreceiver) `universalReceiver(bytes32,bytes)`), such as token transfers, followers, information, etc...
+- it offers extensibility via [LSP17](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp17---contract-extension) where you can add functions to the account as extensions after deployment to support new standards and functions
+- it provides a full secure ownership control as a 2 step process (1st step for initiation, 2nd step for confirmation) using [LSP14](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp14---ownable2step).
+- finally, it allows to execute directly through the contract itself instead of resolving through the owner first using the [LSP20 standard](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp20---call-verification).
 
 ## LSP1UniversalReceiver
 
@@ -550,7 +558,7 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vau
 
 # Publicly Known Issues
 
-### Previous audits
+## Previous audits
 
 The current contract have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
 
@@ -560,17 +568,17 @@ Any issue mentioned in the report listed under the [`./audits`](https://github.c
 - [Quantstamp audit (07/09/2022)](./audits/Quantstamp_audit_2022_09_07.pdf)
 - [Watchpug audit (20/10/2022)](./audits/Watchpug_audit_2022_10_20.pdf)
 - [Watchpug audit (15/12/2022)](./audits/Watchpug_audit_2022_12_15.pdf)
-- [RuntimeVerification formalVerification (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
+- [RuntimeVerification, Formal Verification audit (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
 - [Trust audit (2023/04/13)](./audits/Trust_audit_2023_04_13.pdf)
 - [Watchpug audit (2023/04/21)](./audits/Watchpug_audit_2023_04_21.pdf)
 
-### General
+## General
 
 - No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
 
 - The contracts are using [`supportsERC165InterfaceUnchecked`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/utils/introspection/ERC165Checker.sol#L110) to check for support of a single interfaceId for gas cost optimisation. It does not conform to the ERC165 standard but we do this out of gas optimisation as our implementations do a lot of external calls to check for interfaces IDs.
 
-### LSP0ERC725Account.sol
+## `LSP0ERC725Account.sol`
 
 - The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
 
@@ -585,7 +593,7 @@ Any issue mentioned in the report listed under the [`./audits`](https://github.c
 
 - You can have delegate call with selfdestruct that will bypass the second lsp20 check (`lsp20VerifyCallResult(…)`). Mentioned in Trust audit report, see finding M3 for more details.
 
-### LSP1UniversalReceiverDelegateUP.sol
+## `LSP1UniversalReceiverDelegateUP.sol`
 
 - The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
   1. faking the typeIDs of LSP7 and LSP8
@@ -608,7 +616,7 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 >
 > On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
 
-### LSP6KeyManager.sol
+## `LSP6KeyManager.sol`
 
 - The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
 
@@ -631,13 +639,13 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 - `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
 
-### LSP7DigitalAsset.sol
+## `LSP7DigitalAsset.sol`
 
 - `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
-### LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol
+## `LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`
 
 `LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
 
@@ -669,19 +677,19 @@ if (success) {
 }
 ```
 
-### LSP8IdentifiableDigitalAsset.sol
+## `LSP8IdentifiableDigitalAsset.sol`
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
-### LSP14Ownable2Step.sol
+## `LSP14Ownable2Step.sol`
 
 - When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in its `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
 
-### LSP17Extendable.sol
+## `LSP17Extendable.sol`
 
 - Setting extensions for functions that operate on `msg.sender` (eg: tokens transfer) is dangerous.
 
-### LSP20CallVerification.sol
+## `LSP20CallVerification.sol`
 
 - Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
 
