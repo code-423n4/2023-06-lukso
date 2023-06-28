@@ -25,7 +25,7 @@
   - [Contracts in scope](#contracts-in-scope)
   - [Out of scope](#out-of-scope)
 - [Additional Context](#additional-context)
-  - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#-lsp7compatibleerc20--and--lsp8compatibleerc721-)
+  - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#lsp7compatibleerc20-and-lsp8compatibleerc721)
   - [Scoping Details](#scoping-details)
 - [Instructions](#instructions)
   - [Setup](#setup)
@@ -39,15 +39,15 @@
 - [Publicly Known Issues](#publicly-known-issues)
   - [Previous audits](#previous-audits)
   - [General](#general)
-  - [LSP0ERC725Account.sol](#lsp0erc725accountsol)
-  - [LSP1UniversalReceiverDelegateUP.sol](#lsp1universalreceiverdelegateupsol)
-  - [LSP6KeyManager.sol](#lsp6keymanagersol)
-  - [LSP7DigitalAsset.sol](#lsp7digitalassetsol)
-  - [LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
-  - [LSP8IdentifiableDigitalAsset.sol](#lsp8identifiabledigitalassetsol)
-  - [LSP14Ownable2Step.sol](#lsp14ownable2stepsol)
-  - [LSP17Extendable.sol](#lsp17extendablesol)
-  - [LSP20CallVerification.sol](#lsp20callverificationsol)
+  - [`LSP0ERC725Account.sol`](#lsp0erc725accountsol)
+  - [`LSP1UniversalReceiverDelegateUP.sol`](#lsp1universalreceiverdelegateupsol)
+  - [`LSP6KeyManager.sol`](#lsp6keymanagersol)
+  - [`LSP7DigitalAsset.sol`](#lsp7digitalassetsol)
+  - [`LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
+  - [`LSP8IdentifiableDigitalAsset.sol`](#lsp8identifiabledigitalassetsol)
+  - [`LSP14Ownable2Step.sol`](#lsp14ownable2stepsol)
+  - [`LSP17Extendable.sol`](#lsp17extendablesol)
+  - [`LSP20CallVerification.sol`](#lsp20callverificationsol)
 - [Slither Known Issues](#slither-known-issues)
 
 # LUKSO audit details
@@ -77,29 +77,43 @@ Automated findings output for the audit can be found within 24 hours of audit op
 
 ## LSP0ERC725Account
 
-_[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It provides generic data storage, a generic execution medium, and a universal function to be notified about different actions, such as token transfers, followers, information, etc .. Also it offers extensibility where you can add functions to the account as extensions after deployment to support new standards and functions, and also providing a full secure ownership control.
+_[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a comprehensive range of essential features. It is composed of multiple and standards and modules:
+
+- a generic `bytes32 => bytes` data key-value store ([ERC725Y](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc725y---generic-key-value-store)) as smart contract storage
+- a generic execution medium ([ERC725X](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc725x---generic-executor)) to interact with addresses (EOA and contracts) or deploy new contracts (via CREATE or CREATE2)
+- signature validation via [ERC1271](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#erc1271)
+- a universal function ([LSP1](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp1---universalreceiver) `universalReceiver(bytes32,bytes)`) to be notified about different actions and information, such as token transfers, followers, information, etc...
+- offers extensibility via [LSP17](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp17---contract-extension) where you can add functions to the account as extensions after deployment to support new standards and functions
+- provides a secure ownership management module ([LSP14](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp14---ownable2step)).
+- finally, it allows executing directly through the contract itself instead of resolving through the owner first using the [LSP20 standard](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp20---call-verification).
+
+![LSP0 modules diagram](./assets/LSP0-module-diagram.jpeg)
 
 ## LSP1UniversalReceiver
 
-_[LSP1UniversalReceiver]_ is designed to facilitate a universally standardized way of receiving notifications about various actions, such as token transfers, new followers, or updated information. The core function of this standard, named `universalReceiver(..)`, operates as a common notification gateway. It standardizes the process of emitting data received, making the contract implementing the LSP1 standard the gateway of knowing various information, such which tokens or followers you own. LSP1UniversalReceiver standardizes as well an optional process of reacting to the action being notified about using the LSP1UniversalReceiverDelegate.
+_[LSP1UniversalReceiver]_ is designed to facilitate a universally standardized way of receiving notifications about various actions, such as token transfers, new followers, or updated information. This standard's core function named `universalReceiver(bytes32,bytes)` operates as a standard notification gateway. It standardizes the process of emitting data received, creating for the contract implementing LSP1 a standard gateway to be notified about various information, such as which tokens you received and own or which followers accounts started following you.
+
+LSP1UniversalReceiver also standardizes an optional extension (LSP1UniversalReceiverDelegate, see details below) that enables to define complex logic and custom reactivity depending on the `bytes32 typeId` received by the initial `universalReceiver(bytes32,bytes)` function.
 
 ## LSP1UniversalReceiverDelegate
 
 _[LSP1UniversalReceiverDelegate]_ standard formalize the procedure of reacting to specific actions. This standard is typically implemented once the `universalReceiver(..)` function is invoked.
 
-The `universalReceiver(..)` function is called with a unique `bytes32 typeId` identifier. Subsequently, the `universalReceiver(...)` function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the `bytes32` as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique `bytes32 typeId` like [`LSP7Tokens_RecipientNotification`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-7-DigitalAsset.md#transfer)), the UniversalReceiverDelegate could contain logic that triggers a specific response such as reverting the entire transaction.
+The `universalReceiver(..)` function is called with a unique `bytes32 typeId` identifier. Subsequently, the `universalReceiver(...)` function forwards the call, along with the sender's address and the value sent, to the UniversalReceiverDelegate. The UniversalReceiverDelegate, in its role, identifies the `bytes32` as a specific action and performs a designated response. For instance, if a token transfer is recognized (represented by a unique `bytes32 typeId` like [`LSP7Tokens_RecipientNotification`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-7-DigitalAsset.md#transfer)), the UniversalReceiverDelegate could contain logic that triggers a specific response, for instance reverting the entire transaction if the token received is a spam token known from a public blacklist registry.
 
 The UniversalReceiverDelegate address can be changed in the contract implementing the `universalReceiver(..)` function. Also there could be the case where multiple UniversalReceiverDelegates exist.
 
 ## LSP6KeyManager
 
-_[LSP6KeyManager]_ is a smart contract that acts as a controller for another contract it is linked to (a smart contract based account, a token contract, etc...). It enables the linked contract to be controlled by multiple addresses. Such addresses called _"controllers"_ can be granted different permissions defined by the LSP6 standard that allow them to perform different type of actions, including setting data on the ERC725Y storage of the linked account, or using the linked account to interact with other addresses on the network (transferring LYX, interact with tokens or any other smart contracts, etc...). LSP6 enables meta transactions in its interface via the `executeRelayCall(...)` function, where any executor address can dispatch transactions signed by an other controller, and pay the gas fees on behalf of this controller. Finally, the LSP6KeyManager also allows batching transactions via both `executeBatch(...)` and `executeRelayCallBatch(...)`
+_[LSP6KeyManager]_ is a smart contract that acts as a controller for another contract it is linked to (a smart contract-based account, a token contract, etc...). It enables the linked contract to be controlled by multiple addresses. Such addresses, called _"controllers"_, can be granted different permissions defined by the LSP6 standard that allow them to perform different types of actions, including setting data on the ERC725Y storage of the linked account or using the linked account to interact with other addresses on the network (transferring LYX, interact with tokens or any other smart contracts, etc...).
+
+LSP6 enables meta transactions in its interface via the `executeRelayCall(...)` function, where any executor address can dispatch transactions signed by another controller, and pay the gas fees on behalf of this controller. Finally, the LSP6KeyManager also allows batching transactions via `executeBatch(...)` and `executeRelayCallBatch(...)`
 
 ## Tokens
 
 The new token standards on LUKSO share the following similarities:
 
-- flexible data key value store via LSP4
+- flexible data key-value store via [LSP4](https://docs.lukso.tech/standards/nft-2.0/LSP4-Digital-Asset-Metadata)
 - similar interface for the `transfer(...)` function (only difference is the 3rd parameter where LSP7 takes a `uint256 amount` while LSP8 takes a `bytes32 tokenId`).
 - notify the receiver of the token via LSP1, using the 4th parameter `bool allowNonLSP1Recipient` in the `transfer(...)` function.
 
@@ -107,17 +121,17 @@ The new token standards on LUKSO share the following similarities:
 
 ### LSP4DigitalAssetMetadata
 
-_[LSP4DigitalAssetMetadata]_ is a metadata standard that defines metadata keys to store information related to a digital asset inside its ERC725Y storage, including the token name (`LSP4TokenName`) and its symbol (`LSP4TokenSymbol`). It also defines a standard JSON structure that can contain information describing the asset. Such standard information include a description of the asset, an icon for the digital asset, links to find out more (e.g: website, ...), or any additional custom attributes. Finally, it defines a metadata key that can contain the list of creator addresses for this asset (`LSP4Creators[]`).
+_[LSP4DigitalAssetMetadata]_ is a metadata standard that defines metadata keys to store information related to a digital asset inside its ERC725Y storage, including the token name (`LSP4TokenName`) and its symbol (`LSP4TokenSymbol`). It also defines a standard JSON structure that can contain information describing the asset. Such information can be anything like the description of the asset, an icon for the digital asset, links to find out more (e.g: website, ...), or any additional custom attributes related to the asset or the NFT. Finally, it defines a metadata key that can contain the list of creator addresses for this asset (`LSP4Creators[]`).
 
 ### LSP7DigitalAsset
 
-_[LSP7DigitalAsset]_ is a standard that defines a fungible token, meaning tokens that are mutually interchangeable (one token has the same value as another token). Like ERC20, tokens can be transferred in quantities, where a token holder can transfer multiple tokens by specifying an `uint256 amount` when using the `transfer(...)` function. By default, LSP7 Digital Assets are divisible like fiat currencies, where 1 token can be divided in smaller units (e.g: 1/10th of a token), with their `decimals()` set to 18 by default. However, LSP7 includes a feature that enables to make the token non divisible via the `isNonDivisible` parameter on deployment.
+_[LSP7DigitalAsset]_ is a standard that defines a fungible token, meaning tokens that are mutually interchangeable (one token has the same value as another token). Like ERC20, tokens can be transferred in quantities. The token holder can transfer multiple tokens by specifying an `uint256 amount` when using the `transfer(...)` function. By default, LSP7 Digital Assets are divisible like fiat currencies, meaning 1 token can be divided into smaller units (e.g: 1/10th of a token), with their `decimals()` set to 18 by default. However, LSP7 includes a feature that enables to specify the token as [_"non divisible"_](https://docs.lukso.tech/standards/nft-2.0/LSP7-Digital-Asset#divisible-vs-non-divisible) via the `isNonDivisible` parameter on deployment.
 
 ### LSP8IdentifiableDigitalAsset
 
-_[LSP8IdentifiableDigitalAsset]_ is a standard that defines a non fungible token, meaning tokens that are unique and distinguishable from each other (one token cannot be replaced by another token). Each tokens are uniquely represented by their `bytes32 tokenId`, and can be transfered via the `transfer(...)` function, where the given as a parameter to the `transfer(...)` function.
+_[LSP8IdentifiableDigitalAsset]_ is a standard that defines a non-fungible token, meaning tokens that are unique and distinguishable from each other (one token cannot be replaced by another token). Each token is uniquely represented by its `bytes32 tokenId`, and can be transferred via the `transfer(...)` function, where the `tokenId` is given as the 3rd parameter of the `transfer(...)` function.
 
-LSP8 includes a feature that enables to define different types of tokens IDs via the `LSP8TokenIdType` metadata key. Token ID type varies from simple to complex, for instance:
+LSP8 includes a feature to define the [**type of token ID**](https://docs.lukso.tech/standards/nft-2.0/LSP8-Identifiable-Digital-Asset#bytes32-tokenid) through the `LSP8TokenIdType` metadata key. Token ID type varies from simple to complex, for instance:
 
 - the token Ids can be represented by an address that represent an ERC725Y smart contract that can holds metadata in its storage for this specific NFT (`LSP8TokenIdType == 1`).
 - the token Ids can be represented by a number that increment on each newly minted NFT (`LSP8TokenIdType == 2`).
@@ -125,30 +139,32 @@ LSP8 includes a feature that enables to define different types of tokens IDs via
 
 ## LSP14Ownable2Step
 
-_[LSP14Ownable2Step]_ is an advanced ownership module designed to enable contracts to have a clear ownership structure. It introduces a crucial feature of two-step processes for both ownership transfer and renouncement, which significantly reduces the likelihood of accidental or unauthorized changes to the contract's ownership. This enhanced security mechanism ensures that ownership actions require deliberate and careful confirmation, minimizing the risk of unintended transfers or renouncements. Using a two-step process where the new owner has to accept ownership ensures that the contract is always owned by an address that has control over it since the new owner explicitly accepts ownership, proving that it has control over its address.
+_[LSP14Ownable2Step]_ is an advanced ownership module designed to give a more precise and safer way to manage contract ownership. It introduces a crucial feature of two-step processes for ownership transfer and renouncement, significantly reducing the likelihood of accidental or unauthorized changes to the contract's ownership (_e.g: transferring ownership to an address to an address where the new owner has shortly before the process lost access to its private key_). This enhanced security mechanism ensures that ownership actions require deliberate and careful confirmation, minimizing the risk of unintended transfers or renouncements. Using a two-step process where the new owner has to accept ownership ensures that the contract is always owned by an address that has control over it since the new owner explicitly accepts ownership, proving that it has control over its address.
 
 ## LSP17ContractExtension
 
-_[LSP17ContractExtension]_ is designed to extend a contract's functionality post-deployment. Once a contract with a set of functions is deployed on the blockchain, it becomes immutable, meaning that no additional functions can be added after deployment.
+_[LSP17ContractExtension]_ is designed to extend a contract's functionality post-deployment. Once a contract with a set of functions is deployed on the blockchain, it becomes immutable, meaning no additional functions can be added after deployment.
 
-The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension contract through the `fallback` function, instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contract that should support standards and functions that get standardized and discussed in the future.
+The LSP17ContractExtension standard provides a solution to this limitation. It does this by forwarding the call to an extension contract through the `fallback` function instead of leading to a revert due to the invocation of an undefined function. This forwarding mechanism allows the contract to be extended and to add functionality after it has been deployed. The standard could be beneficial for contracts that should support standards and functions that get standardized and discussed in the future.
 
 ## LSP20CallVerification
 
-_[LSP20CallVerification]_ is an innovative module designed to simplify access control rules verification within smart contracts. By implementing a standardized approach, this module enables seamless validation of whether an address possesses the necessary permissions to initiate a specific call.
+_[LSP20CallVerification]_ is an innovative module that simplifies access control rules verification within smart contracts. By implementing a standardized approach, this module enables seamless validation of whether an address possesses the necessary permissions to initiate a specific call.
+
+LSP20 aims to reduce this complexity for application and protocol developers, who need to resolve the contract owner first and then have to interact through the owner in order to call any function on the actual targeted contract. This module embedded in a contract through inheritance enables to abstract away this complexity. Applications and other contracts can now interact directly with the targeted contract, and LSP20 will forward in the background any ownership verification logic in the background, by forwarding the call to the owner and returning the verification result in the form of a [`magicValue`](https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-20-CallVerification.md#lsp20verifycall).
 
 ![LSP20 Diagram](https://docs.lukso.tech/assets/images/LSP20-example-LSP6-2af355425a5873f9474cf4329ce859a7.jpeg)
 
 # Scope
 
-Here are some examples of issues that we are mostly concerned about:
+Here are some examples of issues that we are primarily concerned about:
 
-- Ownership bypassing.
-- Executing without the right permission. (bypassing permissions)
-- Permissions overlap. (meaning if i have permission X and added permission Y, i can execute an action only allowed by permission Z)
-- Locking the account due to a certain chain of actions.
+- Bypassing ownership.
+- Bypassing required permissions (executing a calldata / payload that requires a specific permission X, but the caller / signer does not actually have this permission X).
+- Permissions overlap (if a controller have permission X and added permission Y, it can execute an action only allowed by permission Z).
+- Locking the account due to a certain chain of actions, or making the contract state in a state that leads to a _"deadlock"_.
 - Reentrancy without the right permissions. (bypassing permissions)
-- `LSP1UniversalReceiverDelegateUP` will be set as a default UniversalReceiverDelegate for the UniversalProfiles deployed by the LUKSO foundation, is there a potential risk to deploy just 1 UniverrsalReceiverDelegate contract and grant it `SUPER_SETDATA` and `REENTRANCY` permission on all of these UniversalProfiles?
+- `LSP1UniversalReceiverDelegateUP` will be set as a default UniversalReceiverDelegate for the UniversalProfiles deployed by the LUKSO foundation, if there is a potential risk to deploy just 1 UniversalReceiverDelegate contract and grant it `SUPER_SETDATA` and `REENTRANCY` permission on all of these UniversalProfiles?
 
 ## Summary
 
@@ -174,9 +190,9 @@ Here are some examples of issues that we are mostly concerned about:
 
 ## Contracts in scope
 
-This is the complete list of the contracts in scope for this contest.
+Below is the complete list of the contracts in scope for this contest.
 
-There are 3 type of contracts per LSP standard:
+There are 3 types of contracts per LSP standard:
 
 - **`Core` contracts**: contain the core implementation logic of the LSP standard.
 
@@ -331,20 +347,20 @@ _Example: `LSP6KeyManagerInitAbstract.sol`_
 
 # Additional Context
 
-- The **LSP1UniversalReceiverDelegateUP** contract will be utilized as the primary UniversalReceiverDelegate (not a UniversalReceiverDelegate mapped to a specific typeId via the `LSP1UniversalReceiverDelegate:<typeId>` data key) for the majority of **UniversalProfiles** deployed on the network. Instead of deploying a UniversalReceiverDelegate for each individual UniversalProfile, this contract operates based on global variables and parameters. A single instance of this contract will be deployed and assigned to all UniversalProfiles.
+- The **LSP1UniversalReceiverDelegateUP** contract will be used as the primary UniversalReceiverDelegate (not a UniversalReceiverDelegate mapped to a specific typeId via the `LSP1UniversalReceiverDelegate:<typeId>` data key) for the majority of **UniversalProfiles** deployed on the network. Instead of deploying a UniversalReceiverDelegate for each individual UniversalProfile, this contract operates based on global variables and parameters. A single instance of this contract will be deployed and assigned to all UniversalProfiles.
 
-  Additionally, this contract will be granted the `SUPER_SETDATA` and `REENTRANCY` permissions across all UniversalProfiles according to [LSP6KeyManager]. Given this design and architecture, it's essential to thoroughly investigate and identify potential bugs or vulnerabilities. Particular attention should be given to any possible loopholes that could allow for unintended write access to the storage of contracts beyond the `msg.sender` (the UniversalProfile initiating the call), bypassing of permissions, among other security concerns.
+  Additionally, this contract will be granted the `SUPER_SETDATA` and `REENTRANCY` permissions across all UniversalProfiles, according to [LSP6KeyManager]. Given this design and architecture, it's essential to investigate and identify potential bugs or vulnerabilities thoroughly. Particular attention should be given to any possible loopholes that could allow for unintended write access to the storage of contracts beyond the `msg.sender` (the UniversalProfile initiating the call), bypassing of permissions, among other security concerns.
 
-- The architecture implemented in this repository comprises a core contract that encapsulates the main logic, and two contracts that inherit from this core contract. One is designed for the standard constructor version, and the other is designed as an initializable version. The initializable version is intentionally created for the use of MinimalProxies, not for upgradeable proxies (as of the current state). Consequently, no gaps have been introduced or need to respect the use of a separate package.
+- The architecture implemented in this repository comprises a core contract that encapsulates the main logic and two other contracts that inherit from this core contract. One is designed for the standard constructor version, and the other is designed as an initializable version. The initializable version is intentionally created for MinimalProxies ([EIP1167](https://eips.ethereum.org/EIPS/eip-1167)), not for upgradeable proxies (as of the current state). Consequently, no gaps have been introduced or need to respect the use of a separate package.
 
-  Meanwhile, the LUKSO team is developing a transpiler to streamline this process. This transpiler will eliminate the need for the core contract, allowing for constructor contracts in a repository. Then, the transpiler will convert all the code into an initializable version that is compatible with both upgradeable and minimal proxies in a separate repository.
+  Meanwhile, the LUKSO team is developing a transpiler to streamline this process. This transpiler will eliminate the need for the core contract, allowing for constructor contracts in a repository. Then, the transpiler will convert all the code into an initializable version compatible with both upgradeable and minimal proxies in a separate repository.
 
-- In the `execute(uint256,address,uint256,bytes)` function of **ERC725X**, no additional checks have been introduced to verify that the owner has not changed following a delegatecall. This is a design choice, as introducing such checks might give a false sense of security. It's possible that a malicious actor could momentarily alter the owner variable during the delegatecall, and do malicious action and reset it afterwards, thereby bypassing the check. Additionally, the importance of the owner variable may vary between different contracts and implementations. For instance, a delegatecall could modify the ERC725Y storage, which in certain cases might serve as the principal access point to the account. This is particularly relevant for when the account is owned by an **LSP6KeyManager**, where permissions are stored in the ERC725Y storage rather than being tied to the owner variable.
+- In the `execute(uint256,address,uint256,bytes)` function of **ERC725X**, no additional checks have been introduced to verify that the owner has not changed following a delegatecall. This is a design choice, as introducing such checks might give a false sense of security. It is possible that a malicious actor could momentarily alter the owner variable during the delegatecall, and do malicious action and reset it afterwards, thereby bypassing the check. Additionally, the importance of the owner variable may vary between different contracts and implementations. For instance, a delegatecall could modify the ERC725Y storage, which might serve as the principal access point to the account in certain cases. This is particularly relevant when the account is owned by an **LSP6KeyManager**, where permissions are stored in the ERC725Y storage rather than being tied to the owner variable.
 
 ## `LSP7CompatibleERC20` and `LSP8CompatibleERC721`
 
 LSP7 and LSP8 are different in terms of their interface and the way to interact with them compared to the traditional ERC20 and ERC721 token standards.
-We have also included two contracts that can be used and interacted with the same way as you would interact with ERC20 / ERC721 tokens, while leveraging the core functionalities of the LSP7/8 standards.
+We have also included two contracts that can be used and interacted with the same way as you would interact with ERC20 / ERC721 tokens while leveraging the core functionalities of the LSP7/8 standards.
 
 - `LSP7CompatibleERC20`, which contains all the LSP7 public functions + the following ERC20 public functions: `allowance(...)`, `approve(...)`, `transfer(...)` and `transferFrom(...)`
 - `LSP8CompatibleERC721`, which contains the LSP8 public functions + the following ERC721 public functions: `tokenURI(...)`, `ownerOf(...)`, `getApproved(...)`, `isApprovedForAll(...)`, `approve(...)`, `setApprovalForAll(...)`, `transferFrom(...)`, `safeTransferFrom(...)` and `authorizeOperator(...)`.
@@ -550,7 +566,7 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vau
 
 # Publicly Known Issues
 
-### Previous audits
+## Previous audits
 
 The current contract have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
 
@@ -560,17 +576,17 @@ Any issue mentioned in the report listed under the [`./audits`](https://github.c
 - [Quantstamp audit (07/09/2022)](./audits/Quantstamp_audit_2022_09_07.pdf)
 - [Watchpug audit (20/10/2022)](./audits/Watchpug_audit_2022_10_20.pdf)
 - [Watchpug audit (15/12/2022)](./audits/Watchpug_audit_2022_12_15.pdf)
-- [RuntimeVerification formalVerification (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
+- [RuntimeVerification, Formal Verification audit (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
 - [Trust audit (2023/04/13)](./audits/Trust_audit_2023_04_13.pdf)
 - [Watchpug audit (2023/04/21)](./audits/Watchpug_audit_2023_04_21.pdf)
 
-### General
+## General
 
 - No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
 
 - The contracts are using [`supportsERC165InterfaceUnchecked`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/utils/introspection/ERC165Checker.sol#L110) to check for support of a single interfaceId for gas cost optimisation. It does not conform to the ERC165 standard but we do this out of gas optimisation as our implementations do a lot of external calls to check for interfaces IDs.
 
-### LSP0ERC725Account.sol
+## `LSP0ERC725Account.sol`
 
 - The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
 
@@ -579,13 +595,13 @@ Any issue mentioned in the report listed under the [`./audits`](https://github.c
   1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner).
   2. but it will fail because the owner being an EOA cannot return the magic value.
 
-- A potential collision can happen in the `universalReceiver(..)` function when 2 type IDs start with the same 20 bytes. _See Trust audit report finding M2 for more details._
+- A potential collision can happen in the `universalReceiver(..)` function when 2 `bytes32 typeId`s start with the same 20 bytes. _See Trust audit report finding M2 for more details._
 
 - The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
 
 - You can have delegate call with selfdestruct that will bypass the second lsp20 check (`lsp20VerifyCallResult(…)`). Mentioned in Trust audit report, see finding M3 for more details.
 
-### LSP1UniversalReceiverDelegateUP.sol
+## `LSP1UniversalReceiverDelegateUP.sol`
 
 - The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
   1. faking the typeIDs of LSP7 and LSP8
@@ -608,7 +624,7 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 >
 > On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
 
-### LSP6KeyManager.sol
+## `LSP6KeyManager.sol`
 
 - The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
 
@@ -631,13 +647,13 @@ The reason is we want to allow to react on the `data` parameter, for instance.
 
 - `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
 
-### LSP7DigitalAsset.sol
+## `LSP7DigitalAsset.sol`
 
 - `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
-### LSP7CompatibleERC20.sol and LSP7CompatibleERC20InitAbstract.sol
+## `LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`
 
 `LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
 
@@ -669,19 +685,19 @@ if (success) {
 }
 ```
 
-### LSP8IdentifiableDigitalAsset.sol
+## `LSP8IdentifiableDigitalAsset.sol`
 
 - We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
 
-### LSP14Ownable2Step.sol
+## `LSP14Ownable2Step.sol`
 
 - When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in its `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
 
-### LSP17Extendable.sol
+## `LSP17Extendable.sol`
 
 - Setting extensions for functions that operate on `msg.sender` (eg: tokens transfer) is dangerous.
 
-### LSP20CallVerification.sol
+## `LSP20CallVerification.sol`
 
 - Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
 
