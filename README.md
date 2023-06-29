@@ -74,7 +74,7 @@ Automated findings output for the audit can be found within 24 hours of audit op
 
 ## Previous audits
 
-The current contract have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
+The current contracts have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
 
 Any issue mentioned in the report listed under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
 
@@ -616,6 +616,8 @@ npm run build
 ```
 
 ### Hardhat Tests
+
+> **Note:** some hardhat tests related to setting the Allowed Calls of a controller under the `AddressPermissions:AllowedCalls:<address>` data key in the LSP6 Key Manager are currently skipped (via `.skip`). They come from an older version of the Key Manager that has been refactored, where the behaviour and custom errors used have changed. These tests have not been updated, do not test for the correct behaviour anymore and are marked as skipped for this reason.
 
 To run the mocha unit tests:
 
