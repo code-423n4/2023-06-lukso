@@ -7,6 +7,19 @@
 # Table of Content
 
 - [LUKSO audit details](#lukso-audit-details)
+- [Automated Findings / Publicly Known Issues](#automated-findings--publicly-known-issues)
+  - [Previous audits](#previous-audits)
+  - [General](#general)
+  - [`LSP0ERC725Account.sol`](#lsp0erc725accountsol)
+  - [`LSP1UniversalReceiverDelegateUP.sol`](#lsp1universalreceiverdelegateupsol)
+  - [`LSP6KeyManager.sol`](#lsp6keymanagersol)
+  - [`LSP7DigitalAsset.sol`](#lsp7digitalassetsol)
+  - [`LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
+  - [`LSP8IdentifiableDigitalAsset.sol`](#lsp8identifiabledigitalassetsol)
+  - [`LSP14Ownable2Step.sol`](#lsp14ownable2stepsol)
+  - [`LSP17Extendable.sol`](#lsp17extendablesol)
+  - [`LSP20CallVerification.sol`](#lsp20callverificationsol)
+  - [Slither Known Issues](#slither-known-issues)
 - [Overview](#overview)
   - [ERC725](#erc725)
   - [LSP0ERC725Account](#lsp0erc725account)
@@ -37,19 +50,6 @@
   - [Code Coverage](#code-coverage)
   - [Contract Size](#contract-size)
   - [Deployment](#deployment)
-- [Automated Findings / Publicly Known Issues](#automated-findings--publicly-known-issues)
-  - [Previous audits](#previous-audits)
-  - [General](#general)
-  - [`LSP0ERC725Account.sol`](#lsp0erc725accountsol)
-  - [`LSP1UniversalReceiverDelegateUP.sol`](#lsp1universalreceiverdelegateupsol)
-  - [`LSP6KeyManager.sol`](#lsp6keymanagersol)
-  - [`LSP7DigitalAsset.sol`](#lsp7digitalassetsol)
-  - [`LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`](#lsp7compatibleerc20sol-and-lsp7compatibleerc20initabstractsol)
-  - [`LSP8IdentifiableDigitalAsset.sol`](#lsp8identifiabledigitalassetsol)
-  - [`LSP14Ownable2Step.sol`](#lsp14ownable2stepsol)
-  - [`LSP17Extendable.sol`](#lsp17extendablesol)
-  - [`LSP20CallVerification.sol`](#lsp20callverificationsol)
-  - [Slither Known Issues](#slither-known-issues)
 
 # LUKSO audit details
 
@@ -67,6 +67,149 @@
 - [Read our guidelines for more details](https://docs.code4rena.com/roles/wardens)
 - Starts June 20, 2023 20:00 UTC
 - Ends July 05, 2023 20:00 UTC
+
+# Automated Findings / Publicly Known Issues
+
+Automated findings output for the audit can be found within 24 hours of audit opening.
+
+## Previous audits
+
+The current contracts have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
+
+Any issue mentioned in the report listed under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
+
+- [Chainsulting audit report (06/07/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Chainsulting_audit_2022_07_06.pdf)
+- [Quantstamp audit (07/09/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Quantstamp_audit_2022_09_07.pdf)
+- [Watchpug audit (20/10/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_10_20.pdf)
+- [Watchpug audit (15/12/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_12_15.pdf)
+- [RuntimeVerification, Formal Verification audit (2023/02/20)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
+- [Trust audit (2023/04/13)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Trust_audit_2023_04_13.pdf)
+- [Watchpug audit (2023/04/21)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2023_04_21.pdf)
+
+## General
+
+- No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
+
+- The contracts are using [`supportsERC165InterfaceUnchecked`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/utils/introspection/ERC165Checker.sol#L110) to check for support of a single interfaceId for gas cost optimisation. It does not conform to the ERC165 standard but we do this out of gas optimisation as our implementations do a lot of external calls to check for interfaces IDs.
+
+## `LSP0ERC725Account.sol`
+
+- The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
+
+- When the owner of the LSP0 is an EOA, if a caller calls the protected functions:
+
+  1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner).
+  2. but it will fail because the owner being an EOA cannot return the magic value.
+
+- A potential collision can happen in the `universalReceiver(..)` function when 2 `bytes32 typeId`s start with the same 20 bytes. _See Trust audit report finding M2 for more details._
+
+- The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
+
+- You can have delegate call with selfdestruct that will bypass the second lsp20 check (`lsp20VerifyCallResult(…)`). Mentioned in Trust audit report, see finding M3 for more details.
+
+## `LSP1UniversalReceiverDelegateUP.sol`
+
+- The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
+  1. faking the typeIDs of LSP7 and LSP8
+  2. creating a contract that fakes the `balanceOf(…)` function for LSP7 or LSP8 assets transfer.
+
+The caller will, however, have to pay for the gas of spamming the account.
+
+- It is allowed with LSP7 token transfers to transfer `0` as an amount and that it calls the `universalReceiver(...)` function of the sender and recipient.
+
+The reason is we want to allow to react on the `data` parameter, for instance.
+
+- It is possible to spam fake vaults that you own in multiple ways:
+
+> Example 1:
+>
+> 1. Do `Vault.execute(…)` (from ERC725X)
+> 2. → the data payload would be the `universalReceiver(…)` function of the UP user you want to spam, passing the right `typeId` for VaultTransferRecipient.
+
+> Example 2:
+>
+> On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
+
+## `LSP6KeyManager.sol`
+
+- The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
+
+- The relayer can choose the amount of gas provided when interacting with the `executeRelayCall(...)` functions. For more details, see Trust audit report finding L3.
+
+- The overlapping issue between the two permissions `ADDCONTROLLER` / `EDITPERMISSIONS` is known. For instance:
+
+  - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
+  - **if you have permission `EDITPERMISSIONS`:** You can grant yourself all the permissions and take control of the account (you can also grant yourself `ADDCONTROLLER`, and create a new wallet that you control).
+
+  These two permissions are separated for legal reasons. In some implementations or use cases, applications or protocols might require giving a controller only one of the two permissions, not the other (and vice versa).
+
+- It is possible to execute some code in the receive/fallback functions of the recipient by only having the permission transferValue/SuperTransferValue.
+
+- It is not possible to call LSP17 extensions through the KeyManager.
+
+- Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector.
+
+- Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 transactions in one channel and the first one is failing, one would have to re-sign the next 2 transactions with a different nonce in order to execute them. Another solution would be signing all 3 transactions in 3 different channels. See first audit report from Watchpug finding M3 for details.
+
+- `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
+
+## `LSP7DigitalAsset.sol`
+
+- `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
+
+- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
+
+## `LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`
+
+`LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
+
+We do not return a boolean in LSP7 because we want to stay consistent with the other functions from the LSP7 interface (like `authorizeOperator(...)` and `transfer(...)`) that do not return anything, as defined in the `ILSP7DigitalAsset.sol` interface.
+
+In `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`, we cannot override the LSP7 function to return a boolean in these two contracts, because we cannot override the function definitions _"from returning nothing to returning something"_ (the Solidity compiler does not allow this).
+
+We are currently aware of this issue being not completely in-line with ERC20 in `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`.
+
+One way we are planning to mitigate this issue is by adding an assembly block that returns a `true` boolean in these two functions in these two contracts. This will not change anything if these function are interacted with the Solidity function call syntax (_e.g: `LSP7CompatibleERC20.increaseAllowance(operatorAddress, 10 ether)`_), but if interacted via low level call, it will enable to decode the returned data as a `bool` and process it, as shown below:
+
+```solidity
+bytes memory increaseAllowanceCalldata = abi.encodeWithSelector(
+    this.increaseAllowance.selector,
+    operatorAddress,
+    10 ether
+);
+
+(bool success, bytes memory result) = address(
+    lsp7CompatibleContractAddress
+).call(increaseAllowanceCalldata);
+
+// if the external call completed successfully
+if (success) {
+    // decode the `result` as a boolean and ensure it is `true`
+    bool booleanReturned = abi.decode(result, (bool));
+
+    require(booleanReturned == true);
+}
+```
+
+## `LSP8IdentifiableDigitalAsset.sol`
+
+- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
+
+## `LSP14Ownable2Step.sol`
+
+- When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in its `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
+
+## `LSP17Extendable.sol`
+
+- Setting extensions for functions that operate on `msg.sender` (eg: tokens transfer) is dangerous.
+
+## `LSP20CallVerification.sol`
+
+- Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
+
+## Slither Known Issues
+
+Any known issues from Slither for each contract are listed under the [`slither/`](https://github.com/code-423n4/2023-06-lukso/tree/main/slither) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
 
 # Overview
 
@@ -474,6 +617,8 @@ npm run build
 
 ### Hardhat Tests
 
+> **Note:** some hardhat tests related to setting the Allowed Calls of a controller under the `AddressPermissions:AllowedCalls:<address>` data key in the LSP6 Key Manager are currently skipped (via `.skip`). They come from an older version of the Key Manager that has been refactored, where the behaviour and custom errors used have changed. These tests have not been updated, do not test for the correct behaviour anymore and are marked as skipped for this reason.
+
 To run the mocha unit tests:
 
 ```bash
@@ -590,149 +735,6 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP8IdentifiableD
 
 npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vault.sol:LSP9Vault <address of the LSP9 deployed> <address of the deployer>
 ```
-
-# Automated Findings / Publicly Known Issues
-
-Automated findings output for the audit can be found within 24 hours of audit opening.
-
-## Previous audits
-
-The current contract have gone through multiple audits and formal verification previous to the contest. You can find all the previous audits reports under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder.
-
-Any issue mentioned in the report listed under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
-
-- [Chainsulting audit report (06/07/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Chainsulting_audit_2022_07_06.pdf)
-- [Quantstamp audit (07/09/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Quantstamp_audit_2022_09_07.pdf)
-- [Watchpug audit (20/10/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_10_20.pdf)
-- [Watchpug audit (15/12/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_12_15.pdf)
-- [RuntimeVerification, Formal Verification audit (2023/02/20)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
-- [Trust audit (2023/04/13)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Trust_audit_2023_04_13.pdf)
-- [Watchpug audit (2023/04/21)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2023_04_21.pdf)
-
-## General
-
-- No constructor in `OwnableUnset.sol` and `LSP14Ownable2Step.sol`. We cannot add a constructor at the moment since these 2 contracts are shared currently between the standard and proxy version (with initialize(...)). Once we have the `lsp-smart-contract-upgradeable` repo, we will add a constructor in the standard version and an `initialize(...)` function in the Init version.
-
-- The contracts are using [`supportsERC165InterfaceUnchecked`](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/a7a94c77463acea95d979aae1580fb0ddc3b6a1e/contracts/utils/introspection/ERC165Checker.sol#L110) to check for support of a single interfaceId for gas cost optimisation. It does not conform to the ERC165 standard but we do this out of gas optimisation as our implementations do a lot of external calls to check for interfaces IDs.
-
-## `LSP0ERC725Account.sol`
-
-- The effect of using `msg.value` with operation type DELEGATECALL in `execute(…)` functions is known. Similar to the issue mentioned in [Uniswap V3 Periphery](https://github.com/Uniswap/v3-periphery/issues/52).
-
-- When the owner of the LSP0 is an EOA, if a caller calls the protected functions:
-
-  1. the LSP20 call for `lsp20VerifyCall(...)` will pass (because it is a low level call, even if it is calling an EOA owner).
-  2. but it will fail because the owner being an EOA cannot return the magic value.
-
-- A potential collision can happen in the `universalReceiver(..)` function when 2 `bytes32 typeId`s start with the same 20 bytes. _See Trust audit report finding M2 for more details._
-
-- The UniversalReceiverDelegate of the receiver can consume a lot of gas, making the caller who initiated the transfer pay a lot in gas fees.
-
-- You can have delegate call with selfdestruct that will bypass the second lsp20 check (`lsp20VerifyCallResult(…)`). Mentioned in Trust audit report, see finding M3 for more details.
-
-## `LSP1UniversalReceiverDelegateUP.sol`
-
-- The UniversalReceiverDelegateUP could be used to register spam assets, as currently, there is no whitelisting feature in the contract. It is always possible to spam via the LSP1 `universalReceiver(...)` function. For instance, by:
-  1. faking the typeIDs of LSP7 and LSP8
-  2. creating a contract that fakes the `balanceOf(…)` function for LSP7 or LSP8 assets transfer.
-
-The caller will, however, have to pay for the gas of spamming the account.
-
-- It is allowed with LSP7 token transfers to transfer `0` as an amount and that it calls the `universalReceiver(...)` function of the sender and recipient.
-
-The reason is we want to allow to react on the `data` parameter, for instance.
-
-- It is possible to spam fake vaults that you own in multiple ways:
-
-> Example 1:
->
-> 1. Do `Vault.execute(…)` (from ERC725X)
-> 2. → the data payload would be the `universalReceiver(…)` function of the UP user you want to spam, passing the right `typeId` for VaultTransferRecipient.
-
-> Example 2:
->
-> On the Vault, under the LSP1Delegate address, put the address of the UP user as a LSP1Delegate you want to spam.
-
-## `LSP6KeyManager.sol`
-
-- The `executeBatch(..)` function (from ERC725X) is not yet supported in the KeyManager as a path for execution.
-
-- The relayer can choose the amount of gas provided when interacting with the `executeRelayCall(...)` functions. For more details, see Trust audit report finding L3.
-
-- The overlapping issue between the two permissions `ADDCONTROLLER` / `EDITPERMISSIONS` is known. For instance:
-
-  - **if you have permission `ADDCONTROLLER`:** You can create a new wallet address you control and give it all the permissions via `ADDCONTROLLER`.
-  - **if you have permission `EDITPERMISSIONS`:** You can grant yourself all the permissions and take control of the account (you can also grant yourself `ADDCONTROLLER`, and create a new wallet that you control).
-
-  These two permissions are separated for legal reasons. In some implementations or use cases, applications or protocols might require giving a controller only one of the two permissions, not the other (and vice versa).
-
-- It is possible to execute some code in the receive/fallback functions of the recipient by only having the permission transferValue/SuperTransferValue.
-
-- It is not possible to call LSP17 extensions through the KeyManager.
-
-- Possibility to lock the account by setting the KeyManager address as extension of `lsp20VerifyCall` selector.
-
-- Failed relay calls (via `executeRelayCall(…)` don’t increase the nonce). Therefore if one would pre-sign 3 transactions in one channel and the first one is failing, one would have to re-sign the next 2 transactions with a different nonce in order to execute them. Another solution would be signing all 3 transactions in 3 different channels. See first audit report from Watchpug finding M3 for details.
-
-- `REENTRANCY` permission is checked for the contract that reenters the KeyManager or for the signer if the reentrant call happens through `executeRelayCall(..)` & `executeRelayCallBatch(..)`. Initiator of the call doesn’t need to have `REENTRANCY` permission.
-
-## `LSP7DigitalAsset.sol`
-
-- `authorizeOperator(..)` CAN NOT avoid front-running and Allowance Double-Spend Exploit. This can be avoided by using the `increaseAllowance(..)` and `decreaseAllowance(..)` functions.
-
-- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
-
-## `LSP7CompatibleERC20.sol` and `LSP7CompatibleERC20InitAbstract.sol`
-
-`LSP7DigitalAssetCore.sol` includes the non-standard functions `increaseAllowance` and `decreaseAllowance` to mitigate the issues around double spend exploit. In `@openzeppelin/contracts`, the ERC20 implementation of these two functions returns a boolean `true`.
-
-We do not return a boolean in LSP7 because we want to stay consistent with the other functions from the LSP7 interface (like `authorizeOperator(...)` and `transfer(...)`) that do not return anything, as defined in the `ILSP7DigitalAsset.sol` interface.
-
-In `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`, we cannot override the LSP7 function to return a boolean in these two contracts, because we cannot override the function definitions _"from returning nothing to returning something"_ (the Solidity compiler does not allow this).
-
-We are currently aware of this issue being not completely in-line with ERC20 in `LSP7CompatibleERC20` and `LSP7CompatibleERC20InitAbstract`.
-
-One way we are planning to mitigate this issue is by adding an assembly block that returns a `true` boolean in these two functions in these two contracts. This will not change anything if these function are interacted with the Solidity function call syntax (_e.g: `LSP7CompatibleERC20.increaseAllowance(operatorAddress, 10 ether)`_), but if interacted via low level call, it will enable to decode the returned data as a `bool` and process it, as shown below:
-
-```solidity
-bytes memory increaseAllowanceCalldata = abi.encodeWithSelector(
-    this.increaseAllowance.selector,
-    operatorAddress,
-    10 ether
-);
-
-(bool success, bytes memory result) = address(
-    lsp7CompatibleContractAddress
-).call(increaseAllowanceCalldata);
-
-// if the external call completed successfully
-if (success) {
-    // decode the `result` as a boolean and ensure it is `true`
-    bool booleanReturned = abi.decode(result, (bool));
-
-    require(booleanReturned == true);
-}
-```
-
-## `LSP8IdentifiableDigitalAsset.sol`
-
-- We are aware that the `transferBatch(...)` function could be optimized for gas. For instance for scenarios where the balance of the sender (if it’s the same from address of every iterations) can be updated once instead of on every iterations (to avoid multiple storage writes). Same for operator allowances.
-
-## `LSP14Ownable2Step.sol`
-
-- When using the function `acceptOwnership(...)` , if the current owner is a contract that implements LSP1, the current owner can block the new owner from accepting ownership by reverting in its `universalReceiver(..)` function (the current owner’s UniversalReceiver function).
-
-## `LSP17Extendable.sol`
-
-- Setting extensions for functions that operate on `msg.sender` (eg: tokens transfer) is dangerous.
-
-## `LSP20CallVerification.sol`
-
-- Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
-
-## Slither Known Issues
-
-Any known issues from Slither for each contract are listed under the [`slither/`](https://github.com/code-423n4/2023-06-lukso/tree/main/slither) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
 
 [`LSP0ERC725AccountCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol
 [`LSP0Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Utils.sol
