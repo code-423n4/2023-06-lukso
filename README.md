@@ -8,6 +8,7 @@
 
 - [LUKSO audit details](#lukso-audit-details)
 - [Overview](#overview)
+  - [ERC725](#erc725)
   - [LSP0ERC725Account](#lsp0erc725account)
   - [LSP1UniversalReceiver](#lsp1universalreceiver)
   - [LSP1UniversalReceiverDelegate](#lsp1universalreceiverdelegate)
@@ -68,6 +69,17 @@
 - Ends July 05, 2023 20:00 UTC
 
 # Overview
+
+## ERC725
+
+An ERC725 smart contract is composed of two main components:
+
+- `ERC725X`: a generic executor contract via an `execute(...)` and `executeBatch()` functions.
+- `ERC725Y`: a generic data key value store interacted via `setData(...)` and `setDataBatch(...)`.
+
+![ERC725 smart contract](https://docs.lukso.tech/assets/images/ERC725Owner-456d267de2e1f0f91b09a4cb582bd38b.jpeg)
+
+The ERC725 smart contracts represent the foundation behind most of the LSP smart contracts, from the LSP0 ERC725 Account to the LSP4 Digital Asset Metadata. You can find the ERC725 smart contracts implementation in Solidity under the [`submodules/ERC725`](https://github.com/code-423n4/2023-06-lukso/tree/erc725-diagrams/submodules) folder.
 
 ![Universal Profile architecture overview](https://docs.lukso.tech/assets/images/universal-profile-architecture-335f9157e3ab222ff460c5816b2b90d3.jpeg)
 
