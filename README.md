@@ -27,6 +27,7 @@
   - [`LSP7CompatibleERC20` and `LSP8CompatibleERC721`](#lsp7compatibleerc20-and-lsp8compatibleerc721)
   - [Scoping Details](#scoping-details)
 - [Instructions](#instructions)
+  - [Quickstart](#quickstart)
   - [Setup](#setup)
   - [Build](#build)
   - [Hardhat Tests](#hardhat-tests)
@@ -418,18 +419,37 @@ The behavior specific to this contract is as follow:
 
 # Instructions
 
+### Quickstart
+
+```
+git clone https://github.com/code-423n4/2023-06-lukso.git \
+&& cd 2023-06-lukso \
+&& git submodule update --init --recursive \
+&& npm install \
+&& cd ./submodules/ERC725/implementations && npm install && cd ../../../
+```
+
 ### Setup
 
-To clone the repo
+1. Clone the repository and change the working directory.
 
 ```bash
 git clone https://github.com/code-423n4/2023-06-lukso.git
+cd 2023-06-lukso
 ```
 
-npm install
+2. Install the submodules (`forge-std` for the Foundry tests + the `ERC725` smart contracts)
 
 ```bash
-cd 2023-06-lukso && npm i
+git submodule update --init --recursive
+```
+
+3. Install the dependencies (of both the `lsp-smart-contracts` and the `ERC725` submodule)
+
+```bash
+npm install
+cd ./submodules/ERC725/implementations && npm install
+cd ../../../
 ```
 
 ### Build
