@@ -7,7 +7,6 @@
 # Table of Content
 
 - [LUKSO audit details](#lukso-audit-details)
-- [Automated Findings](#automated-findings)
 - [Overview](#overview)
   - [LSP0ERC725Account](#lsp0erc725account)
   - [LSP1UniversalReceiver](#lsp1universalreceiver)
@@ -36,7 +35,7 @@
   - [Code Coverage](#code-coverage)
   - [Contract Size](#contract-size)
   - [Deployment](#deployment)
-- [Publicly Known Issues](#publicly-known-issues)
+- [Automated Findings / Publicly Known Issues](#automated-findings--publicly-known-issues)
   - [Previous audits](#previous-audits)
   - [General](#general)
   - [`LSP0ERC725Account.sol`](#lsp0erc725accountsol)
@@ -48,7 +47,7 @@
   - [`LSP14Ownable2Step.sol`](#lsp14ownable2stepsol)
   - [`LSP17Extendable.sol`](#lsp17extendablesol)
   - [`LSP20CallVerification.sol`](#lsp20callverificationsol)
-- [Slither Known Issues](#slither-known-issues)
+  - [Slither Known Issues](#slither-known-issues)
 
 # LUKSO audit details
 
@@ -67,10 +66,6 @@
 - Starts June 20, 2023 20:00 UTC
 - Ends July 05, 2023 20:00 UTC
 
-# Automated Findings
-
-Automated findings output for the audit can be found within 24 hours of audit opening.
-
 # Overview
 
 ![Universal Profile architecture overview](https://docs.lukso.tech/assets/images/universal-profile-architecture-335f9157e3ab222ff460c5816b2b90d3.jpeg)
@@ -87,7 +82,7 @@ _[LSP0ERC725Account]_ is an advanced smart contract-based account that offers a 
 - provides a secure ownership management module ([LSP14](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp14---ownable2step)).
 - finally, it allows executing directly through the contract itself instead of resolving through the owner first using the [LSP20 standard](https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account#lsp20---call-verification).
 
-![LSP0 modules diagram](./assets/LSP0-module-diagram.jpeg)
+![LSP0 modules diagram](https://docs.lukso.tech/assets/images/LSP0-modules-diagram-a27fff560955b9489b50e4fec6ea5091.jpeg)
 
 ## LSP1UniversalReceiver
 
@@ -414,11 +409,11 @@ The behavior specific to this contract is as follow:
 - Are there any novel or unique curve logic or mathematical models?: The ERC725Account is a blockchain account, that can do several stuff execution, setting data, validating signatures, receiving and reacting on universalReceiver calls, extend the account with extensions.  The owner can execute certain functions, as well as addresses allowed by the logic of the owner. (If the caller is not the owner, verification is forwarded to the owner)  The LSP6KeyManager is a smart contract that can own the ERC725Account and allow certain calls to the account linked (ERC725Account) based on the permissions of the caller which are stored in the ERC725Account. Also this contract allows relay execution.  LSP1UniversalReceiverDelegate is a contract design to be set as a UniversalReceiverDelegate of the account to react on certain universalReceiver calls, to register the asset of the tokens and vaults received. LSP7 and LSP8 are new token standards based on LSP4 that allow adding metadata to the tokens contracts themselves. Their interface is built in a unified way, using the same functions for transferring tokens and approving operators, including the same number of parameters (and their types) for these functions. They also include features via LSP1 to notify the sender and the recipient on transfer of receiving tokens.
 - Does it use a timelock function?:
 - Is it an NFT?: True
-- Does it have an AMM?:
+- Does it have an AMM?: No
 - Is it a fork of a popular project?: False
-- Does it use rollups?:
-- Is it multi-chain?:
-- Does it use a side-chain?:
+- Does it use rollups?: No
+- Is it multi-chain?: LUKSO itself is not a multi-chain. The lsp-smart-contracts are initially intended to be used on the LUKSO network. However, the Universal Profile of a user could be deployed at the same address across multiple chains (using for instance Nick's method), to enable the user to use the same UP across multiple networks / chains and offer a different user experience.
+- Does it use a side-chain?: No
 ```
 
 # Instructions
@@ -564,7 +559,9 @@ npx hardhat verify --network luksoTestnet --contract contracts/LSP8IdentifiableD
 npx hardhat verify --network luksoTestnet --contract contracts/LSP9Vault/LSP9Vault.sol:LSP9Vault <address of the LSP9 deployed> <address of the deployer>
 ```
 
-# Publicly Known Issues
+# Automated Findings / Publicly Known Issues
+
+Automated findings output for the audit can be found within 24 hours of audit opening.
 
 ## Previous audits
 
@@ -572,13 +569,13 @@ The current contract have gone through multiple audits and formal verification p
 
 Any issue mentioned in the report listed under the [`./audits`](https://github.com/code-423n4/2023-06-lukso/tree/main/audits) folder MUST be considered as a known issue.
 
-- [Chainsulting audit report (06/07/2022)](./audits/Chainsulting_audit_2022_07_06.pdf)
-- [Quantstamp audit (07/09/2022)](./audits/Quantstamp_audit_2022_09_07.pdf)
-- [Watchpug audit (20/10/2022)](./audits/Watchpug_audit_2022_10_20.pdf)
-- [Watchpug audit (15/12/2022)](./audits/Watchpug_audit_2022_12_15.pdf)
-- [RuntimeVerification, Formal Verification audit (2023/02/20)](./audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
-- [Trust audit (2023/04/13)](./audits/Trust_audit_2023_04_13.pdf)
-- [Watchpug audit (2023/04/21)](./audits/Watchpug_audit_2023_04_21.pdf)
+- [Chainsulting audit report (06/07/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Chainsulting_audit_2022_07_06.pdf)
+- [Quantstamp audit (07/09/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Quantstamp_audit_2022_09_07.pdf)
+- [Watchpug audit (20/10/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_10_20.pdf)
+- [Watchpug audit (15/12/2022)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2022_12_15.pdf)
+- [RuntimeVerification, Formal Verification audit (2023/02/20)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/RuntimeVerification_formalVerification_2023_02_20.pdf)
+- [Trust audit (2023/04/13)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Trust_audit_2023_04_13.pdf)
+- [Watchpug audit (2023/04/21)](https://github.com/code-423n4/2023-06-lukso/tree/main/audits/Watchpug_audit_2023_04_21.pdf)
 
 ## General
 
@@ -701,12 +698,9 @@ if (success) {
 
 - Additional data can be returned after the first 32 bytes of the abi encoded magic value from LSP20 standardized functions.
 
-# Slither Known Issues
+## Slither Known Issues
 
 Any known issues from Slither for each contract are listed under the [`slither/`](https://github.com/code-423n4/2023-06-lukso/tree/main/slither) folder in this repository. We encourage reporting any bugs around them and not just the errors on their own. Slither errors without some proven negative impact will be considered as known issues.
-
-<!-- Global Links -->
-<!-- prettier-ignore-start -->
 
 [`LSP0ERC725AccountCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountCore.sol
 [`LSP0Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Utils.sol
@@ -715,33 +709,21 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP0ERC725Account.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725Account.sol
 [`LSP0ERC725AccountInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0ERC725AccountInit.sol
 [`LSP0Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP0ERC725Account/LSP0Constants.sol
-
-<!-- --- -->
-
 [`UniversalProfileInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInitAbstract.sol
 [`UniversalProfile.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfile.sol
 [`UniversalProfileInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/UniversalProfileInit.sol
-
-<!-- --- -->
-
 [`LSP1UniversalReceiverDelegateUP.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateUP/LSP1UniversalReceiverDelegateUP.sol
 [`LSP1Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Utils.sol
 [`LSP1UniversalReceiverDelegateVault.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1UniversalReceiverDelegateVault/LSP1UniversalReceiverDelegateVault.sol
 [`ILSP1UniversalReceiver.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/ILSP1UniversalReceiver.sol
 [`LSP1Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Constants.sol
 [`LSP1Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP1UniversalReceiver/LSP1Errors.sol
-
-<!-- --- -->
-
 [`LSP4DigitalAssetMetadataInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadataInitAbstract.sol
 [`LSP4DigitalAssetMetadata.sol`]: chttps://github.com/code-423n4/2023-06-lukso/tree/main/ontracts/LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol
 [`LSP4Compatibility.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Compatibility.sol
 [`LSP4Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Constants.sol
 [`ILSP4Compatibility.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/ILSP4Compatibility.sol
 [`LSP4Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP4DigitalAssetMetadata/LSP4Errors.sol
-
-<!-- --- -->
-
 [`LSP6SetDataModule.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6SetDataModule.sol
 [`LSP6KeyManagerCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerCore.sol
 [`LSP6ExecuteModule.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6Modules/LSP6ExecuteModule.sol
@@ -753,9 +735,6 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP6KeyManagerInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerInitAbstract.sol
 [`LSP6KeyManager.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManager.sol
 [`LSP6KeyManagerInit.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP6KeyManager/LSP6KeyManagerInit.sol
-
-<!-- --- -->
-
 [`LSP7DigitalAssetCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7DigitalAssetCore.sol
 [`LSP7CompatibleERC20InitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20InitAbstract.sol
 [`LSP7CompatibleERC20.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7CompatibleERC20.sol
@@ -776,9 +755,6 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP7Burnable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7Burnable.sol
 [`LSP7BurnableInitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/extensions/LSP7BurnableInitAbstract.sol
 [`LSP7Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP7DigitalAsset/LSP7Constants.sol
-
-<!-- --- -->
-
 [`LSP8IdentifiableDigitalAssetCore.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8IdentifiableDigitalAssetCore.sol
 [`LSP8CompatibleERC721InitAbstract.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721InitAbstract.sol
 [`LSP8CompatibleERC721.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8CompatibleERC721.sol
@@ -800,31 +776,19 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP8Burnable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/extensions/LSP8Burnable.sol
 [`ILSP8Mintable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/presets/ILSP8Mintable.sol
 [`LSP8Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP8IdentifiableDigitalAsset/LSP8Constants.s
-
-<!-- --- -->
-
 [`LSP14Ownable2Step.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Ownable2Step.sol
 [`ILSP14Ownable2Step.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/ILSP14Ownable2Step.sol
 [`LSP14Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Constants.sol
 [`LSP14Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP14Ownable2Step/LSP14Errors.sol
-
-<!-- --- -->
-
 [`LSP17Extendable.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Extendable.sol
 [`LSP17Extension.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Extension.sol
 [`LSP17Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Constants.sol
 [`LSP17Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Errors.sol
 [`LSP17Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP17ContractExtension/LSP17Utils.sol
-
-<!-- --- -->
-
 [`LSP20CallVerification.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20CallVerification.sol
 [`ILSP20CallVerifier.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/ILSP20CallVerifier.sol
 [`LSP20Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Constants.sol
 [`LSP20Errors.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP20CallVerification/LSP20Errors.sol
-
-<!-- --- -->
-
 [`EIP191Signer.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/Custom/EIP191Signer.sol
 [`LSP2Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol
 [`generateArrayElementKeyAtIndex(bytes32,uint128)`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP2ERC725YJSONSchema/LSP2Utils.sol#L48
@@ -835,9 +799,6 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`LSP5Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP5ReceivedAssets/LSP5Constants.sol
 [`LSP10Utils.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP10ReceivedVaults/LSP10Utils.sol
 [`LSP10Constants.sol`]: https://github.com/code-423n4/2023-06-lukso/tree/main/contracts/LSP10ReceivedVaults/LSP10Constants.sol
-
-<!-- Links to Specs -->
-
 [ERC-725]: https://github.com/ERC725Alliance/ERC725/blob/develop/docs/ERC-725.md
 [LSP-0-ERC725Account]: https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-0-ERC725Account.md
 [LSP-1-UniversalReceiver]: https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-1-UniversalReceiver.md
@@ -852,9 +813,6 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [LSP-14-Ownable2Step]: https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-14-Ownable2Step.md
 [LSP-17-ContractExtension]: https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-17-ContractExtension.md
 [LSP-20-CallVerification]: https://github.com/lukso-network/LIPs/blob/main/LSPs/LSP-20-CallVerification.md
-
-<!-- Links to Docs --->
-
 [ERC725]: https://docs.lukso.tech/standards/lsp-background/erc725
 [UniversalProfile]: https://docs.lukso.tech/standards/universal-profile/introduction
 [LSP0ERC725Account]: https://docs.lukso.tech/standards/universal-profile/lsp0-erc725account
@@ -870,9 +828,6 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [LSP14Ownable2Step]: https://docs.lukso.tech/standards/generic-standards/lsp14-ownable-2-step
 [LSP17ContractExtension]: https://docs.lukso.tech/standards/generic-standards/lsp17-contract-extension
 [LSP20CallVerification]: https://docs.lukso.tech/standards/generic-standards/lsp20-call-verification
-
-<!-- Links to Libraries -->
-
 [`Create2.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/Create2.sol
 [`ECDSA.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/cryptography/ECDSA.sol
 [`ERC165Checker.sol`]: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.9.2/contracts/utils/introspection/ERC165Checker.sol
@@ -887,8 +842,7 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`ERC725XCore.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725XCore.sol
 [`OwnableUnset.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/custom/OwnableUnset.sol
 [`BytesLib.sol`]: https://github.com/GNSPS/solidity-bytes-utils/blob/v0.8.0/contracts/BytesLib.sol
-
-[`ERC725InitAbstract.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725InitAbstract 
+[`ERC725InitAbstract.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725InitAbstract
 [`IERC725X.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/interfaces/IERC725X.sol
 [`ERC725.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725.sol
 [`IERC725Y.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/interfaces/IERC725Y.sol
@@ -897,7 +851,5 @@ Any known issues from Slither for each contract are listed under the [`slither/`
 [`errors.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/errors.sol
 [`ERC725Init.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725Init.sol
 [`ERC725XInit.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725XInit.sol
-[`ERC725YInit.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725YInit.sol 
+[`ERC725YInit.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/ERC725YInit.sol
 [`constants.sol`]: https://github.com/ERC725Alliance/ERC725/blob/v5.1.0/implementations/contracts/constants.sol
-
-<!-- prettier-ignore-end -->
