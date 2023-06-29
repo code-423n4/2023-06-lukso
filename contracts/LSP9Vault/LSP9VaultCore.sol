@@ -21,25 +21,25 @@ import {LSP2Utils} from "../LSP2ERC725YJSONSchema/LSP2Utils.sol";
 import {
     ERC725XCore,
     IERC725X
-} from "@erc725/smart-contracts/contracts/ERC725XCore.sol";
+} from "../../submodules/ERC725/implementations/contracts/ERC725XCore.sol";
 import {
     ERC725YCore,
     IERC725Y
-} from "@erc725/smart-contracts/contracts/ERC725YCore.sol";
+} from "../../submodules/ERC725/implementations/contracts/ERC725YCore.sol";
 import {
     OwnableUnset
-} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+} from "../../submodules/ERC725/implementations/contracts/custom/OwnableUnset.sol";
 import {LSP14Ownable2Step} from "../LSP14Ownable2Step/LSP14Ownable2Step.sol";
 import {LSP17Extendable} from "../LSP17ContractExtension/LSP17Extendable.sol";
 
 // constants
-import "@erc725/smart-contracts/contracts/errors.sol";
+import "../../submodules/ERC725/implementations/contracts/errors.sol";
 import {
     OPERATION_0_CALL,
     OPERATION_1_CREATE,
     OPERATION_2_CREATE2,
     OPERATION_3_STATICCALL
-} from "@erc725/smart-contracts/contracts/constants.sol";
+} from "../../submodules/ERC725/implementations/contracts/constants.sol";
 import {
     _INTERFACEID_LSP1,
     _LSP1_UNIVERSAL_RECEIVER_DELEGATE_PREFIX,

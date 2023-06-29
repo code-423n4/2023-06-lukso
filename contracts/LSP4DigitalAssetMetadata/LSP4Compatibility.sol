@@ -5,7 +5,7 @@ pragma solidity ^0.8.4;
 import {ILSP4Compatibility} from "./ILSP4Compatibility.sol";
 
 // modules
-import {ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725YCore.sol";
+import {ERC725YCore} from "../../submodules/ERC725/implementations/contracts/ERC725YCore.sol";
 
 // constants
 import "./LSP4Constants.sol";

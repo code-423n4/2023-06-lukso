@@ -2,10 +2,12 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {ERC725Y} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {
+    ERC725Y
+} from "../../../submodules/ERC725/implementations/contracts/ERC725Y.sol";
 import {
     ERC725Y_DataKeysValuesLengthMismatch
-} from "@erc725/smart-contracts/contracts/errors.sol";
+} from "../../../submodules/ERC725/implementations/contracts/errors.sol";
 
 // libraries
 import {LSP6Utils} from "../LSP6Utils.sol";

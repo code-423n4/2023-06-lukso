@@ -19,11 +19,11 @@ import {LSP1Utils} from "../LSP1UniversalReceiver/LSP1Utils.sol";
 import {LSP2Utils} from "../LSP2ERC725YJSONSchema/LSP2Utils.sol";
 
 // modules
-import {ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725YCore.sol";
-import {ERC725XCore} from "@erc725/smart-contracts/contracts/ERC725XCore.sol";
+import {ERC725YCore} from "../../submodules/ERC725/implementations/contracts/ERC725YCore.sol";
+import {ERC725XCore} from "../../submodules/ERC725/implementations/contracts/ERC725XCore.sol";
 import {
     OwnableUnset
-} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+} from "../../submodules/ERC725/implementations/contracts/custom/OwnableUnset.sol";
 import {LSP14Ownable2Step} from "../LSP14Ownable2Step/LSP14Ownable2Step.sol";
 import {LSP17Extendable} from "../LSP17ContractExtension/LSP17Extendable.sol";
 import {
@@ -31,7 +31,7 @@ import {
 } from "../LSP20CallVerification/LSP20CallVerification.sol";
 
 // constants
-import "@erc725/smart-contracts/contracts/constants.sol";
+import "../../submodules/ERC725/implementations/contracts/constants.sol";
 import {
     _INTERFACEID_LSP0,
     _INTERFACEID_ERC1271,
@@ -58,7 +58,7 @@ import {
 // errors
 import {
     ERC725Y_DataKeysValuesLengthMismatch
-} from "@erc725/smart-contracts/contracts/errors.sol";
+} from "../../submodules/ERC725/implementations/contracts/errors.sol";
 import {
     NoExtensionFoundForFunctionSelector
 } from "../LSP17ContractExtension/LSP17Errors.sol";

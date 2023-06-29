@@ -4,7 +4,7 @@ pragma solidity ^0.8.4;
 // interfaces
 import {
     IERC725Y
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725Y.sol";
+} from "../../../submodules/ERC725/implementations/contracts/interfaces/IERC725Y.sol";
 import {ILSP1UniversalReceiver} from "../ILSP1UniversalReceiver.sol";
 import {ILSP7DigitalAsset} from "../../LSP7DigitalAsset/ILSP7DigitalAsset.sol";
 

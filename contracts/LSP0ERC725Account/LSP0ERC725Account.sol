@@ -5,7 +5,7 @@ pragma solidity ^0.8.4;
 import {LSP0ERC725AccountCore} from "./LSP0ERC725AccountCore.sol";
 import {
     OwnableUnset
-} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+} from "../../submodules/ERC725/implementations/contracts/custom/OwnableUnset.sol";
 
 /**
  * @title Deployable Implementation of LSP0-ERC725Account Standard

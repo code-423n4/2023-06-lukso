@@ -5,7 +5,9 @@ pragma solidity ^0.8.4;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 
 // modules
-import {ERC725YCore} from "@erc725/smart-contracts/contracts/ERC725YCore.sol";
+import {
+    ERC725YCore
+} from "../../submodules/ERC725/implementations/contracts/ERC725YCore.sol";
 import {
     LSP4DigitalAssetMetadata
 } from "../LSP4DigitalAssetMetadata/LSP4DigitalAssetMetadata.sol";

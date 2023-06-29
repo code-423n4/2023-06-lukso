@@ -5,10 +5,10 @@ pragma solidity ^0.8.4;
 import {IERC165} from "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import {
     IERC725X
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725X.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725X.sol";
 import {
     IERC725Y
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725Y.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725Y.sol";
 import {IERC1271} from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import {
     ILSP1UniversalReceiver

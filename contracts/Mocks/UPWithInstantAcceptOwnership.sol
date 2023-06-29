@@ -7,7 +7,7 @@ import {
 } from "../LSP0ERC725Account/LSP0ERC725AccountCore.sol";
 import {
     OwnableUnset
-} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+} from "../../submodules/ERC725/implementations/contracts/custom/OwnableUnset.sol";
 import {LSP14Ownable2Step} from "../LSP14Ownable2Step/LSP14Ownable2Step.sol";
 
 // constants

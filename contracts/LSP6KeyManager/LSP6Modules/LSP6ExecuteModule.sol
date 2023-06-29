@@ -2,7 +2,9 @@
 pragma solidity ^0.8.5;
 
 // modules
-import {ERC725Y} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {
+    ERC725Y
+} from "../../../submodules/ERC725/implementations/contracts/ERC725Y.sol";
 
 // libraries
 import {LSP6Utils} from "../LSP6Utils.sol";
@@ -31,7 +33,7 @@ import {
     OPERATION_2_CREATE2,
     OPERATION_3_STATICCALL,
     OPERATION_4_DELEGATECALL
-} from "@erc725/smart-contracts/contracts/constants.sol";
+} from "../../../submodules/ERC725/implementations/contracts/constants.sol";
 
 // errors
 import {

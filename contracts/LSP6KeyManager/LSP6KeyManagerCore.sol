@@ -5,10 +5,10 @@ pragma solidity ^0.8.5;
 import {IERC1271} from "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import {
     IERC725X
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725X.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725X.sol";
 import {
     IERC725Y
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725Y.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725Y.sol";
 import {ILSP6KeyManager} from "./ILSP6KeyManager.sol";
 import {
     ILSP20CallVerifier as ILSP20
@@ -16,7 +16,9 @@ import {
 
 // modules
 import {ILSP14Ownable2Step} from "../LSP14Ownable2Step/ILSP14Ownable2Step.sol";
-import {ERC725Y} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {
+    ERC725Y
+} from "../../submodules/ERC725/implementations/contracts/ERC725Y.sol";
 import {ERC165} from "@openzeppelin/contracts/utils/introspection/ERC165.sol";
 import {LSP6SetDataModule} from "./LSP6Modules/LSP6SetDataModule.sol";
 import {LSP6ExecuteModule} from "./LSP6Modules/LSP6ExecuteModule.sol";

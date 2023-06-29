@@ -2,7 +2,7 @@
 pragma solidity ^0.8.4;
 
 // modules
-import {ERC725Y} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {ERC725Y} from "../../submodules/ERC725/implementations/contracts/ERC725Y.sol";
 
 // libraries
 import {BytesLib} from "solidity-bytes-utils/contracts/BytesLib.sol";

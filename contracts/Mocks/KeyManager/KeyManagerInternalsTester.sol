@@ -5,7 +5,9 @@ pragma solidity ^0.8.4;
 import {LSP6Utils} from "../../LSP6KeyManager/LSP6Utils.sol";
 
 // modules
-import {ERC725Y} from "@erc725/smart-contracts/contracts/ERC725Y.sol";
+import {
+    ERC725Y
+} from "../../../submodules/ERC725/implementations/contracts/ERC725Y.sol";
 import {LSP6KeyManager} from "../../LSP6KeyManager/LSP6KeyManager.sol";
 
 /**

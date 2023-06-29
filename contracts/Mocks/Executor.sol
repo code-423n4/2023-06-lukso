@@ -4,10 +4,10 @@ pragma solidity ^0.8.4;
 // interfaces
 import {
     IERC725X
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725X.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725X.sol";
 import {
     IERC725Y
-} from "@erc725/smart-contracts/contracts/interfaces/IERC725Y.sol";
+} from "../../submodules/ERC725/implementations/contracts/interfaces/IERC725Y.sol";
 import {ILSP6KeyManager} from "../LSP6KeyManager/ILSP6KeyManager.sol";
 
 // modules
@@ -17,7 +17,7 @@ import {LSP6KeyManager} from "../LSP6KeyManager/LSP6KeyManager.sol";
 // constants
 import {
     OPERATION_0_CALL
-} from "@erc725/smart-contracts/contracts/constants.sol";
+} from "../../submodules/ERC725/implementations/contracts/constants.sol";
 
 contract Executor {
     address internal constant _DUMMY_RECIPIENT =

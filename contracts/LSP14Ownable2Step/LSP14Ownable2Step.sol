@@ -7,7 +7,7 @@ import {ILSP14Ownable2Step} from "./ILSP14Ownable2Step.sol";
 // modules
 import {
     OwnableUnset
-} from "@erc725/smart-contracts/contracts/custom/OwnableUnset.sol";
+} from "../../submodules/ERC725/implementations/contracts/custom/OwnableUnset.sol";
 
 // libraries
 import {LSP1Utils} from "../LSP1UniversalReceiver/LSP1Utils.sol";
