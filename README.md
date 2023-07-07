@@ -310,6 +310,13 @@ LSP20 aims to reduce this complexity for application and protocol developers, wh
 
 # Scope
 
+**Watch the following video for an overview of the LSP Smart Contracts repository**.
+
+<a href="https://www.youtube.com/watch?v=E8Ih5n7auKY" target="_blank">
+ <img src="https://img.youtube.com/vi/E8Ih5n7auKY/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
+</a>
+
+
 Here are some examples of issues that we are primarily concerned about:
 
 - Bypassing ownership.
