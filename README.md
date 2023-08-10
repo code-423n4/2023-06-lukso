@@ -54,11 +54,11 @@
 # LUKSO audit details
 
 - Total Prize Pool: $100,000 USDC
-  - HM awards: $70,000 USDC
-  - Analysis awards: $4,250 USDC
-  - QA awards: $2,000 USDC
-  - Bot Race awards: $6,250 USDC
-  - Gas awards: $2,000 USDC
+  - HM awards: $69,712.50 USDC
+  - Analysis awards: $4,225 USDC
+  - QA awards: $2,112.50 USDC
+  - Bot Race awards: $6,337.50 USDC
+  - Gas awards: $2,112.50 USDC
   - Judge awards: $9,000 USDC
   - Lookout awards: $6,000 USDC
   - Scout awards: $500 USDC
