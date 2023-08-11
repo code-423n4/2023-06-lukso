@@ -1,10 +1,10 @@
-[![Twitter](https://img.shields.io/twitter/follow/lukso_io)](https://twitter.com/lukso_io)
-[![Discord](https://img.shields.io/badge/Discord-7289da?logo=discord)](https://discord.com/invite/lukso)
-[![Contracts](https://img.shields.io/badge/Smart-Contracts-555?logo=solidity)](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
-[![LIPs](https://img.shields.io/badge/LIPs-555?logo=github)](https://github.com/lukso-network/LIPs)
-[![Docs](https://img.shields.io/badge/Docs-007500?logo=readthedocs)](https://docs.lukso.tech)
+- [Twitter](https://twitter.com/lukso_io)
+- [Discord](https://discord.com/invite/lukso)
+- [Contracts](https://github.com/lukso-network/lsp-smart-contracts/tree/v0.10.2)
+- [LIPs](https://github.com/lukso-network/LIPs)
+- [Docs](https://docs.lukso.tech)
 
-# Table of Content
+# Table of Contents
 
 - [LUKSO audit details](#lukso-audit-details)
 - [Automated Findings / Publicly Known Issues](#automated-findings--publicly-known-issues)
