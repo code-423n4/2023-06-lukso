@@ -1,0 +1,701 @@
+==============================================================
+Guild: Code4rena
+Channel: ARCHIVE-Q2-2023 / lukso-jun30
+==============================================================
+
+[06/29/2023 03:30] itsbritt#0491 (pinned)
+👋 Hello and welcome to the audit channel for the $100,000 USDC **LUKSO** audit!
+
+📆 Audit opens 06/30/2023 20:00 (20:00 UTC) and runs through 07/14/2023 20:00 (20:00 UTC) (14 days).
+
+Please give a warm welcome to the LUKSO team, particularly @0xYamen, @CJ42, and @maxime OOO who will be available for questions either here in the channel or via DM in the CET timezone.
+
+We'll be posting relevant links, documentation, etc. here, so if you intend to participate in this audit, consider enabling notifications for this channel. 🐺 ⏰
+
+Audit Page: https://code4rena.com/contests/2023-06-lukso#top
+
+{Reactions}
+👍 (16) 
+
+[06/29/2023 16:23] itsmetechjay
+Pinned a message.
+
+
+[07/01/2023 05:35] liveactionllamac4 (pinned)
+**Wardens** - please note that the automated findings output (AKA the winning bot race report 🏆, submitted by @IllIllI) is posted below. 
+
+These are considered publicly known issues and are not eligible for awards.
+
+🤖 **Automated findings: **
+https://gist.github.com/liveactionllama/cb2471f54012df01df5bd06a93e5125b
+
+📄 **Code4rena submission guidelines and automated findings policy: **
+https://docs.code4rena.com/roles/wardens/submission-policy#automated-findings-ineligible
+
+The above link will also be added to the contest README shortly.
+
+{Reactions}
+🔥 (7) thankyou 
+
+[07/01/2023 05:35] liveactionllamac4
+Pinned a message.
+
+
+[07/01/2023 07:21] bytes032
+damn @IllIllI youre killing it
+
+{Reactions}
+725UP (3) 
+
+[07/01/2023 07:21] bytes032
+great job
+
+{Reactions}
+thankyou (2) 
+
+[07/01/2023 09:55] yamenmerhi
+Hello wardens! We’re excited to work with you! Our dev team @CJ42 , @B00ste , @maxime OOO  and myself are ready to answer any questions you have! Please note, our team is mostly based in the CET timezone, so please take that into consideration when it comes to the speed of responses! 🙏
+
+{Reactions}
+✅ (7) ❤️‍🔥 (2) 
+
+[07/01/2023 20:08] luisc#9339
+Put together a one-pager that's less dense the C4 page. Also do an analysis on the following contracts:
+- ILSP0ERC725Account
+- LSP9Vault 
+- ILSP14Ownable2Step
+
+https://shieldsecurity.notion.site/LUKSO-Audit-fc4722268a7542cf87bd58ba1a5f5cda
+
+{Embed}
+https://shieldsecurity.notion.site/LUKSO-Audit-fc4722268a7542cf87bd58ba1a5f5cda
+LUKSO Audit
+LUKSO is a blockchain-based platform designed specifically for the creative industries, including fashion, design, lifestyle, and media. Conceived as a digital base layer for modern creative economies, LUKSO aims to facilitate innovation, automate interactions, and ensure trust in transactions within these industries.
+
+{Reactions}
+✅ LUKSO3D 
+
+[07/01/2023 20:37] mahdirostami
+I think LSP9Vault is out of scope.
+
+{Reactions}
+👍 SmilingVR 
+
+[07/01/2023 20:44] yamenmerhi
+True, LSP9Vault is out of scope itself as correctness of code and functionalities but the contracts in scope (LSP0ERC725Account - LSP1UniversalReceiverDelegateUP) expect the use of LSP9Vault.
+
+For example one of the goals of LSP1UniversalReceiverDelegateUP is to detect ownership transfer of LSP9Vaults and register the received vaults in the ERC725Y storage of the LSP0ERC725Account according to LSP10ReceivedVaults standard
+
+This happens when an LSP0 accept ownership of an LSP9Vault, the LSP9Vault automatically will call the universalReceiver function on the new owner (LSP0) to notify about the new acceptance of ownership, and then the universalReceiver function of LSP0 will call the universalReceiver function on the LSP1UniversalReceiverDelegateUP (when this contract is set as UniversalReceiverDelegate of the LSP0)
+
+{Reactions}
+✅ (3) 
+
+[07/02/2023 11:04] mahdirostami
+hello,
+What is the main way to contact Accounts? LSP0 or LSP6?
+
+{Reactions}
+LUKSOsignetnavy 
+
+[07/02/2023 11:12] yamenmerhi
+Not sure i understand what do you mean by 'contact Accounts'
+
+an LSP0ERC725Account is the main account, and LSP6KeyManager can be set as an owner of the LSP0ERC725Account.
+
+When owned by an EOA, the EOA can call directly the functions of the LSP0.
+
+When owned by an LSP6, the controllers (according to LSP6) can either call the LSP0 through the LSP6. (calling execute of the LSP6 --> that calls the functions of the LSP0) **OR** the controllers can call the functions of the LSP0 directly since the LSP0 supports the LSP20CallVerification and LSP6 support LSP20CallVerifier functions
+
+
+[07/02/2023 11:15] yamenmerhi
+---------------------------------------------
+
+The LSP20CallVerification support was added to the LSP0 to have a unified way of interacting with the account regardless of the owner (if the owner support LSP20CallVerifier)
+
+
+[07/02/2023 11:16] yamenmerhi
+But with both ways you can interact with LSP0, either through the LSP6 or directly through the LSP0
+
+
+[07/02/2023 11:20] mahdirostami
+Thank you
+
+{Reactions}
+PinkPills 
+
+[07/02/2023 12:42] sinarette
+@0xYamen Hey, is there any difference in code/scope compared to the last audit? I mean, which part from the scope is uncovered by the previous audits?
+
+
+[07/02/2023 14:01] yamenmerhi
+The last audit was with Trust where the scope of the audit was the same as this one except the Tokens represented by LSP7 and LSP8. From the last audit till now, the changes were very minimal, but for the other audits they were constantly happening while the development whenever we added a feature or changed the architecture. 
+
+The main focus was on LSP1 LSP0 LSP6 and few audits targeted LSP7 and LSP8
+
+{Reactions}
+code4rena (3) 
+
+[07/02/2023 16:44] dicethedev
+Can you check your DM
+
+{Reactions}
+UP 
+
+[07/03/2023 07:51] cj42 (pinned)
+Hello wardens! 👋 
+I hope you all had a great week-end and are ready and motivated to audit the lsp-smart-contracts! 👊 
+
+For those who are looking at the codebase of the `LSP6KeyManager.sol` contract, here is a Youtube video that I did with the_bytecode that goes over the Solidity source code of the `executeRelayCall(...)` function.
+
+It will help you understand the following:
+- how a relay transaction is encoded + signed.
+- multi channel nonces.
+- how nonces are verified and incremented.
+- some basics overview of how a permission is verified with bitwise `AND` / `&`
+
+https://www.youtube.com/watch?v=2Sm9LsCPjdE
+
+Any questions or clarification, feel free to ping us directly by message or ask in this channel 🙂
+
+{Embed}
+shafu
+https://www.youtube.com/watch?v=2Sm9LsCPjdE
+The Bytecode #4 - Jean Cavallera - Lukso Key Manager
+https://github.com/lukso-network/lsp-smart-contracts/tree/develop
+https://twitter.com/JeanCavallera
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/maxresdefault-F1332.jpg
+
+{Reactions}
+LUKSOCool (6) 
+
+[07/03/2023 09:17] 0xsorrynotsorry
+hey @CJ42 , could you accept my FR please?
+
+
+[07/03/2023 09:17] cj42
+@sorryNotsorry done ✅ AMA
+
+
+[07/03/2023 15:03] csjaybit
+hi any previous audits?
+
+
+[07/03/2023 15:07] sinarette
+Read the contest page, they are listed right on the top
+
+
+[07/03/2023 15:07] yamenmerhi
+https://github.com/code-423n4/2023-06-lukso/tree/main/audits
+
+{Embed}
+https://github.com/code-423n4/2023-06-lukso/tree/main/audits
+2023-06-lukso/audits at main · code-423n4/2023-06-lukso
+Contribute to code-423n4/2023-06-lukso development by creating an account on GitHub.
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/6d0248d3-8925-4107-a033-0e66737ae9c0-A1783
+
+
+[07/03/2023 15:16] csjaybit
+thank you sir
+
+
+[07/04/2023 03:47] wangxx2026
+@CJ42 could you accept my FR ?
+
+
+[07/04/2023 04:18] cj42
+@wangxx2026 done ✅
+
+
+[07/04/2023 07:55] cj42 (pinned)
+Wardens, if you come across functions that look like this and wonder why we made the function `payable` but reverted if some value is sent to it, here are the rationale.
+
+```js
+function setData(
+    bytes32 dataKey,
+    bytes memory dataValue
+) public payable virtual override onlyOwner {
+    if (msg.value != 0) revert ERC725Y_MsgValueDisallowed();
+    _setData(dataKey, dataValue);
+}
+```
+
+In Solidity, you cannot override a function as follow:
+- neither override from `payable` -➝ `nonpayable` ❌
+- nor from `nonpayable` -➝ `payable` ❌
+
+We want to enforce that no value can be sent to this function
+But allow anyone to override the behaviour if they want this function to allow accepting value.
+
+Since we cannot override from `nonpayable` —> `payable`, we decided to make the function always `payable` (to allow overriding this behaviour) but revert by default if value is sent (to make it feels like if it is `nonpayable`)
+
+Asked by @wangxx2026 but thought sharing it as well for anyone else so that you get the context.
+
+{Reactions}
+chefskiss (6) 
+
+[07/04/2023 07:59] wangxx2026
+LSP20CallVerification._verifyCall(_owner); Could you explain in more detail how this works? magicValue is confusing@CJ42
+
+
+[07/04/2023 08:22] cj42
+Yes sure. This is the high level idea of LSP20.
+To not have to go through the owner of the contract, but just call the contract directly.
+
+The contract will see that the call does not come from the `owner` directly, so it will forward the calldata to the `owner`.
+> In this picture, the `owner` is the Key Manager but it can be anything.
+
+The owner then performs the verification logic (or any other logic), and return a result back to the actual contract in the form of a `LSP20 Magic Value`.
+
+Let me draw on top of that to explain
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/Fz42jlrWcAE2UyK-8A8D8.png
+
+{Reactions}
+👍🏻 (2) 
+
+[07/04/2023 08:29] __melonwater
+Hi, I wonder why do we need to grant LSP1UniversalReceiverDelegateUP reentrancy permission?
+
+
+[07/04/2023 08:34] yamenmerhi (pinned)
+The Flow of interaction is the following:
+
+- LSP0 call transfer on a LSP7token X 
+- Token X will inform the sender and the recipient of the transfer through universalReceiver function
+- The universalReceiver function on the sender, will call the `LSP1UniversalReceiverDelegateUP` if set.
+- The `LSP1UniversalReceiverDelegateUP` will now need to remove the address of the asset sent and other data keys on the LSP0 since the LSP0 does not own anymore of this asset
+- The `LSP1UniversalReceiverDelegateUP` will need to setData to remove these data keys, so needs the SETDATA permission.
+- Since the LSP0 initiated a call in the same tx that trigger the transfer function of LSP7token X, it means we are reentering the LSP0 to do setData this time, so it needs the REENTRANCY Permission
+
+
+[07/04/2023 08:34] yamenmerhi
+The Reentrancy permission should be checked against the contract that is reentering not initiating the call that reenters
+
+
+[07/04/2023 08:35] cj42
+The internal function `_verifyCall(...)` will call the public `lsp20VerifyCall(...)` on the owner contract.
+And it will return the MAGIC VALUE.
+
+From this you have 3 potential value returned
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/lsp20-step1-3F940.jpeg
+
+
+[07/04/2023 08:35] __melonwater
+got it, thanks
+
+
+[07/04/2023 08:37] yamenmerhi
+For instance if i call a protocol X, and the protocol X have a bunch of external calls, and one of these external calls targeted the LSP0 that already initiated a call to the protocol, the contract doing the external call should have reentrancy permission because it's trying to execute an action in the background
+
+{Reactions}
+🙏 
+
+[07/04/2023 08:42] cj42
+The magic value MUST start with `0x9bf04b` as its first 3 bytes.
+
+_case 1:_ if the magic value starts with these first 3 bytes `0x9bf04b`, that means the verification succeeded, there is nothing else that needs to be done. The function can be executed (e.g: ERC725Y `setData(bytes32,bytes)`).
+
+_case 2: _ if the magic value is `0x9bf04b01` (with these first 3 bytes + the 4th byte is **strictly `01`**), that means the verification succeeded, but the contract has to do a post verification because the function being run is making an external call (e.g: ERC725X `execute(uint256,address,uint256,bytes)`). This is necessary to prevent scenario of reentrancy in particular.
+
+> Note: for case1, we don't care what the 4th byte is, as long as it is not `01`
+
+_case 3:_ if the value being returned does not start with `0x9bf04b`, it is an invalid magic value, so we revert with the custom error `LSP20InvalidMagicValue`
+
+```js
+// bytes4(bytes.concat(bytes3(ILSP20.lsp20VerifyCall.selector), hex"01"))
+bytes4 constant _LSP20_VERIFY_CALL_MAGIC_VALUE_WITH_POST_VERIFICATION = 0x9bf04b01;
+
+// bytes4(bytes.concat(bytes3(ILSP20.lsp20VerifyCall.selector), hex"00"))
+bytes4 constant _LSP20_VERIFY_CALL_MAGIC_VALUE_WITHOUT_POST_VERIFICATION = 0x9bf04b00;
+```
+
+
+[07/04/2023 08:48] wangxx2026
+ok thanks, let me digest
+
+{Stickers}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/755244428305760266-07F97.json
+
+
+[07/04/2023 09:00] cj42
+@wangxx2026 here it is for the `MAGIC_VALUE` detail. Hope it helps to digest better. Let me know if you are not sure (or anyone) about something in the figure
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/LSP20-step2-BDE6F.jpeg
+
+
+[07/04/2023 09:03] wangxx2026
+ok
+
+
+[07/04/2023 09:04] yamenmerhi
+LSP0 have an owner KeyManager X
+
+Lets say EOA A, called `setData` function, the setData function will identify that the caller is the not the owner.  
+
+The setData function will use the internal `_verifyCall` function to call the `lsp20VerifyCall(..)` function on the owner passing the caller (EOA A), value (0 let’s say), the calldata (setting 2 data keys let’s say).  
+
+The role of the `lsp20VerifyCall(..)` function is to have a logic that verify wether the call is allowed based on the parameter.   
+
+In the case of the KeyManager, we well check the permission of the caller (EOA A), if he has permission to set these data keys (taken from calldata), then the function will return the magic value if the caller is allowed.  
+
+The `lsp20VerifyCallResult` in the KeyManager serve to re-set back to the Reentrnacy guard to false.  
+
+When a setData is done, we don’t set the Reentrnacy guard to true because setData cannot reenter, that’s why we don’t need to trigger the `lsp20VerifyCallResult` in case of setData. 
+
+So we return the magic value (3 bytes with whatever byte at the end but not `0x01`)
+
+When an execute is done, we set the Reentrnacy guard to true because execute can reenter, that’s why we need to trigger the `lsp20VerifyCallResult` in case of execute. 
+
+So we return the magic value (3 bytes with`0x01` as the last byte indicating that we need to trigger `lsp20VerifyCallResult` to re-set the reentrancy guard to false)  
+
+> in case of execute, only the first execute should trigger the `lsp20VerifyCallResult` function to re-set the reentrancy guard to false, as in case of chaining several execute functions together, you don’t want the second one to re-set the reentrancy guard to false in the middle and make the subsequent call not require `REENTRACNY` Permission. 
+> 
+> Because `REENTRACNY` permission is only required when the Reentrnacy guard is set to true.
+
+
+[07/04/2023 09:06] yamenmerhi
+------------------------------------------------------------------------------------------------
+
+When an LSP0 have an owner such as EOA, or a contract that does not implement the `lsp20VerifyCall` function or a contract that implement the fallback. 
+
+When an EOA X calls a function of the LSP0, this function will see that the caller is not the owner, so it will call the `lsp20VerifyCall` function on the owner. In case of all these owners mentioned above, none of them will return the magic value, so the call verification be unsuccessful and the call will revert
+
+
+[07/05/2023 13:16] csjaybit
+do we have a full documentation anywhere?
+
+
+[07/05/2023 13:17] immeas
+here?
+https://docs.lukso.tech/standards/introduction
+
+{Embed}
+https://docs.lukso.tech/standards/introduction
+Introduction | LUKSO Tech Documentation
+See the Contracts Implementation section for the Solidity implementation of these standards.
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/lukso-docs-opengraph-FD18A.jpg
+
+
+[07/05/2023 13:18] immeas
+contains a bunch of documentation at least 🙂
+
+
+[07/05/2023 13:32] cj42
+@TK | csjaybit you will have the links to all the documentations here in the **Summary** section in the C4 repo: https://github.com/code-423n4/2023-06-lukso#summary
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/image-B132D.png
+
+{Reactions}
+thankyou (2) 
+
+[07/05/2023 13:33] csjaybit
+thank you
+
+
+[07/05/2023 13:44] wangxx2026
+It's not over yet, there are bonuses
+
+{Attachments}
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/image-717BE.png
+
+
+[07/05/2023 13:49] gpersoon
+Fellow wardens: I've made the following drawing to help you understand the Universal Profiles and KeyManager: 
+https://twitter.com/gpersoon/status/1676588871255990272
+
+{Embed}
+Gerard Persoon (@gpersoon)
+https://twitter.com/gpersoon/status/1676588871255990272
+For anyone joining in the @code4rena contest for @lukso_io. I've made the following drawing to help understand the Universal Profiles and KeyManager.
+https://t.co/WitI50nOVg
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/F0Rvwf2X0AUqCqr-C57F5.png
+Twitter
+
+{Reactions}
+🔥 (21) 
+
+[07/06/2023 19:02] kartoonjoy
+Pinned a message.
+
+
+[07/06/2023 19:02] kartoonjoy
+Pinned a message.
+
+
+[07/06/2023 19:02] kartoonjoy
+Pinned a message.
+
+
+[07/06/2023 20:10] thiagomathiaz
+@CJ42 or @0xYamen FR
+
+
+[07/06/2023 20:24] yamenmerhi
+Done
+
+
+[07/07/2023 06:28] cj42
+Done ✅
+
+
+[07/07/2023 15:20] kartoonjoy (pinned)
+Hi wardens 👋. The sponsor has created a nice video overview of the LSP Smart Contracts repository that can be viewed here: https://github.com/code-423n4/2023-06-lukso/blob/main/README.md#scope
+
+
+[07/07/2023 15:20] kartoonjoy
+Pinned a message.
+
+
+[07/07/2023 15:22] cj42 (pinned)
+See also here: https://www.youtube.com/watch?v=E8Ih5n7auKY
+
+{Embed}
+LUKSO Blockchain
+https://www.youtube.com/watch?v=E8Ih5n7auKY
+Code4Rena Contest: LUKSO lsp-smart-contracts repository overview
+Understanding how the LSP2 standard encodes static types in the ERC725Y storage of a smart contract.
+
+🌐 Visit our website:
+👉 https://lukso.network/
+
+💬 Join our Discord:
+👉 https://discord.gg/lukso
+
+📚 Technical Documentation:
+👉 https://docs.lukso.tech/
+Code4rena - ARCHIVE-Q2-2023 - lukso-jun30 [1123814946938040421].txt_Files/maxresdefault-BED15.jpg
+
+{Reactions}
+hi5 (3) 
+
+[07/07/2023 15:24] kartoonjoy
+Pinned a message.
+
+
+[07/08/2023 22:47] 0xsynon
+Wow I'm late to the party, just came back from holidays. I hope there's still something for me to find 😄
+
+
+[07/08/2023 22:48] 0xsynon
+and @CJ42 I'm a big fan, your "All about solidity" series has been foundational to my career
+
+{Reactions}
+👌 (2) 
+
+[07/09/2023 07:30] 0xumarkhatab
+Hi @0xYamen , how do we calculate the index for AddressPermissions to insert new one , is it like array.length ?  
+
+Context : LSP6 Key manager and ERC725 Account
+
+
+[07/09/2023 07:31] 0xumarkhatab
+just reading the docs , thought to ask !
+
+
+[07/09/2023 07:31] immeas
+it's stored in `_LSP6KEY_ADDRESSPERMISSIONS_ARRAY`
+
+
+[07/09/2023 07:32] immeas
+the function `LSP6Utils::generateNewPermissionsKeys` explains the structure pretty well
+
+
+[07/09/2023 07:58] 0xumarkhatab
+I'll look into it ...
+Thanks immeas
+
+{Reactions}
+hi5 
+
+[07/09/2023 08:34] yamenmerhi
+Technically you'll check the array Length stored under AddressPermissions[] data key.
+If you get for example 2, you know that there is some addresses stored under index 0 and index 1, so you'll write under the index 2
+
+
+[07/09/2023 08:36] 0xumarkhatab
+Yeah that makes sense for sure , I had a concern that I'll ask you when I jump into the code ! 
+
+By the way I'm loving this socio specific Blockchain concept ...
+
+
+[07/10/2023 10:33] bauchibred
+Hi @0xYamen sent a FR
+
+
+[07/10/2023 10:33] yamenmerhi
+Accepted
+
+
+[07/13/2023 11:53] yamenmerhi
+@everyone @everyone Any questions ? Anything not clear ?
+
+
+[07/13/2023 11:54] cj42
+@everyone Feel free to ask any questions about the protocol, and the codebase.
+Are there any particular area in the Github repo, the Solidity code or the figure you are not sure to understand?
+Feel free to drop your questions here or by DM 🙂
+
+
+[07/14/2023 20:02] C4
+**🚨 AUDIT ALERT**
+
+@🐺wardens The **LUKSO** audit is now closed! Huge thanks to everyone who participated 🔍, whether you submitted a finding or not.
+
+What's next: The sponsor team and judge will review the findings over the next couple of weeks. Keep an eye on #📢announcements for regular updates on how the audit is progressing through awarding 🤑🏆, judging 🧑‍⚖️ and reporting 📜. Feel free to ping a Contest-Admin if you have questions along the way
+
+
+[07/15/2023 00:11] dwward3n
+What's the best way to audit this kind of big complex project? I feel overwhelmed as a solo
+
+{Reactions}
+jerry 
+
+[07/15/2023 08:55] t1moh
+It will pass, don't worry
+
+{Reactions}
+😂 (3) 
+
+[07/15/2023 17:55] mahdirostami
+Thanks to Lukso team, I really enjoy the contest and learn a lot of new ideas, I hope this audit will help your project.
+
+{Reactions}
+🙏 
+
+[07/15/2023 22:40] yamenmerhi
+@everyone Thanks for all the wardens that participated in the contest, we really appreciate the effort! LUKSO team would be interested to hear your opinion on various topics, such as documentation, code complexity, design decision and overall opinion on the project, feel free to send feedback here or in private messages! Many thanks 🙏
+
+{Reactions}
+LUKSO3D (4) C4Keycap (4) thankyou (2) 
+
+[07/17/2023 21:54] dwward3n
+Complex structure, universal logic
+
+
+[07/17/2023 21:54] dwward3n
+Is LUKSO live on any chain?
+
+
+[07/26/2023 23:59] cj42
+The LUKSO main network is live since 23rd May
+
+
+[08/05/2023 10:22] saq_143
+award:hi5: ?
+
+
+[08/05/2023 11:51] milotruck
+Should be in a week or so, judging is completed
+
+{Reactions}
+👍 
+
+[08/05/2023 14:19] 0xnevi
+My man gonna crush it again 😉
+
+{Reactions}
+🙏 
+
+[08/08/2023 13:02] petrichor0961
+Dozmarak
+:10_10:
+
+
+[08/10/2023 21:22] _paperparachute
+🤑 🎉  Awards for **LUKSO**:
+
+$44,459.52 USDC » @MiloTruck  
+$12,360.37 USDC » @codegpt 
+$9,181.99 USDC » @0xc695 
+$6,244.37 USDC » @Gerard Persoon 
+$2,034.26 USDC » @K42 Ψ 
+$714.09 USDC » @Rolezn 
+$686.13 USDC » @0xcatellatech 
+$454.76 USDC » @David Giladi 
+$380.65 USDC » @Raihan 
+$292.81 USDC » @LéoS 
+$292.81 USDC » @Sathish9098 
+$292.81 USDC » @petrichor🦖 
+$292.81 USDC » @hunter_w3b 
+$93.68 USDC » @matrix_0wl 
+$93.68 USDC » @naman1778 
+$60.20 USDC » @vnavascues 
+$60.20 USDC » @banpaleo5 
+$33.48 USDC » @Rageur 
+$33.48 USDC » @ReyAdmirado 
+$33.48 USDC » @SM3_SS 
+$33.48 USDC » @SAAJ 
+$33.48 USDC » @SAQ 
+
+🏁 Findings summary
+--------------------------------------—
+High risk findings: 0
+Med risk findings: 10 total, 8 unique
+Gas reports: 14 (Best: @Raihan)
+QA reports: 9 (Best: @Gerard Persoon)
+Advanced analysis reports: 3 (Best: @K42 Ψ)
+
+Awards will be distributed on Polygon within the next week. Congratulations all!  💸 💸 💸
+
+*Note: If you participated in this audit and don’t see your name on this list, please wait until the report is published and the findings repo is made public to check on your submissions.
+
+
+[08/10/2023 21:26] milotruck
+Congrats everyone!
+
+{Reactions}
+👍 (23) 🔥 (20) hi5 (10) 
+
+[08/10/2023 21:27] petrichor0961
+Puffff :10_10:
+
+
+[08/10/2023 21:37] 0xnevi
+Biggg congrats to u 💪 and all wardens
+
+{Reactions}
+❤️ (4) 
+
+[08/10/2023 21:39] kmanofficial
+Congrats
+
+
+[08/10/2023 21:41] 0xjuancito
+What a legend! Congrats mate!
+
+{Reactions}
+❤️ 
+
+[08/10/2023 21:45] _k42
+Hype! Thank you @CJ42  and @Trust  for the badass judging and congrats to all others! 🙏 👽 🙏 Only the start, keep grinding wardens :code4rena: 👏
+
+{Reactions}
+🙏 
+
+[08/13/2023 20:00] c145h
+Good one, happy for you!
+
+
+[08/15/2023 05:40] naman1778#5622
+Do rewards for this contest have been sent?
+
+
+[08/15/2023 14:54] thebrittfactor
+Not yet! These should be processed soon!
+
+
+[08/20/2023 11:16] saint6704
+Congratulations @MiloTruck huge achievement 💪
+
+{Reactions}
+❤️ 
+
+==============================================================
+Exported 95 message(s)
+==============================================================
